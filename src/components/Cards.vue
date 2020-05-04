@@ -15,12 +15,11 @@
                     <user-card v-for="card in results" :key="`card-${card.id}`" :data="card"/>
                 </template>
                 <template v-else-if="type === 'list'">
-                    <list-card v-for="a in 12"/>
+                    <list-card v-for="card in results" :key="`card-${card.id}`" :data="card"/>
                 </template>
                 <template v-else-if="type === 'profile-image-card'">
                     <profile-image-card v-for="a in 12" :link="{ name: 'Avengers: Endgame', year: '2019' }"/>
                 </template>
-                <!-- <list-card/> -->
             </div>
             <pagination class="mt-3" :tmdbData="tmdbData" :tcData="tcData" :tcAllResults="tcAllResults" :itemPerPage="itemPerPage"/>
         </div>
@@ -73,11 +72,11 @@ export default {
         },
         results() {
             if(this.tmdbData) return this.tmdbData.results
-            if(this.tcData) return this.tcData.results
+            if(this.tcData) return this.tcData.data
             if(this.tcAllResults) { return this.paginate(this.tcAllResults, this.$route.params.page, this.itemPerPage) }
         },
         skeletonLoaderType() {
-            if(this.type === 'person') return 'small'
+            if(['person', 'user'].includes(this.type)) return 'small'
         },
     },
     methods: {

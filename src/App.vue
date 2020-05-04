@@ -3,6 +3,7 @@
     <navigation v-if="loggedIn"/>
     <navigation-logout v-else/>
     <router-view class="body"/>
+    <vote-comment/>
   </div>
 </template>
 
@@ -10,12 +11,14 @@
 import Navigation from '@/components/Navigation.vue'
 import NavigationLogout from '@/components/NavigationLogout.vue'
 import mixin from './plugins/helpers.js'
+import VoteComment from '@/components/modals/VoteComment.vue'
 
 
 export default {
     components: {
       'navigation': Navigation,
       'navigation-logout': NavigationLogout,
+      'vote-comment': VoteComment,
     },
     computed: {
       loggedIn() { return this.$store.getters['auth/loggedIn'] }

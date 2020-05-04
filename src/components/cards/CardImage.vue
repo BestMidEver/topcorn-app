@@ -23,6 +23,8 @@ export default {
         src() {
             if(this.isTrue(this.data.poster_path)) return `${process.env.VUE_APP_TMDB_POSTER_URL}${this.data.poster_path}`
             if(this.isTrue(this.data.profile_path)) return `${process.env.VUE_APP_TMDB_POSTER_URL}${this.data.profile_path}`
+            if(this.isTrue(this.data.facebook_profile_path)) return `${this.data.facebook_profile_path}&height=450&width=300`
+            if(this.isTrue(this.data.cover_path)) return `${process.env.VUE_APP_TMDB_SMALL_COVER_URL}${this.data.cover_path}`
             return require('@/assets/200x300logo.png')
         },
     },
@@ -31,7 +33,7 @@ export default {
 
 <style scoped>
 .narrow{
-    height: 6vh!important;
+    height: 12vh!important;
     /* object-fit: cover;
     width: 100%; */
 }

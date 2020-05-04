@@ -34,15 +34,10 @@ export default {
         itemPerPage: Number,
     },
     computed: {
-        totalResults() {
-            if(this.tmdbData) return this.tmdbData.total_results
-            if(this.tcAllResults) return this.tcAllResults.length
-        },
         totalPages() {
-            if(this.tmdbData) {
-                return this.tmdbData.total_pages
-            } 
-            if(this.tcAllResults) return Math.ceil(this.totalResults / this.itemPerPage)  
+            if(this.tmdbData) return this.tmdbData.total_pages
+            if(this.tcData) return this.tcData.last_page
+            if(this.tcAllResults) return Math.ceil(this.tcAllResults.length / this.itemPerPage)
         },
         currentPage() { return parseInt(this.$route.params.page) },
         firstPageClass() { return (this.currentPage === 1 ? 'disabled ' : '') },

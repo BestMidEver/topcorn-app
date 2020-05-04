@@ -10,7 +10,6 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import '../../mixins/urlGenerator'
 import lodash from 'lodash'
-//import searchPersonUserList from './searchPersonUserList'
 import Cards from '@/components/Cards.vue'
  
 

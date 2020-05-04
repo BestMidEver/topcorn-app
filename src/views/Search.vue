@@ -1,7 +1,7 @@
 <template>
     <div @scroll.passive="handleScroll">
         <tabs :items="tabs" :itemTypes="tabTypes" :activeType.sync="activeType"/>
-        <custom-input v-model="searchText" type="text" clearMessage="Cancel" placeHolder="Search a movie by title" icon="search" class="mt-2"/>
+        <custom-input v-model="searchText" type="text" clearMessage="Cancel" :placeHolder="placeholder" icon="search" class="mt-2"/>
         <router-view></router-view>
     </div>
 </template>
@@ -17,10 +17,10 @@ export default {
         'custom-input': CustomInput,
     },
     data: function() {
-        const tabTypes = ['movie', 'series', 'person', 'user', 'list']
+        const tabTypes = ['movie', 'series', 'person', 'user'/* , 'list' */]
         return {
             pageTitle: 'Search',
-            tabs: ['Movie', 'Series', 'Person', 'User', 'List'],
+            tabs: ['Movie', 'Series', 'Person', 'User'/* , 'List' */],
             tabTypes: tabTypes,
             activeType: this.$route.name.split('-')[1],
             searchText: this.$route.params.pathMatch,
@@ -28,7 +28,11 @@ export default {
         }
     },
     computed: {
-        routeWatcher() { return `/search-${this.searchText||''}/${this.activeType}/1` }
+        routeWatcher() { return `/search-${this.searchText||''}/${this.activeType}/1` },
+        placeholder() {
+            if(this.activeType === 'user') return 'Start typing a name or enter an email'
+            return 'Start typing a name'
+        }
     },
     watch: {
         '$route.name'(val) { this.activeType = val.split('-')[1] },

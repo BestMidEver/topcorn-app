@@ -15,8 +15,6 @@
 <script>
 import CardContainer from '@/components/cards/CardContainer.vue'
 import CardImage from '@/components/cards/CardImage.vue'
-import CardOverLayerTop from '@/components/cards/CardOverLayerTop.vue'
-import CardOverLayerBottom from '@/components/cards/CardOverLayerBottom.vue'
 import CardText from '@/components/cards/CardText.vue'
 
 
@@ -24,8 +22,6 @@ export default {
     components: {
         'card-container': CardContainer,
         'card-image': CardImage,
-        'card-over-layer-top': CardOverLayerTop,
-        'card-over-layer-bottom': CardOverLayerBottom,
         'card-text': CardText,
     },
     props: {

@@ -1,16 +1,10 @@
 <template>
-    <card-container>
+    <card-container :data="data">
         <template slot="image">
-            <card-image v-for="image in images" :src="image" size="narrow"/>
-        </template>
-        <template slot="over-layer-top">
-            <card-over-layer-top/>
+            <card-image v-for="(image, i) in images" :key="`${i}-${image.cover_path}`" :data="image" size="narrow"/>
         </template>
         <template slot="over-layer-bottom">
             <card-over-layer-bottom/>
-        </template>
-        <template slot="badge-top">
-            <card-badge-top/>
         </template>
         <template slot="badge-bottom">
             <card-badge-bottom/>
@@ -47,13 +41,20 @@ export default {
         'card-footer': CardFooter,
     },
     props: {
-        
+        data: Object,
     },
-    data: function() {
-        return {
-            images: ['https://image.tmdb.org/t/p/w1280/q2CtXYjp9IlnfBcPktNkBPsuAEO.jpg', 'https://image.tmdb.org/t/p/w1280/8tf1xLcZHcSxmXK0rSZNo2WAdRb.jpg', 'https://image.tmdb.org/t/p/w1280/kczQeXxj34UDRdIAwYmkAbgiBC6.jpg', 'https://image.tmdb.org/t/p/w1280/d27Ir9tRj7tgEHfksyb6eSXPOHB.jpg', 'https://image.tmdb.org/t/p/w1280/s4ubF2BR1iMM5Fra1f8nCfAIHKV.jpg']
+    computed: {
+        images() {
+            return [
+                { cover_path: this.data.m1_cover_path },
+                { cover_path: this.data.m2_cover_path },
+                { cover_path: this.data.m3_cover_path },
+                /* { cover_path: this.data.m4_cover_path },
+                { cover_path: this.data.m5_cover_path },
+                { cover_path: this.data.m6_cover_path }, */
+            ]
         }
-    },
+    }
 }
 </script>
 

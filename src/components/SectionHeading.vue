@@ -1,5 +1,5 @@
 <template>
-    <div class="ml-3 mr-1 mx-md-1 d-flex align-items-center">
+    <div class="ml-3 mr-1 mx-md-1 d-flex align-items-center" style="min-height: 24px">
 		<div :class="titleSize || 'h6'">{{ title }}</div>
         <div class="ml-auto">
             <div class="d-flex">

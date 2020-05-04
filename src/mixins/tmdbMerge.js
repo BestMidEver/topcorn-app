@@ -25,7 +25,6 @@ Vue.mixin({
                 total_pages: this.tmdbResponse.total_pages,
                 total_results: this.tmdbResponse.total_results
             }
-            console.log('mergedTmdbResponse updated', data)
             return data
         }
     },

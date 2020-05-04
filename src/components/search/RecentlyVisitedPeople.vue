@@ -1,7 +1,7 @@
 <template>
     <div>
-        <section-heading title="Recently viewed" class="mt-3">
-            <custom-button type="text" class="btn-sm btn-block border-0"><div class="one-line">Clear All</div></custom-button>
+        <section-heading title="Recently visited" class="mt-3">
+            <custom-button v-if="anyRecentlyVisited" type="text" class="btn-sm btn-block border-0" @click="clearRecentlyVisiteds(types)"><div class="one-line">Clear All</div></custom-button>
         </section-heading>
         <cards type="person" :tcAllResults="allResults" :loading="$store.state.loading.pageLoading2" class="mt-2"/>
     </div>

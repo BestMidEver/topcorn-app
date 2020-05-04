@@ -3,7 +3,7 @@
         <section-heading title="Recently visited" class="mt-3">
             <custom-button v-if="anyRecentlyVisited" type="text" class="btn-sm btn-block border-0" @click="clearRecentlyVisiteds(types)"><div class="one-line">Clear All</div></custom-button>
         </section-heading>
-        <cards type="user" :tcAllResults="allResults" :loading="$store.state.loading.pageLoading2" class="mt-2"/>
+        <cards type="list" :tcAllResults="allResults" :loading="$store.state.loading.pageLoading2" class="mt-2"/>
     </div>
 </template>
 
@@ -22,7 +22,7 @@ export default {
     },
     data() {
         return {
-            types: 'users'
+            types: 'lists'
         }
     }
 }

@@ -12,6 +12,8 @@ import SearchPerson from '@/components/search/SearchPerson.vue'
 import RecentlyVisitedPeople from '@/components/search/RecentlyVisitedPeople.vue'
 import SearchUser from '@/components/search/SearchUser.vue'
 import RecentlyVisitedUsers from '@/components/search/RecentlyVisitedUsers.vue'
+import SearchList from '@/components/search/SearchList.vue'
+import RecentlyVisitedLists from '@/components/search/RecentlyVisitedLists.vue'
 import QuickVote from '@/views/QuickVote.vue'
 import Movie from '@/views/Movie.vue'
 import Series from '@/views/Series.vue'
@@ -34,6 +36,8 @@ const routes = [
       { path: '/search-*/person/:page', name: 'search-person-search', component: SearchPerson },
       { path: '/search-/user/:page', name: 'search-user-recents', component: RecentlyVisitedUsers },
       { path: '/search-*/user/:page', name: 'search-user-search', component: SearchUser },
+      { path: '/search-/list/:page', name: 'search-list-recents', component: RecentlyVisitedLists },
+      { path: '/search-*/list/:page', name: 'search-list-search', component: SearchList },
     ]
   },
   { path: '/quick-vote', name: 'QuickVote', component: QuickVote, meta: { requiresAuth: true }   },
@@ -42,16 +46,6 @@ const routes = [
   { path: '/person', name: 'Person', component: Person, meta: { requiresAuth: true }   },
   { path: '/profile', name: 'Profile', component: Profile, meta: { requiresAuth: true }   },
   { path: '/settings', name: 'Settings', component: Settings, meta: { requiresAuth: true }   },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: function () {
-      return import(/* webpackChunkName: "about" */ '../views/About.vue')
-    }
-  }
 ]
 
 const router = new VueRouter({

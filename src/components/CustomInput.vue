@@ -49,7 +49,7 @@ export default {
                 //}, 1000)
             }
         },
-        isClearVisible() { return this.clearMessage && (this.inputVal !== '') }
+        isClearVisible() { return this.clearMessage && this.isTrue(this.inputVal) }
     },
     methods: {
         clearInput() { /* clearTimeout(this.timeout); this.$emit('input', '') */ this.inputVal = '' }
