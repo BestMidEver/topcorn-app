@@ -15,7 +15,7 @@
             <!-- Mobile Search button -->
             <ul class="navbar-nav text-center">
                 <li class="nav-item">
-                    <router-link to="/search-/movie/1" class="nav-link d-md-none">
+                    <router-link :to="searchTo" class="nav-link d-md-none" :class="{ active: isActive('/search') }">
                         <font-awesome-icon icon="search"/>
                         <div class="extra-small">Search</div>
                     </router-link>
@@ -25,7 +25,7 @@
             <!-- Mobile Quick Vote button -->
             <ul class="navbar-nav text-center">
                 <li class="nav-item">
-                    <router-link to="/quick-vote" class="nav-link d-md-none">
+                    <router-link to="/quick-vote-movies" class="nav-link d-md-none">
                         <font-awesome-icon icon="star-half-alt"/>
                         <div class="extra-small">Quick Vote</div>
                     </router-link>
@@ -76,14 +76,14 @@
 
                     <!-- Collapsed & Larger Screen Recommendation button -->
                     <li class="nav-item">
-                        <router-link to="/search-/movie/1" class="nav-link">
+                        <router-link :to="searchTo" class="nav-link" :class="{ active: isActive('/search') }">
                             <font-awesome-icon icon="search" class="d-none d-md-inline"/> Search
                         </router-link>
                     </li>
 
                     <!-- Collapsed & Larger Screen Quick Vote button -->
                     <li class="nav-item">
-                        <router-link to="/quick-vote" class="nav-link">
+                        <router-link to="/quick-vote-movies" class="nav-link">
                             <font-awesome-icon icon="star-half-alt" class="d-none d-md-inline"/> Quick Vote
                         </router-link>
                         <div class="dropdown-divider d-md-none"></div>
@@ -198,11 +198,17 @@ export default {
     components: {
         'notification-badge': NotificationBadge,
     },
+    computed: {
+        searchTo() { return this.isStringStartWith(this.$route.path, '/search') ? '/search-/movie/1' : this.$store.state.navigation.search }
+    },
     methods: {
         logout() {
             this.$store.dispatch('auth/destroyToken').then(response => {
                 this.$router.push({ name: 'Login' })
             })
+        },
+        isActive(input) {
+            return this.isStringStartWith(this.$route.path, input)
         }
     }
 }

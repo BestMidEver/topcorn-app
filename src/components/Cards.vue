@@ -6,7 +6,7 @@
         <div v-show="!loading">
             <div :class="containerClass">
                 <template v-if="['movie', 'series'].includes(type)">
-                    <movie-series-card v-for="card in results" :key="`card-${card.id}`" :data="card" :type="type"/>
+                    <movie-series-card v-for="card in results" :key="`card-${card.id}`" :data="card" :boundedTo="boundedTo" :type="type"/>
                 </template>
                 <template v-else-if="type === 'person'">
                     <person-card v-for="card in results" :key="`card-${card.id}`" :data="card"/>
@@ -51,6 +51,7 @@ export default {
         tmdbData: Object,
         tcData: Object,
         tcAllResults: Array,
+        boundedTo: Array,
         isCardColumns: Boolean,
         expandStatus: {
             validator: value => ['expanded', 'compressed'].includes(value)

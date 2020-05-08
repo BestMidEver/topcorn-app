@@ -19,7 +19,7 @@
             <card-text :data="data"/>
         </template>
         <template slot="footer">
-            <card-footer :data="data"/>
+            <card-footer :data="data" :boundedTo="boundedTo" :dataType="type"/>
         </template>
     </card-container>
 </template>
@@ -48,6 +48,7 @@ export default {
     },
     props: {
         data: Object,
+        boundedTo: Array,
         type: String
     },
 }

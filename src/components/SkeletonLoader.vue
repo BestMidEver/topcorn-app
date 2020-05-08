@@ -1,6 +1,7 @@
 <template>
-    <div class="mt-2" :class="cardClass">
-        <div class="card h-100 d-flex flex-column justify-content-between mx-1">
+    <div :class="cardClass">
+        <div v-if="type === 'line'" class="rectangle" :style="lineStyle"></div>
+        <div v-else class="card h-100 d-flex flex-column justify-content-between mx-1">
             <img class="card-img-top" :src="require('@/assets/2x3loading.png')"/>
             <div class="card-block p-1" :class="isTextCenter">
               <div class="rectangle" :style="headingStyle"></div>
@@ -33,8 +34,9 @@
 export default {
     props: {
         type: {
-            validator: value => ['small', ''].includes(value)
+            validator: value => ['small', 'line', ''].includes(value)
         },
+        lineHeight: String
     },
     data() {
         return {
@@ -42,8 +44,12 @@ export default {
     },
     computed: {
         cardClass() {
-            if(this.type === 'small') return 'col-4 col-sm-3 col-md-2'
-            return 'col-6 col-md-4 col-lg-3 col-xl-2'
+            if(this.type === 'line') return ''
+            if(this.type === 'small') return 'mt-2 col-4 col-sm-3 col-md-2'
+            return 'mt-2 col-6 col-md-4 col-lg-3 col-xl-2'
+        },
+        lineStyle() {
+          return { width: this.calcRandomWidth(), height: this.lineHeight }
         },
         headingStyle() {
           const style = { width: this.calcRandomWidth() }

@@ -36,7 +36,6 @@ const actions = {
                 context.commit('retrieveToken', token)
                 resolve(response)
             }).catch(error => {
-                console.log(error)
                 reject(error)
             })
         })
@@ -52,7 +51,6 @@ const actions = {
             }).then(response => {
                 resolve(response)
             }).catch(error => {
-                console.log(error)
                 reject(error)
             })
         })
@@ -67,7 +65,6 @@ const actions = {
                     context.commit('destroyToken')
                     resolve(response)
                 }).catch(error => {
-                    console.log(error)
                     localStorage.removeItem('access_token')
                     context.commit('destroyToken')
                     reject(error)

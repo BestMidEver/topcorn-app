@@ -11,7 +11,7 @@
 import Navigation from '@/components/Navigation.vue'
 import NavigationLogout from '@/components/NavigationLogout.vue'
 import mixin from './plugins/helpers.js'
-import VoteComment from '@/components/modals/VoteComment.vue'
+import VoteComment from '@/components/modals/voteModal/VoteComment.vue'
 
 
 export default {

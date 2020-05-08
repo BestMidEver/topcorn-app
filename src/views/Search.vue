@@ -36,10 +36,8 @@ export default {
     },
     watch: {
         '$route.name'(val) { this.activeType = val.split('-')[1] },
+        '$route.params.pathMatch'(val) { this.searchText = this.isTrue(val) ? val : '' },
         routeWatcher(val) { if(val !== this.$route.path) this.$router.replace(val) },
-    },
-    created() {
-        console.log('search component created')
     },
     beforeCreate() {
         this.$store.dispatch('interactions/pluckMoviesSeries')

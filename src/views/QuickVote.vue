@@ -1,31 +1,43 @@
 <template>
-    <div>
-        <!-- <progress-bar/>
-        <choose-modal :between="between" :view="view"/> -->
-        <vote-modal/>
+    <div class="modal-container">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header p-0">
+                    <tabs :items="tabs" :itemTypes="tabTypes" :activeType.sync="activeType" class="w-100"/>
+                </div>
+                <router-view></router-view>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-import ProgressBar from '@/components/ProgressBar.vue'
-import ChooseModal from '@/components/ChooseModal.vue'
-import VoteModal from '@/components/VoteModal.vue'
+import Tabs from '@/components/Tabs.vue'
 
 
 export default {
     components: {
-        'progress-bar': ProgressBar,
-        'choose-modal': ChooseModal,
-        'vote-modal': VoteModal,
+        'tabs': Tabs,
     },
-    data: function() {
+    data() {
         return {
-            between: ['Movies', 'Series'],
-            view: 'Movies'
+            tabs: ['Movie', 'Series'],
+            tabTypes: ['movies', 'series'],
+            activeType: this.$route.name.split('-')[1],
         }
-    }
+    },
+    computed: {
+        routeWatcher() { return `/quick-vote-${this.activeType}` },
+    },
+    watch: {
+        routeWatcher(val) { if(val !== this.$route.path) this.$router.replace(val) },
+    },
 }
 </script>
 
 <style scoped>
+.fs-container { background-size: 100% 100%!important; }
+.modal-dialog-centered::before {
+    height: unset;
+}
 </style>

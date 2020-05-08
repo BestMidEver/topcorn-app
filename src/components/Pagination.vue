@@ -68,12 +68,12 @@ nav{ overflow: auto; white-space: nowrap;  max-width: 500px; }
 .first-page{
     left: 0;
     position: sticky;
-    z-index: 1050;
+    z-index: 1040;
 }
 .last-page{
     right: 0;
     position: sticky;
-    z-index: 1050;
+    z-index: 1040;
 }
 svg{ font-size: 10px; }
 </style>

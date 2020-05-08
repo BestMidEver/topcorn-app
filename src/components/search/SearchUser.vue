@@ -52,7 +52,6 @@ export default {
                 if(axiosRandom === this.axiosRandom) this.tcResponse = response.data
             }).catch(error => {
                 this.tcResponse = this.tcResponse0
-                console.log(error)
             }).then(() => { this.$store.dispatch('loading/finishPageLoading4') })
         }
     },

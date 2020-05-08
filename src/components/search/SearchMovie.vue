@@ -1,6 +1,6 @@
 <template>
     <div>
-        <cards :type="movieSeriesType" :tmdbData="mergedTmdbResponse" :loading="$store.state.loading.pageLoading" class="mt-2"/>
+        <cards :type="movieSeriesType" :tmdbData="mergedTmdbResponse" :loading="$store.state.loading.pageLoading" :boundedTo="['interactions/setMovieInteraction', 'recentlyVisited/setMovieInteraction']" class="mt-2"/>
     </div>
 </template>
 
@@ -13,16 +13,16 @@ export default {
     components: {
         'cards': Cards,
     },
-    data() {
-        return {
-            movieSeriesType: 'movie',
-        } 
-    },
     watch: {
         $route() { this.startdebouncingSearch() }
     },
     beforeMount() {
         this.startdebouncingSearch()
+    },
+    data() {
+        return {
+            movieSeriesType: 'movie',
+        }
     },
 }
 </script>

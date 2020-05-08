@@ -1,6 +1,6 @@
 <template>
     <div>
-        <cards :type="movieSeriesType" :tmdbData="mergedTmdbResponse" :loading="$store.state.loading.pageLoading" class="mt-2"/>
+        <cards :type="movieSeriesType" :tmdbData="mergedTmdbResponse" :loading="$store.state.loading.pageLoading" :boundedTo="['interactions/setSeriesInteraction', 'recentlyVisited/setSeriesInteraction']" class="mt-2"/>
     </div>
 </template>
 

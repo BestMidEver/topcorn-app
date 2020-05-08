@@ -20,8 +20,24 @@ const mutations = {
     setMovies(state, movies) {
         state.movies = movies
     },
+    setMovieInteraction(state, movie) {
+        let interaction = state.movies.find(m => m.id === movie.id)
+        if(interaction) {
+            interaction.ban_id = movie.ban_id
+            interaction.later_id = movie.later_id
+            interaction.rate_code = movie.rate_code
+        }
+    },
     setSeries(state, series) {
         state.series = series
+    },
+    setSeriesInteraction(state, series) {
+        let interaction = state.series.find(m => m.id === series.id)
+        if(interaction) {
+            interaction.ban_id = series.ban_id
+            interaction.later_id = series.later_id
+            interaction.rate_code = series.rate_code
+        }
     },
     setPeople(state, people) {
         state.people = people
@@ -41,7 +57,7 @@ const actions = {
     getData(context) {
         context.dispatch('loading/startPageLoading2', null, { root:true })
         return new Promise((resolve, reject) => {
-            axios.get(`${process.env.VUE_APP_API_URL}/recenltyVisiteds`)
+            axios.get(`${process.env.VUE_APP_API_URL}/recentlyVisiteds`)
             .then(response => {
                 context.commit('setMovies', response.data.movies)
                 context.commit('setSeries', response.data.series)
@@ -50,7 +66,6 @@ const actions = {
                 //context.commit('setLists', response.data.lists)
                 resolve(response)
             }).catch(error => {
-                console.log(error)
                 reject(error)
             }).then(() => { context.dispatch('loading/finishPageLoading2', null, { root:true }) })
         })
@@ -63,7 +78,6 @@ const actions = {
                 context.commit('clear', types)
                 resolve(response)
             }).catch(error => {
-                console.log(error)
                 reject(error)
             }).then(() => { context.dispatch('loading/finishResponseWaiting', null, { root:true }) })
         })

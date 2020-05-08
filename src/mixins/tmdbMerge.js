@@ -19,7 +19,7 @@ Vue.mixin({
                     Vue.set(movie, 'ban_id', interaction ? interaction.ban_id : null)
                     Vue.set(movie, 'later_id', interaction ? interaction.later_id : null)
                     Vue.set(movie, 'rate_code', interaction ? interaction.rate_code : null)
-                    Vue.set(movie, 'rated_id', interaction ? interaction.rated_id : null)
+                    //Vue.set(movie, 'rated_id', interaction ? interaction.rated_id : null)
                     return movie
                 }),
                 total_pages: this.tmdbResponse.total_pages,

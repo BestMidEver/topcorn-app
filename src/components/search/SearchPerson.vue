@@ -52,7 +52,6 @@ export default {
                 if(axiosRandom === this.axiosRandom) this.tmdbResponse = response.data
             }).catch(error => {
                 this.tmdbResponse = this.tmdbResponse0
-                console.log(error)
             }).then(() => { this.$store.dispatch('loading/finishPageLoading3') })
         }
     },

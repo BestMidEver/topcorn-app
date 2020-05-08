@@ -1,9 +1,9 @@
 <template>
     <div>
         <section-heading title="Recently visited" class="mt-3">
-            <custom-button v-if="anyRecentlyVisited" type="text" class="btn-sm btn-block border-0" @click="clearRecentlyVisiteds(types)"><div class="one-line">Clear All</div></custom-button>
+            <custom-button v-if="anyRecentlyVisited" type="text" class="btn-sm btn-block border-0" @click="clearRecentlyVisiteds(types)" :disabled="$store.state.loading.responseWaiting"><div class="one-line">Clear All</div></custom-button>
         </section-heading>
-        <cards type="series" :tcAllResults="allResults" :loading="$store.state.loading.pageLoading2" class="mt-2"/>
+        <cards type="series" :tcAllResults="allResults" :loading="$store.state.loading.pageLoading2" :boundedTo="['interactions/setSeriesInteraction', 'recentlyVisited/setSeriesInteraction']" class="mt-2"/>
     </div>
 </template>
 

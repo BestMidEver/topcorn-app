@@ -9,7 +9,7 @@
 export default {
     props: {
         type: {
-            validator: value => ['text', 'watch-later', 'seen', 'ban', 'share', 'edit', 'expand', 'edit', 'create', 'like', 'show-less', 'scroll-up', 'bookmark', 'bell', 'last-seen', 'filter', 'sort', 'follow'].includes(value)
+            validator: value => ['text', 'watch-later', 'seen', 'ban', 'share', 'edit', 'expand', 'edit', 'create', 'like', 'show-less', 'scroll-up', 'bookmark', 'bell', 'last-seen', 'filter', 'sort', 'follow', 'back'].includes(value)
         },
         borderRadius: {
             validator: value => ['left', 'right', 'bottom-left', 'bottom-right', 'none'].includes(value)
@@ -39,6 +39,7 @@ export default {
                 'filter': { default: ['fas', 'filter'], active: ['fas', 'filter'] },
                 'sort': { default: ['fas', 'sort-amount-down'], active: ['fas', 'sort-amount-down'] },
                 'follow': { default: ['fas', 'user-friends'], active: ['fas', 'user-friends'] },
+                'back': { default: ['fas', 'arrow-left'], active: ['fas', 'arrow-left'] },
             },
         }
     },
@@ -54,7 +55,7 @@ button{ color: var(--secondary); }
 button:not(.filter):not(.sort):hover{ color: var(--hover-color); background: var(--hover-bg-color)!important; }
 
 
-.watch-later.active{ color: var(--warning); }
+.watch-later.active{ color: var(--warning)!important; }
 .seen.active5, .bookmark.active{ background: var(--success); color: #fff; }
 .seen.active5:hover, .bookmark.active:hover{ color: var(--success); }
 .seen.active4{ background: var(--info); color: #fff; }
@@ -65,7 +66,7 @@ button:not(.filter):not(.sort):hover{ color: var(--hover-color); background: var
 .seen.active2:hover{ color: var(--warning); }
 .seen.active1{ background: var(--danger); color: #fff; }
 .seen.active1:hover{ color: var(--danger); }
-.ban.active, .bell.active{ color: var(--danger); }
+.ban.active, .bell.active{ color: var(--danger)!important; }
 .share.active{ color: var(--blue); }
 .expand.active, .edit.active{ color: var(--tab-active-color); }
 .like.active{ color: var(--like-color); }
