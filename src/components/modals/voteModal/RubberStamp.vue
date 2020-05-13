@@ -1,14 +1,18 @@
 <template>
-    <span class="stamp is-draft one-line" :class="computedClass" :style="{ '-webkit-mask-image': 'url(' + require('@/assets/rubber.png') + ')' }">{{ rateCodeToText(rateCode) }}</span>
+    <span class="stamp is-draft one-line" :class="computedClass" :style="{ '-webkit-mask-image': 'url(' + require('@/assets/rubber.png') + ')' }">{{ rateCodeToText(rate) }}</span>
 </template>
 
 <script>
+import codeToText from '@/mixins/codeToText'
+
+
 export default {
+    mixins: [codeToText],
     props: {
-        rateCode: Number
+        rate: Number
     },
     computed: {
-        computedClass() { return this.rateCode > 0 ? `active${this.rateCode}` : 'd-none' },
+        computedClass() { return this.rate > 0 ? `active${this.rate}` : 'd-none' },
 
     },
 }

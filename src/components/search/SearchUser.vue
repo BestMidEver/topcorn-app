@@ -8,9 +8,9 @@
 import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import '../../mixins/urlGenerator'
 import lodash from 'lodash'
 import Cards from '@/components/Cards.vue'
+import urlGenerate from '@/mixins/urlGenerate'
  
 
 Vue.use(lodash)
@@ -21,6 +21,7 @@ export default {
     components: {
         'cards': Cards,
     },
+    mixins: [urlGenerate],
     data() {
         const tcResponse = { current_page: 1, data: [], last_page: 0, total: 0 }
         return {

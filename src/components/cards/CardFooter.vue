@@ -3,23 +3,25 @@
         <div class="row no-gutters">
             <template v-if="type === 'list'">
                 <div class="col">
-                    <custom-button type="watch-later" borderRadius="bottom-left" status="active" class="btn-sm btn-block border-0"></custom-button>
+                    <custom-button type="watch-later" borderRadius="bottom-left" status="active" class="btn-sm btn-block border-0" :disabled="$store.state.loading.responseWaiting"></custom-button>
                 </div>
                 <div class="col-7">
-                    <custom-button type="bookmark" borderRadius="none" status="active" class="btn-sm btn-block border-0"> Favorite</custom-button>
+                    <custom-button type="bookmark" borderRadius="none" status="active" class="btn-sm btn-block border-0" :disabled="$store.state.loading.responseWaiting"> Favorite</custom-button>
                 </div>
             </template>
             <template v-else>
                 <div class="col">
-                    <custom-button type="watch-later" borderRadius="bottom-left" :status="watchLaterStatus" class="btn-sm btn-block border-0" @click="$store.dispatch('noModals/watchLater', { data: data, boundedTo: boundedTo, type: dataType })"/>
+                    <custom-button type="watch-later" borderRadius="bottom-left" :status="watchLaterStatus" class="btn-sm btn-block border-0"
+                        @click="$store.dispatch('noModals/watchLater', { data: data, boundedTo: boundedTo, type: dataType })" :disabled="$store.state.loading.responseWaiting"/>
                 </div>
                 <div class="col-7">
                     <custom-button type="seen" borderRadius="none" :status="seenStatus" class="btn-sm btn-block border-0"
-                        @click="$store.dispatch('modals/openVoteComment', { data: data, boundedTo: boundedTo, type: dataType })"> Seen</custom-button>
+                        @click="$store.dispatch('modals/openVoteComment', { data: data, boundedTo: boundedTo, type: dataType })" :disabled="$store.state.loading.responseWaiting"> Seen</custom-button>
                 </div>
             </template>
             <div class="col">
-                <custom-button type="ban" borderRadius="bottom-right" :status="banStatus" class="btn-sm btn-block border-0" @click="$store.dispatch('noModals/ban', { data: data, boundedTo: boundedTo, type: dataType })"/>
+                <custom-button type="ban" borderRadius="bottom-right" :status="banStatus" class="btn-sm btn-block border-0"
+                    @click="$store.dispatch('noModals/ban', { data: data, boundedTo: boundedTo, type: dataType })" :disabled="$store.state.loading.responseWaiting"/>
             </div>
         </div>
     </div>

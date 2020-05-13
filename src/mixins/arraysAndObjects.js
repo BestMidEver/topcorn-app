@@ -1,6 +1,4 @@
-import Vue from 'vue'
-
-Vue.mixin({
+export default {
     methods: {
         distinctArrayOfObjects(array) {
             const map = new Map();
@@ -14,4 +12,4 @@ Vue.mixin({
             return result
         },
     }
-})
+}

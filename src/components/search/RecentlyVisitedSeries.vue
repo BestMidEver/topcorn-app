@@ -20,6 +20,7 @@ export default {
         'cards': Cards,
         'section-heading': SectionHeading,
     },
+    mixins: [recentlyVisited],
     data() {
         return {
             types: 'series'

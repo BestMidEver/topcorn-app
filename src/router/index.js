@@ -15,9 +15,11 @@ import RecentlyVisitedUsers from '@/components/search/RecentlyVisitedUsers.vue'
 import SearchList from '@/components/search/SearchList.vue'
 import RecentlyVisitedLists from '@/components/search/RecentlyVisitedLists.vue'
 import QuickVote from '@/views/QuickVote.vue'
-import QuickVoteMovies from '@/components/quickVote/QuickVoteMovies.vue'
-import QuickVoteSeries from '@/components/quickVote/QuickVoteSeries.vue'
+import QuickVoteMoviesSeries from '@/components/quickVote/QuickVoteMoviesSeries.vue'
 import Movie from '@/views/Movie.vue'
+import MovieSeriesProfile from '@/components/movie/MovieSeriesProfile.vue'
+import MovieSeriesDetail from '@/components/movie/MovieSeriesDetail.vue'
+import MovieSeriesCast from '@/components/movie/MovieSeriesCast.vue'
 import Series from '@/views/Series.vue'
 import Person from '@/views/Person.vue'
 import Profile from '@/views/Profile.vue'
@@ -44,11 +46,19 @@ const routes = [
   },
   { path: '/quick-vote', name: 'quickVote', component: QuickVote, meta: { requiresAuth: true },
     children: [
-      { path: '/quick-vote-movies', name: 'quickVote-movies', component: QuickVoteMovies },
-      { path: '/quick-vote-series', name: 'quickVote-series', component: QuickVoteSeries },
+      { path: '/quick-vote-movies', name: 'quickVote-movies', component: QuickVoteMoviesSeries, props: { type: 'movie' } },
+      { path: '/quick-vote-series', name: 'quickVote-series', component: QuickVoteMoviesSeries, props: { type: 'series' } },
     ]
   },
-  { path: '/movie', name: 'Movie', component: Movie, meta: { requiresAuth: true }   },
+  { path: '/movie/:tab/:id', name: 'movie', component: Movie, meta: { requiresAuth: true }, props: { type: 'movie' },
+    children: [
+      { path: '/movie/profile/:id', name: 'movie-profile', component: MovieSeriesProfile, props: { type: 'movie' } },
+      { path: '/movie/detail/:id', name: 'movie-detail', component: MovieSeriesDetail, props: { type: 'movie' } },
+      { path: '/movie/cast/:id', name: 'movie-cast', component: MovieSeriesCast, props: { type: 'movie' } },
+      { path: '/movie/comment/:id', name: 'movie-comment', component: MovieSeriesProfile, props: { type: 'movie' } },
+      { path: '/movie/recommendation/:id', name: 'movie-recommendation', component: MovieSeriesProfile, props: { type: 'movie' } },
+    ]
+  },
   { path: '/series', name: 'Series', component: Series, meta: { requiresAuth: true }   },
   { path: '/person', name: 'Person', component: Person, meta: { requiresAuth: true }   },
   { path: '/profile', name: 'Profile', component: Profile, meta: { requiresAuth: true }   },

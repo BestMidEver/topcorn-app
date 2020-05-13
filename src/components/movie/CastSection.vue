@@ -1,6 +1,5 @@
 <template>
     <div>
-        QV series
     </div>
 </template>
 
@@ -8,9 +7,11 @@
 export default {
     props: {
     },
-    computed: {
+    data: function() {
+        return {
+        }
     },
-    methods: {
+    computed: {
     }
 }
 </script>

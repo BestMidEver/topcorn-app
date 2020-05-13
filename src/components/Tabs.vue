@@ -3,14 +3,14 @@
         <!-- Mobile tab -->
         <div class="d-md-none d-flex justify-content-center mobile-container">
             <button v-for="(tab, index) in items" :key="tab" :id="tabId + index"
-                class="btn btn-link border-no-radius text-sm-center text-muted text-no-decoration" :class="index === active ? 'active' : ''" @click="active = index">{{ tab }}</button>
+                class="btn btn-link border-no-radius text-sm-center text-muted text-no-decoration" :class="index === active ? 'active' : ''" @click="active = index" :disabled="disabled">{{ tab }}</button>
         </div>
 
         <!-- Larger Screen tab -->
         <div class="d-none d-md-inline">
             <ul class="nav justify-content-md-center">
                 <li v-for="(tab, index) in items" :key="'md' + tab" class="nav-item">
-                    <button class="btn btn-link nav-link text-muted" :class="index === active ? 'active' : ''" @click="active = index">{{ tab }}</button>
+                    <button class="btn btn-link nav-link text-muted" :class="index === active ? 'active' : ''" @click="active = index" :disabled="disabled">{{ tab }}</button>
                 </li>
             </ul>
         </div>
@@ -24,7 +24,8 @@ export default {
         activeIndex: Number,
         activeTitle: String,
         itemTypes: Array,
-        activeType: String
+        activeType: String,
+        disabled: Boolean
     },
     data: function() {
         return {

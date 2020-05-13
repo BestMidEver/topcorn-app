@@ -8,9 +8,9 @@
 import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import '../../mixins/urlGenerator'
 import lodash from 'lodash'
 import Cards from '@/components/Cards.vue'
+import urlGenerate from '@/mixins/urlGenerate'
  
 
 Vue.use(lodash)
@@ -18,6 +18,7 @@ Vue.use(VueAxios, axios)
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 export default {
+    mixins: [urlGenerate],
     components: {
         'cards': Cards,
     },

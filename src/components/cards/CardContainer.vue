@@ -1,7 +1,7 @@
 <template>
     <div class="mt-2" :class="cardClass">
         <div class="card h-100 d-flex flex-column justify-content-between mx-1">
-            <router-link class="card-link" :to="`/movie/${id}`" data-toggle="tooltip" data-placement="top" :data-original-title="title">
+            <router-link class="card-link" :to="`/movie/profile/${id}`" data-toggle="tooltip" data-placement="top" :data-original-title="title">
                 <div class="position-relative text-center">
                     <div class="images">
                         <slot name="image"/>

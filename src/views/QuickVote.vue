@@ -3,7 +3,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header p-0">
-                    <tabs :items="tabs" :itemTypes="tabTypes" :activeType.sync="activeType" class="w-100"/>
+                    <tabs :items="tabs" :itemTypes="tabTypes" :activeType.sync="activeType" class="w-100" :disabled="$store.state.loading.pageLoading"/>
                 </div>
                 <router-view></router-view>
             </div>
@@ -30,6 +30,7 @@ export default {
         routeWatcher() { return `/quick-vote-${this.activeType}` },
     },
     watch: {
+        '$route.name'(val) { this.activeType = val.split('-')[1] },
         routeWatcher(val) { if(val !== this.$route.path) this.$router.replace(val) },
     },
 }

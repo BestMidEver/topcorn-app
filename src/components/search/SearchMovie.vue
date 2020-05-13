@@ -13,6 +13,7 @@ export default {
     components: {
         'cards': Cards,
     },
+    mixins: [searchMovieSeries],
     watch: {
         $route() { this.startdebouncingSearch() }
     },

@@ -58,7 +58,7 @@ $ npm run cordova-build-only-www-electron # Build only files to src-cordova
 
 ### SERVER PUSH
 ```
-$ git commit -a -m 'default' && git push live master
+git add . && git commit -a -m 'default' && git push live master
 ```
 
 …or create a new repository on the command line

@@ -4,6 +4,7 @@ import VueAxios from 'vue-axios'
 
 
 Vue.use(VueAxios, axios)
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 const state = {
     voteCommentData: {},
@@ -68,7 +69,10 @@ const actions = {
                 context.dispatch('loading/finishResponseWaiting', null, { root:true })
             }, data.hideModalAfter ? process.env.VUE_APP_DEMONSTRATION_TIME : 0)
         })
-    }
+    },
+    openShareModal(context, data) {
+
+    },
 }
 
 export default {

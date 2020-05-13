@@ -1,20 +1,20 @@
 <template>
     <div class="stars-container" :class="computedClass">
-        <button v-for="index in 5" :key="`s${index}`" class="btn btn-sm p-0" @click="vote(index)" :disabled="$store.state.loading.responseWaiting"><font-awesome-icon :icon="[rateCode > index - 1 ? 'fas' : 'far', 'star']"/></button>
+        <button v-for="index in 5" :key="`s${index}`" class="btn btn-sm p-0" @click="vote(index)" :disabled="$store.state.loading.responseWaiting"><font-awesome-icon :icon="[rate > index - 1 ? 'fas' : 'far', 'star']"/></button>
     </div>
 </template>
 
 <script>
 export default {
     props: {
-        rateCode: Number
+        rate: Number
     },
     computed: {
-        computedClass() { return this.rateCode ? `active${this.rateCode}` : '' },
+        computedClass() { return this.rate ? `active${this.rate}` : '' },
     },
     methods: {
         vote(code) {
-            this.$emit('update:rateCode', code)
+            this.$emit('update:rate', code)
         }
     }
 }

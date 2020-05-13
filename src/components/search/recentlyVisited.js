@@ -1,7 +1,4 @@
-import Vue from 'vue'
-
-
-Vue.mixin({
+export default {
     computed: {
         allResults() { return this.$store.state.recentlyVisited[this.types] },
         anyRecentlyVisited() { return this.allResults.length > 0 },
@@ -11,4 +8,4 @@ Vue.mixin({
             this.$store.dispatch('recentlyVisited/clear', types)
         }
     }
-})
+}

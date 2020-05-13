@@ -25,7 +25,7 @@
             <!-- Mobile Quick Vote button -->
             <ul class="navbar-nav text-center">
                 <li class="nav-item">
-                    <router-link to="/quick-vote-movies" class="nav-link d-md-none">
+                    <router-link :to="quickVoteTo" class="nav-link d-md-none" :class="{ active: isActive('/quick-vote') }">
                         <font-awesome-icon icon="star-half-alt"/>
                         <div class="extra-small">Quick Vote</div>
                     </router-link>
@@ -83,7 +83,7 @@
 
                     <!-- Collapsed & Larger Screen Quick Vote button -->
                     <li class="nav-item">
-                        <router-link to="/quick-vote-movies" class="nav-link">
+                        <router-link :to="quickVoteTo" class="nav-link" :class="{ active: isActive('/quick-vote') }">
                             <font-awesome-icon icon="star-half-alt" class="d-none d-md-inline"/> Quick Vote
                         </router-link>
                         <div class="dropdown-divider d-md-none"></div>
@@ -199,7 +199,8 @@ export default {
         'notification-badge': NotificationBadge,
     },
     computed: {
-        searchTo() { return this.isStringStartWith(this.$route.path, '/search') ? '/search-/movie/1' : this.$store.state.navigation.search }
+        searchTo() { return this.isStringStartWith(this.$route.path, '/search') ? '/search-/movie/1' : this.$store.state.navigation.search },
+        quickVoteTo() { return this.isStringStartWith(this.$route.path, '/quick-vote') ? '/quick-vote-movies' : this.$store.state.navigation.quickVote },
     },
     methods: {
         logout() {

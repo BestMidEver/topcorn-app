@@ -1,22 +1,31 @@
 import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import '../../mixins/urlGenerator'
 import lodash from 'lodash'
+import urlGenerate from '@/mixins/urlGenerate'
+import tmdbMerge from '@/mixins/tmdbMerge'
  
 
 Vue.use(lodash)
 Vue.use(VueAxios, axios)
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
-Vue.mixin({
+export default {
+    mixins: [urlGenerate, tmdbMerge],
     data() {
-        const tmdbResponse = { page: 1, results: [], total_pages: 0, total_results: 0 }
+        const tmdbResponse = { results: [], total_pages: 0, total_results: 0 }
         return {
-            tmdbResponse0: tmdbResponse,
             tmdbResponse: tmdbResponse,
-            axiosRandom: ''
+            mergedTmdbResponse0: tmdbResponse,
+            mergedTmdbResponse: tmdbResponse,
+            axiosRandom: '',
         }
+    },
+    computed: {
+        objInteractions() { return this.$store.state.interactions[this.movieSeriesType + 'Interactions'] },
+    },
+    watch: {
+        objInteractions() { this.merge() }
     },
     methods: {
         startdebouncingSearch() {
@@ -31,11 +40,17 @@ Vue.mixin({
             this.axiosRandom = axiosRandom
             axios.get(this.searchMovieSeriesPersonUrl(this.movieSeriesType, this.$route.params.pathMatch, this.$route.params.page))
             .then(response => {
-                if(axiosRandom === this.axiosRandom) this.tmdbResponse = response.data
+                if(axiosRandom === this.axiosRandom) {
+                    this.tmdbResponse = response.data
+                    this.merge()
+                }
             }).catch(error => {
-                this.tmdbResponse = this.tmdbResponse0
+                this.mergedTmdbResponse = this.mergedTmdbResponse0
                 console.log(error)
             }).then(() => { this.$store.dispatch('loading/finishPageLoading') })
+        },
+        merge() {
+            this.mergedTmdbResponse = this.mergeTmdbResponse(this.tmdbResponse)
         }
     }
-})
+}

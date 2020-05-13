@@ -3,18 +3,18 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header" :class="{ 'border-bottom-0': !imageLoading }">
-                    <h6 class="modal-title">{{ heading }}<em class="small text-muted" v-if="year"> ({{ year }})</em></h6>
+                    <router-link :to="pathTo" class="modal-title h6" style="color: var(--text-link-color)">{{ heading }}<em class="small text-muted" v-if="year"> ({{ year }})</em></router-link>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div v-show="!imageLoading" class="position-relative">
                     <img class="img-fluid" :src="src" @load="imageLoading = false" @error="imageLoading = true">
-                    <rubber-stamp :rateCode="rateCode"/>
+                    <rubber-stamp :rate="rateCode"/>
                 </div>
                 <div class="modal-body">
                     <div class="d-flex justify-content-center align-items-center">
-                        <five-star-button :rateCode.sync="rateCode"/>
+                        <five-star-button :rate.sync="rateCode"/>
                     </div>
                     <div v-show="voteType === 'vote + comment'" class="form-group mt-3">
                         <textarea id="input_review" v-model="inputVal" rows="3" class="form-control" placeholder="Write a public comment"></textarea>
@@ -34,7 +34,7 @@
 <script>
 import FiveStarButton from './FiveStarButton.vue'
 import RubberStamp from './RubberStamp.vue'
-import '@/mixins/codeToText'
+import urlGenerate from '@/mixins/urlGenerate'
 
 
 export default {
@@ -42,6 +42,7 @@ export default {
         'five-star-button': FiveStarButton,
         'rubber-stamp': RubberStamp
     },
+    mixins: [urlGenerate],
     data() {
         return {
             voteType0: 'vote',
@@ -84,9 +85,7 @@ export default {
             if(this.isTrue(this.data.backdrop_path)) return `${process.env.VUE_APP_TMDB_SMALL_COVER_URL}${this.data.backdrop_path}`
             this.imageLoading = true
         },
-        pathTo() {
-            return `/${this.$store.state.modals.voteCommentDataType}/${this.data.id}`
-        },
+        pathTo() { return this.movieSeriesUrl(this.$store.state.modals.voteCommentDataType, this.data.id) },
     },
     watch: {
         pathTo() {
