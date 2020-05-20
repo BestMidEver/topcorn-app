@@ -20,6 +20,8 @@ import Movie from '@/views/Movie.vue'
 import MovieSeriesProfile from '@/components/movie/MovieSeriesProfile.vue'
 import MovieSeriesDetail from '@/components/movie/MovieSeriesDetail.vue'
 import MovieSeriesCast from '@/components/movie/MovieSeriesCast.vue'
+import MovieSeriesComment from '@/components/movie/MovieSeriesComment.vue'
+import MovieSeriesMoreLikeThis from '@/components/movie/MovieSeriesMoreLikeThis.vue'
 import Series from '@/views/Series.vue'
 import Person from '@/views/Person.vue'
 import Profile from '@/views/Profile.vue'
@@ -54,12 +56,26 @@ const routes = [
     children: [
       { path: '/movie/profile/:id', name: 'movie-profile', component: MovieSeriesProfile, props: { type: 'movie' } },
       { path: '/movie/detail/:id', name: 'movie-detail', component: MovieSeriesDetail, props: { type: 'movie' } },
-      { path: '/movie/cast/:id', name: 'movie-cast', component: MovieSeriesCast, props: { type: 'movie' } },
-      { path: '/movie/comment/:id', name: 'movie-comment', component: MovieSeriesProfile, props: { type: 'movie' } },
-      { path: '/movie/recommendation/:id', name: 'movie-recommendation', component: MovieSeriesProfile, props: { type: 'movie' } },
+      { path: '/movie/cast/:id/:page', name: 'movie-cast-cast', component: MovieSeriesCast, props: { type: 'movie' } },
+      { path: '/movie/crew/:id/:page', name: 'movie-cast-crew', component: MovieSeriesCast, props: { type: 'movie' } },
+      { path: '/movie/comment/:id/:page', name: 'movie-comment', component: MovieSeriesComment, props: { type: 'movie' } },
+      { path: '/movie/recommendations/:id/:page', name: 'movie-moreLikeThis-recommendations', component: MovieSeriesMoreLikeThis, props: { type: 'movie' } },
+      { path: '/movie/similar/:id/:page', name: 'movie-moreLikeThis-similar', component: MovieSeriesMoreLikeThis, props: { type: 'movie' } },
+      { path: '/movie/collection/:id/:page', name: 'movie-moreLikeThis-collection', component: MovieSeriesMoreLikeThis, props: { type: 'movie' } },
     ]
   },
-  { path: '/series', name: 'Series', component: Series, meta: { requiresAuth: true }   },
+  { path: '/series/:tab/:id/:season/:episode', name: 'series', component: Series, meta: { requiresAuth: true }, props: { type: 'series' },
+    children: [
+      { path: '/series/profile/:id/:season/:episode', name: 'series-profile', component: MovieSeriesProfile, props: { type: 'series' } },
+      { path: '/series/detail/:id/:season/:episode', name: 'series-detail', component: MovieSeriesDetail, props: { type: 'series' } },
+      { path: '/series/cast/:id/:season/:episode/:page', name: 'series-cast-cast', component: MovieSeriesCast, props: { type: 'series' } },
+      { path: '/series/crew/:id/:season/:episode/:page', name: 'series-cast-crew', component: MovieSeriesCast, props: { type: 'series' } },
+      { path: '/series/comment/:id/:season/:episode/:page', name: 'series-comment', component: MovieSeriesComment, props: { type: 'series' } },
+      { path: '/series/recommendations/:id/:page', name: 'series-moreLikeThis-recommendations', component: MovieSeriesMoreLikeThis, props: { type: 'series' } },
+      { path: '/series/similar/:id/:page', name: 'series-moreLikeThis-similar', component: MovieSeriesMoreLikeThis, props: { type: 'series' } },
+    ]
+  },
+  //{ path: '/series', name: 'Series', component: Series, meta: { requiresAuth: true }   },
   { path: '/person', name: 'Person', component: Person, meta: { requiresAuth: true }   },
   { path: '/profile', name: 'Profile', component: Profile, meta: { requiresAuth: true }   },
   { path: '/settings', name: 'Settings', component: Settings, meta: { requiresAuth: true }   },
@@ -96,6 +112,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
+  //console.log(to, from)
   store.dispatch('navigation/afterEach', to)
 })
 

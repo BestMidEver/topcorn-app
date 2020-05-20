@@ -2,6 +2,7 @@
     <div :class="cardClass">
         <div v-if="type === 'line'" class="rectangle" :style="lineStyle"></div>
         <div v-else-if="type === 'full-line'" class="rectangle" :style="fullLineStyle"></div>
+        <div v-else-if="type === 'dot'" class="dot"></div>
         <div v-else class="card h-100 d-flex flex-column justify-content-between mx-1">
             <img class="card-img-top" :src="require('@/assets/2x3loading.png')"/>
             <div class="card-block p-1" :class="isTextCenter">
@@ -35,7 +36,7 @@
 export default {
     props: {
         type: {
-            validator: value => ['small', 'line', 'full-line', ''].includes(value)
+            validator: value => ['small', 'line', 'full-line', 'dot', ''].includes(value)
         },
         lineHeight: String
     },
@@ -45,7 +46,7 @@ export default {
     },
     computed: {
         cardClass() {
-            if(['line', 'full-line'].includes(this.type)) return ''
+            if(['line', 'full-line', 'dot'].includes(this.type)) return ''
             if(this.type === 'small') return 'mt-2 col-4 col-sm-3 col-md-2'
             return 'mt-2 col-6 col-md-4 col-lg-3 col-xl-2'
         },

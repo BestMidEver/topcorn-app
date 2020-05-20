@@ -4,25 +4,26 @@ const state = {
     dataSet3: [],
     dataObject: {},
     dataObject2: {},
+    dataObject3: {},
 }
 
 const getters = {
 }
 
 const mutations = {
-    setDataSet(state, data) { state.dataSet = data },
-    setDataSet2(state, data) { state.dataSet2 = data },
-    setDataSet3(state, data) { state.dataSet3 = data },
-    setDataObject(state, data) { state.dataObject = data },
-    setDataObject2(state, data) { state.dataObject2 = data },
+    setDataSet(state, data) { state[`dataSet${data.index}`] = data.data },
+    setDataObject(state, data) { state[`dataObject${data.index}`] = data.data },
+    setDataObjectProperty(state, data) { state[`dataObject${data.index}`][data.property] = data.data },
 }
 
 const actions = {
-    setDataSet(context, data) { context.commit('setDataSet', data) },
-    setDataSet2(context, data) { context.commit('setDataSet2', data) },
-    setDataSet3(context, data) { context.commit('setDataSet3', data) },
-    setDataObject(context, data) { context.commit('setDataObject', data) },
-    setDataObject2(context, data) { context.commit('setDataObject2', data) },
+    setDataSet(context, data) { context.commit('setDataSet', { data: data, index: '' }) },
+    setDataSet2(context, data) { context.commit('setDataSet', { data: data, index: 2 }) },
+    setDataSet3(context, data) { context.commit('setDataSet', { data: data, index: 3 }) },
+    setDataObject(context, data) { context.commit('setDataObject', { data: data, index: '' }) },
+    setDataObject2(context, data) { context.commit('setDataObject', { data: data, index: 2 }) },
+    setDataObject3(context, data) { context.commit('setDataObject', { data: data, index: 3 }) },
+    setDataObjectProperty(context, data) { context.commit('setDataObject', data) },
 }
 
 export default {

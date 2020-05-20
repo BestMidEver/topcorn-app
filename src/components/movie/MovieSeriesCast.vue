@@ -1,16 +1,16 @@
 <template>
     <div>
-        <poster-plot-details-section :data="movieData" :isFullScreen="true"/>
+        <cast-section :data="movieData" :type="type" :isFullScreen="true"/>
     </div>
 </template>
 
 <script>
-import PosterPlotDetailsSection from '@/components/movie/PosterPlotDetailsSection.vue'
+import CastSection from '@/components/movie/CastSection.vue'
 
 
 export default {
     components: {
-        'poster-plot-details-section': PosterPlotDetailsSection,
+        'cast-section': CastSection,
     },
     props: {
         type: { validator: value => ['movie', 'series'].includes(value) },
@@ -23,8 +23,6 @@ export default {
     computed: {
         movieData() { return this.$store.state.movieSeriesDataSets.dataObject2 },
     },
-    methods: {
-    }
 }
 </script>
 

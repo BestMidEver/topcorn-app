@@ -1,5 +1,5 @@
 <template>
-    <card-container :data="data">
+    <card-container :data="data" :cardType="type">
         <template slot="image">
             <card-image :data="data"/>
         </template>

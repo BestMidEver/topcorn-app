@@ -1,13 +1,13 @@
 <template>
     <div :id="tabId" class="tab">
-        <!-- Mobile tab -->
-        <div class="d-md-none d-flex justify-content-center mobile-container">
+        <!-- Mobile tab d-md-none-->
+        <div class=" d-flex justify-content-center mobile-container">
             <button v-for="(tab, index) in items" :key="tab" :id="tabId + index"
                 class="btn btn-link border-no-radius text-sm-center text-muted text-no-decoration" :class="index === active ? 'active' : ''" @click="active = index" :disabled="disabled">{{ tab }}</button>
         </div>
 
-        <!-- Larger Screen tab -->
-        <div class="d-none d-md-inline">
+        <!-- Larger Screen tab d-md-inline-->
+        <div class="d-none ">
             <ul class="nav justify-content-md-center">
                 <li v-for="(tab, index) in items" :key="'md' + tab" class="nav-item">
                     <button class="btn btn-link nav-link text-muted" :class="index === active ? 'active' : ''" @click="active = index" :disabled="disabled">{{ tab }}</button>
@@ -24,7 +24,7 @@ export default {
         activeIndex: Number,
         activeTitle: String,
         itemTypes: Array,
-        activeType: String,
+        activeType: [String, Number],
         disabled: Boolean
     },
     data: function() {
@@ -47,14 +47,19 @@ export default {
             }
         },
     },
+    watch: {
+        items() { this.centerTab() }
+    },
     mounted: function () {
-        this.$nextTick(function () {
-            this.centerTab()
-        })
+        this.centerTab()
     },
     methods: {
-        centerTab() { $('#' + this.tabId).animate({scrollLeft: $('#' + this.tabId + this.active)[0].offsetLeft + ($('#' + this.tabId + this.active).width() / 2) - ($('#' + this.tabId).width() / 2)}, 500) }
-    }
+        centerTab() {
+            setTimeout(() => {
+                $('#' + this.tabId).animate({scrollLeft: $('#' + this.tabId + this.active)[0].offsetLeft + ($('#' + this.tabId + this.active).width() / 2) - ($('#' + this.tabId).width() / 2)}, 500)
+            }, 200)
+        }
+    },
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <poster-plot-details-section :data="movieData" :isFullScreen="true"/>
+        <poster-plot-details-section :data="movieData" :type="type" :isFullScreen="true"/>
     </div>
 </template>
 

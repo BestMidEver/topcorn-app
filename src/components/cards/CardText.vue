@@ -1,6 +1,6 @@
 <template>
     <div class="card-block">
-        <h6 class="card-title px-1 py-1 my-0 text-dark" :class="'text-' + align || 'left'">
+        <h6 class="card-title px-1 py-1 my-0 text-dark" :class="'text-' + align || 'left'" style="font-size: 0.9rem;">
             {{ heading }}
             <small v-if="year" class="text-muted d-block pt-1">
                 <em>({{ year }})</em>

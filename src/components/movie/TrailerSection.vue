@@ -3,8 +3,8 @@
         <div id="accordion">
             <div>
                 <div id="collapseCover" class="collapse show" data-parent="#accordion">
-                    <img v-show="!$store.state.loading.pageLoading && !imageLoading" class="img-fluid trailer-cover" :src="coverSrc" @load="imageLoading = false" @error="imageLoading = true">
-                    <img v-if="$store.state.loading.pageLoading || imageLoading" class="img-fluid trailer-cover" :src="require('@/assets/9x16loading.png')"/>
+                    <img v-show="showCover" class="img-fluid trailer-cover" :src="coverSrc" @load="imageLoading = false" @error="imageLoading = true">
+                    <img v-if="!showCover" class="img-fluid trailer-cover" :src="require('@/assets/9x16loading.png')"/>
                     <div v-if="!$store.state.loading.pageLoading && !$store.state.loading.pageLoading2" class="custom-over-layer h-100 d-flex flex-column justify-content-between">
                         <div class="d-flex flex-row no-gutters" style="min-height: 66px">
                             <div class="col pt-2 pl-2">
@@ -22,7 +22,8 @@
                         <div v-if="isTrue(trailers)" class="d-flex flex-row justify-content-center">
                             <button class="btn text-white btn-lg collapsed" data-toggle="collapse" data-target="#collapseFragman" aria-expanded="false" aria-controls="collapseFragman"><font-awesome-icon :icon="['far', 'play-circle']" class="mr-2"/><small>TRAILERS &amp; VIDEOS</small></button>
                         </div>
-                        <div class="d-flex flex-row justify-content-end p-2 text-right" style="min-height: 66px">
+                        <div class="d-flex flex-row justify-content-between p-2 text-right" style="min-height: 66px">
+                            <div class="d-flex flex-column justify-content-end ml-2 mb-2"><img v-if="type === 'series'" v-show="showLogo" style="max-height: 17px" :src="logoSrc" @load="logoLoading = false" @error="logoLoading = true"></div>
                             <div v-if="voteAverage">
                                 <div><span class="text-warning display-4 d-none d-md-inline">{{ voteAverage }}</span><span class="text-warning h5 d-md-none">{{ voteAverage }}</span><span class="text-white"> <small>/10</small></span></div>
                                 <div class="text-white"><small>{{ voteCount }} {{ 'vote' | plural(voteCount, 'votes') }}</small></div>
@@ -47,7 +48,7 @@
                             </div>
                         </div>
                     </div> -->
-                    <div class="embed-responsive embed-responsive-1by1 trailer">
+                    <div v-if="!$store.state.loading.pageLoading && !hiddenTrailers" class="embed-responsive embed-responsive-1by1 trailer">
                         <iframe class="embed-responsive-item" :src="trailerSrc" allowfullscreen></iframe>
                     </div>
                     <div class="d-flex flex-row no-gutters" style="background: #000;">
@@ -68,7 +69,7 @@
                         <div class="col-2">
                             <div class="h-100 d-flex flex-column justify-content-center text-center">
                                 <div>
-                                    <button class="btn btn-lg text-muted hover-white" data-toggle="collapse" data-target="#collapseCover" aria-expanded="true" aria-controls="collapseCover"><font-awesome-icon icon="angle-up" style="font-size: 30px;"/></button>
+                                    <button class="btn btn-lg text-muted hover-white" data-toggle="collapse" data-target="#collapseCover" aria-expanded="true" aria-controls="collapseCover" @click="resetTrailerSection()"><font-awesome-icon icon="angle-up" style="font-size: 30px;"/></button>
                                 </div>
                             </div>
                         </div>
@@ -87,27 +88,71 @@
 
 <script>
 export default {
+    props: {
+        type: { validator: value => ['movie', 'series'].includes(value) },
+    },
     data() {
         return {
             imageLoading: true,
-            currentTrailerIndex: 0
+            logoLoading: true,
+            currentTrailerIndex: 0,
+            hiddenTrailers: false
         }
     },
     computed: {
         data() { return this.$store.state.movieSeriesDataSets.dataObject2 },
-        trailers() { return this.data.videos && this.data.videos.results },
+        seasonNumber() { return this.$route.params.season },
+        episodeNumber() { return this.$route.params.episode },
+        seasonData() { return this.$store.state.movieSeriesDataSets.dataObject3 },
+        episodeData() { return this.seasonNumber == -1 ? {} : this.seasonData.episodes.find(episode => episode.episode_number == this.episodeNumber) },
+        detailedType() {
+            if(this.type === 'movie') return 'movie'
+            if(this.episodeNumber != -1) return 'episode'
+            if(this.seasonNumber != -1) return 'season'
+            return 'series'
+        },
+        trailers() {
+            let dataToCheck = {}
+            if(['movie', 'series'].includes(this.detailedType)) dataToCheck = this.data
+            else if(this.detailedType === 'season') dataToCheck = this.seasonData
+            else dataToCheck = this.episodeData
+            console.log(dataToCheck)
+            return dataToCheck.videos && dataToCheck.videos.results
+        },
         interactionData() { return this.$store.state.movieSeriesDataSets.dataObject },
         coverSrc() {
-            if(this.isTrue(this.data.cover_path)) return `${process.env.VUE_APP_TMDB_COVER_URL}${this.data.cover_path}`
-            if(this.isTrue(this.data.backdrop_path)) return `${process.env.VUE_APP_TMDB_COVER_URL}${this.data.backdrop_path}`
-            if(this.isTrue(this.data.poster_path)) return `${process.env.VUE_APP_TMDB_COVER_URL}${this.data.poster_path}`
+            let dataToCheck = {}
+            if(['movie', 'series', 'season'].includes(this.detailedType)) dataToCheck = this.data
+            else dataToCheck = this.episodeData
+            if(this.isTrue(dataToCheck.cover_path)) return `${process.env.VUE_APP_TMDB_COVER_URL}${dataToCheck.cover_path}`
+            if(this.isTrue(dataToCheck.still_path)) return `${process.env.VUE_APP_TMDB_COVER_URL}${dataToCheck.still_path}`
+            if(this.isTrue(dataToCheck.backdrop_path)) return `${process.env.VUE_APP_TMDB_COVER_URL}${dataToCheck.backdrop_path}`
+            if(this.isTrue(dataToCheck.poster_path)) return `${process.env.VUE_APP_TMDB_COVER_URL}${dataToCheck.poster_path}`
             this.imageLoading = true
         },
-        tagline() { return this.isTrue(this.data.tagline) ? this.data.tagline : false },
+        logoSrc() {
+            if(this.isTrue(this.data.networks && this.data.networks[0])) return `${process.env.VUE_APP_TMDB_ORIGINAL_URL}${this.data.networks[0].logo_path.split('.')[0] + '.svg'}`
+            this.logoLoading = true
+        },
+        tagline() {
+            if(this.type === 'movie') return this.isTrue(this.data.tagline) ? this.data.tagline : false
+            if(this.type === 'series') return this.isAllTrue([this.data.number_of_episodes, this.data.number_of_seasons]) ? `${this.data.number_of_seasons} Seasons - ${this.data.number_of_episodes} Episodes` : false
+        },
         percentage() { return this.interactionData.percent },
-        trailerSrc() { return `${process.env.VUE_APP_YOUTUBE_URL}/${this.trailers[this.currentTrailerIndex].key}?modestbranding=1&showinfo=0&iv_load_policy=3&autoplay=1` },
+        trailerSrc() { return `${process.env.VUE_APP_YOUTUBE_URL}/${this.trailers[this.currentTrailerIndex].key}?modestbranding=1&showinfo=0&iv_load_policy=3` },
         voteAverage() { return this.data.vote_average },
-        voteCount() { return this.data.vote_count }
+        voteCount() { return this.data.vote_count },
+        showCover() { return !this.$store.state.loading.pageLoading && !this.imageLoading && this.data.id == this.$route.params.id },
+        showLogo() { return !this.logoLoading && this.data.id == this.$route.params.id }
+    },
+    watch: {
+        coverSrc() { this.imageLoading = true },
+        logoSrc() { this.logoLoading = true },
+    },
+    methods: {
+        resetTrailerSection() {
+            setTimeout(() => { this.hiddenTrailers = true; setTimeout(() => { this.hiddenTrailers = false }, 100) }, 200)
+        }
     }
 }
 </script>

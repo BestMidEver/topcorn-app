@@ -13,6 +13,7 @@ const mutations = {
 
 const actions = {
     afterEach(context, to) {
+        context.dispatch('modals/resetState', null, { root:true })
         if(to.path.indexOf('/search') === 0) context.commit('setSearch', to.path)
         if(to.path.indexOf('/quick-vote') === 0) context.commit('setQuickVote', to.path)
     },

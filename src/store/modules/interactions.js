@@ -18,15 +18,17 @@ const mutations = {
     setMovieInteractions(state, interactions) {
         state.movieInteractions = interactions
     },
-    setMovieInteraction(state, movie) {
-        let interaction = state.movieInteractions.find(m => m.movie_id === movie.id)
-        const found = interaction ? true : false
-        if(!found) interaction = {}
-        Vue.set(interaction, 'movie_id', movie.id)
-        Vue.set(interaction, 'ban_id', movie ? movie.ban_id : null)
-        Vue.set(interaction, 'later_id', movie ? movie.later_id : null)
-        Vue.set(interaction, 'rate_code', movie ? movie.rate_code : null)
-        if(!found) state.movieInteractions.push(interaction)
+    setMovieInteraction(state, data) {
+        const movie = data.data ? data.data : data
+        console.log('interaction', movie)
+        state.movieInteractions = state.movieInteractions.filter(m => m.movie_id !== movie.id)
+        const interaction = {
+            movie_id: movie.id,
+            ban_id: movie ? movie.ban_id : null,
+            later_id: movie ? movie.later_id : null,
+            rate_code: movie ? movie.rate_code : null
+        }
+        state.movieInteractions.push(interaction)
     },
     setSeriesInteractions(state, interactions) {
         state.seriesInteractions = interactions

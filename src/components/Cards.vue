@@ -9,10 +9,10 @@
                     <movie-series-card v-for="card in results" :key="`card-${card.id}`" :data="card" :boundedTo="boundedTo" :type="type"/>
                 </template>
                 <template v-else-if="type === 'person'">
-                    <person-card v-for="card in results" :key="`card-${card.id}`" :data="card"/>
+                    <person-card v-for="(card, index) in results" :key="`card-${index}-${card.id}`" :data="card"/>
                 </template>
                 <template v-else-if="type === 'user'">
-                    <user-card v-for="card in results" :key="`card-${card.id}`" :data="card"/>
+                    <user-card v-for="(card, index) in results" :key="`card-${index}-${card.id}`" :data="card"/>
                 </template>
                 <template v-else-if="type === 'list'">
                     <list-card v-for="card in results" :key="`card-${card.id}`" :data="card"/>
@@ -21,7 +21,7 @@
                     <profile-image-card v-for="a in 12" :link="{ name: 'Avengers: Endgame', year: '2019' }"/>
                 </template>
             </div>
-            <pagination class="mt-3" :tmdbData="tmdbData" :tcData="tcData" :tcAllResults="tcAllResults" :itemPerPage="itemPerPage"/>
+            <pagination :expandStatus="expandStatus" :tmdbData="tmdbData" :tcData="tcData" :tcAllResults="tcAllResults" :itemPerPage="itemPerPage"/>
         </div>
     </div>
 </template>
@@ -74,7 +74,7 @@ export default {
         results() {
             if(this.tmdbData) return this.tmdbData.results
             if(this.tcData) return this.tcData.data
-            if(this.tcAllResults) { return this.paginate(this.tcAllResults, this.$route.params.page, this.itemPerPage) }
+            if(this.tcAllResults) { return this.paginate(this.tcAllResults, this.$route.params.page || 1, this.itemPerPage) }
         },
         skeletonLoaderType() {
             if(['person', 'user'].includes(this.type)) return 'small'
@@ -89,7 +89,7 @@ export default {
 <style scoped>
 .marginClass{ margin: -0.5rem -0.25rem 0px -0.25rem; }
 .card-columns{ -webkit-column-gap: 0.5rem; -moz-column-gap: 0.5rem; column-gap: 0.5rem; }
-.compressed.movie > div:nth-child(n+3), .compressed.list > div:nth-child(n+3), .compressed.profile-image-card > div:nth-child(n+3),
+.compressed.movie > div:nth-child(n+3), .compressed.series > div:nth-child(n+3), .compressed.list > div:nth-child(n+3), .compressed.profile-image-card > div:nth-child(n+3),
 .compressed.person > div:nth-child(n+4){ display: none }
 @media (min-width: 576px) {
     .compressed.person > div:nth-child(n), .compressed.profile-image-card > div:nth-child(n){ display: block }
@@ -97,16 +97,16 @@ export default {
     .compressed.person > div:nth-child(n+5){ display: none }
 }
 @media (min-width: 768px) {
-    .compressed.person > div:nth-child(n), .compressed.movie > div:nth-child(n), .compressed.list > div:nth-child(n), .compressed.list > div:nth-child(n), .compressed.profile-image-card > div:nth-child(n){ display: block }
-    .compressed.movie > div:nth-child(n+4), .compressed.list > div:nth-child(n+4), .compressed.profile-image-card > div:nth-child(n+4),
+    .compressed.person > div:nth-child(n), .compressed.movie > div:nth-child(n), .compressed.series > div:nth-child(n), .compressed.list > div:nth-child(n), .compressed.list > div:nth-child(n), .compressed.profile-image-card > div:nth-child(n){ display: block }
+    .compressed.movie > div:nth-child(n+4), .compressed.series > div:nth-child(n+4), .compressed.list > div:nth-child(n+4), .compressed.profile-image-card > div:nth-child(n+4),
     .compressed.person > div:nth-child(n+7){ display: none }
 }
 @media (min-width: 992px) {
-    .compressed.movie > div:nth-child(n), .compressed.list > div:nth-child(n){ display: block }
-    .compressed.movie > div:nth-child(n+5), .compressed.list > div:nth-child(n+5){ display: none }
+    .compressed.movie > div:nth-child(n), .compressed.series > div:nth-child(n), .compressed.list > div:nth-child(n){ display: block }
+    .compressed.movie > div:nth-child(n+5), .compressed.series > div:nth-child(n+5), .compressed.list > div:nth-child(n+5){ display: none }
 }
 @media (min-width: 1200px) {
-    .compressed.movie > div:nth-child(n), .compressed.list > div:nth-child(n){ display: block }
-    .compressed.movie > div:nth-child(n+7), .compressed.list > div:nth-child(n+7){ display: none }
+    .compressed.movie > div:nth-child(n), .compressed.series > div:nth-child(n), .compressed.list > div:nth-child(n){ display: block }
+    .compressed.movie > div:nth-child(n+7), .compressed.series > div:nth-child(n+7), .compressed.list > div:nth-child(n+7){ display: none }
 }
 </style>

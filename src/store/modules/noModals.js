@@ -88,6 +88,25 @@ const actions = {
             }).then(() => { context.dispatch('loading/finishResponseWaiting', null, { root:true }) })
         })
     },
+    likeReview(context, data) {
+        context.dispatch('loading/startResponseWaiting', null, { root:true })
+        const isLike = data.data.is_liked == 1 ? 0 : 1
+        return new Promise((resolve, reject) => {
+            axios.post(`${process.env.VUE_APP_API_URL}/likeReview`, {
+                review_id: data.data.id,
+                is_liked: isLike
+            })
+            .then(response => {
+                if(data.boundedTo) data.boundedTo.forEach(boundedTo => {
+                    data.data.is_liked = isLike
+                    context.commit(boundedTo, data.data, { root: true })
+                })
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            }).then(() => { context.dispatch('loading/finishResponseWaiting', null, { root:true }) })
+        })
+    }
 }
 
 export default {

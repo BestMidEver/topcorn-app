@@ -1,6 +1,6 @@
 <template>
-    <div class="d-flex justify-content-center mx-1">
-        <nav v-show="totalPages > 1" id="pagination-nav">
+    <div class="d-flex justify-content-center mx-1" :class="expandStatus !== 'compressed' ? 'mt-3' : ''">
+        <nav v-show="expandStatus !== 'compressed' && totalPages > 1" id="pagination-nav">
             <ul class="pagination">
                 <li v-if="totalPages > 10" class="page-item first-page" :class="firstPageClass">
                     <button class="page-link rounded-0 border-white" @click="paginate(1)"><font-awesome-icon :icon="['fas', 'fast-backward']"/></button>
@@ -13,7 +13,7 @@
                 </li>
             </ul>
         </nav>
-        <no-result v-show="totalPages === 0"/>
+        <no-result v-if="showNoResult" :expandStatus="expandStatus"/>
     </div>
 </template>
 
@@ -32,6 +32,9 @@ export default {
         tcData: Object,
         tcAllResults: Array,
         itemPerPage: Number,
+        expandStatus: {
+            validator: value => ['expanded', 'compressed'].includes(value)
+        },
     },
     computed: {
         totalPages() {
@@ -42,10 +45,15 @@ export default {
         currentPage() { return parseInt(this.$route.params.page) },
         firstPageClass() { return (this.currentPage === 1 ? 'disabled ' : '') },
         lastPageClass() { return (this.currentPage === this.totalPages ? 'disabled ' : '') },
-        loading() { return this.$store.state.loading.pageLoading }
+        loading() { return this.$store.state.loading.pageLoading },
+        showNoResult() {
+            if(this.tmdbData) return !(this.tmdbData.results.length > 0)
+            if(this.tcData) return !(this.tcData.data.length > 0)
+            if(this.tcAllResults) return !(this.tcAllResults.length > 0)
+        },
     },
     watch: {
-        loading(val) { if(!val) this.centerTab() }
+        loading(val) { if(!val && this.expandStatus !== 'compressed') this.centerTab() }
     },
     methods: {
         paginate(to) {

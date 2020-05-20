@@ -52,7 +52,7 @@ export default {
 
 <style scoped>
 button{ color: var(--secondary); }
-button:not(.filter):not(.sort):hover{ color: var(--secondary);  /*background: var(--hover-bg-color)!important; */ }
+button:not(.filter):not(.sort):hover{ /* color: var(--secondary);   *//*background: var(--hover-bg-color)!important; */ }
 
 
 .watch-later.active{ color: var(--warning)!important; }

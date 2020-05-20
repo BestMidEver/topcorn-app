@@ -6,34 +6,43 @@ import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
-const state = {
-    voteCommentData: {},
-    voteCommentDataBoundedTo: [],
-    voteCommentDataType: ''
+const getDefaultState = () => {
+    return {
+        voteCommentData: {},
+        voteCommentDataBoundedTo: [],
+        voteCommentDataType: '',
+        voteCommentType: '' // vote, vote + comment
+    }
 }
+const state = getDefaultState()
 
 const getters = {
 }
 
 const mutations = {
-    reset(state) {
+    resetState(state) {
         state.voteCommentData = {}
         state.voteCommentDataBoundedTo = []
         state.voteCommentDataType = ''
+        state.voteCommentType = ''
     },
     setVoteCommentData(state, data) { state.voteCommentData = data },
     setVoteCommentDataBoundedTo(state, boundedTo) { state.voteCommentDataBoundedTo = boundedTo },
     setVoteCommentDataType(state, type) { state.voteCommentDataType = type },
+    setVoteCommentType(state, type) { state.voteCommentType = type },
 }
 
 const actions = {
+    resetState ({ commit }) { commit('resetState') },
     openVoteComment(context, data) {
         context.commit('setVoteCommentData', data.data)
         context.commit('setVoteCommentDataBoundedTo', data.boundedTo)
         context.commit('setVoteCommentDataType', data.type)
+        context.commit('setVoteCommentType', data.commentExpanded ? 'vote + comment' : 'vote')
         $('#vote-comment-modal').modal('show')
     },
     getUserReview(context) {
+        if(!context.state.voteCommentDataType || !context.state.voteCommentData.id) return
         axios.get(`${process.env.VUE_APP_API_URL}/getUserReview/${context.state.voteCommentDataType}/${context.state.voteCommentData.id}`)
         .then(response => {
             Vue.set(context.state.voteCommentData, 'review', response.data.review ? response.data.review : '')
@@ -48,6 +57,9 @@ const actions = {
         })
         .then(response => {
             Vue.set(context.state.voteCommentData, 'review', review)
+            context.state.voteCommentDataBoundedTo.forEach(boundedTo => {
+                context.commit(boundedTo, response.data, { root: true })
+            })
         }).catch(error => {
         }).then(() => { context.dispatch('loading/finishResponseWaiting', null, { root:true }) })
     },
@@ -60,7 +72,7 @@ const actions = {
         .then(response => {
             context.state.voteCommentData.rate_code = data.vote
             context.state.voteCommentDataBoundedTo.forEach(boundedTo => {
-                context.commit(boundedTo, context.state.voteCommentData, { root: true })
+                context.commit(boundedTo, { data: context.state.voteCommentData, action: 'vote' }, { root: true })
             })
         }).catch(error => {
         }).then(() => {

@@ -1,7 +1,7 @@
 <template>
     <div class="mt-2" :class="cardClass">
         <div class="card h-100 d-flex flex-column justify-content-between mx-1">
-            <router-link class="card-link" :to="`/movie/profile/${id}`" data-toggle="tooltip" data-placement="top" :data-original-title="title">
+            <router-link class="card-link" :to="to" data-toggle="tooltip" data-placement="top" :data-original-title="title">
                 <div class="position-relative text-center">
                     <div class="images">
                         <slot name="image"/>
@@ -15,21 +15,27 @@
                         <slot name="badge-bottom"/>
                     </div>
                 </div>
-                <slot name="text"/>
             </router-link>
+            <slot name="text"/>
+            <slot name="bottom-body"/>
             <slot name="footer"/>
         </div>
     </div>
 </template>
 
 <script>
+import urlGenerate from '@/mixins/urlGenerate'
+
+
 export default {
     props: {
         type: {
             validator: value => ['small'/* , 'big' */].includes(value)
         },
         data: Object,
+        cardType: String
     },
+    mixins: [urlGenerate],
     computed: {
         cardClass() {
             if(this.type === 'small') return 'col-4 col-sm-3 col-md-2'
@@ -38,6 +44,11 @@ export default {
         },
         title() { return this.data.title },
         id() { return this.data.id },
+        to() {
+            if(this.cardType === 'person') return this.personUrl(this.id)
+            if(this.cardType === 'movie') return this.movieSeriesUrl('movie', this.id)
+            if(this.cardType === 'series') return this.movieSeriesUrl('series', this.id)
+        }
     }
 }
 </script>

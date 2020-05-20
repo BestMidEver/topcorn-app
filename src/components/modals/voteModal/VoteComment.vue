@@ -45,7 +45,6 @@ export default {
     mixins: [urlGenerate],
     data() {
         return {
-            voteType0: 'vote',
             voteType: 'vote', // vote, vote + comment
             inputVal: '',
             imageLoading: true
@@ -88,9 +87,11 @@ export default {
         pathTo() { return this.movieSeriesUrl(this.$store.state.modals.voteCommentDataType, this.data.id) },
     },
     watch: {
+        '$store.state.modals.voteCommentType'(val) { this.voteType =  val },
         pathTo() {
-            this.voteType = this.voteType0
+            this.voteType = this.$store.state.modals.voteCommentType
             this.$store.dispatch('modals/getUserReview')
+
         },
         review(val) { this.inputVal = val }
     },
