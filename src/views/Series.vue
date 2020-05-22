@@ -15,6 +15,7 @@ import urlGenerate from '@/mixins/urlGenerate'
 import lodash from 'lodash'
 import HeaderBar from '@/components/HeaderBar.vue'
 import SeriesNavbar from '@/components/movie/SeriesNavbar'
+import SeriesComputeds from '@/components/movie/SeriesComputeds.js'
  
 
 Vue.use(VueAxios, axios, lodash)
@@ -39,7 +40,7 @@ export default {
         'header-bar': HeaderBar,
         'series-navbar': SeriesNavbar
     },
-    mixins: [tmdbMerge, urlGenerate],
+    mixins: [tmdbMerge, urlGenerate, SeriesComputeds],
     props: {
         type: { validator: value => ['movie', 'series'].includes(value) },
     },
@@ -50,14 +51,15 @@ export default {
         obj() { return `${this.type}-${this.$route.params.id}` },
         /* tabObj() { return `${this.$route.params.season}-${this.$route.params.episode}` }, */
         headerData() {
-            if(this.$route.name === 'series-profile') return { title: this.tmdbResponse.name, goBack: true }
+            if(this.$route.name === 'series-profile') return { title: this.episodeCode, goBack: true }
             let data = { to: this.movieSeriesUrl(this.type, this.$route.params.id) }
-            if(this.$route.name === 'series-detail') data.title = `${this.tmdbResponse.name} > More Info`
-            else if(this.$route.name.includes('series-cast')) data.title = `${this.tmdbResponse.name} > Actors & Crew`
-            else if(this.$route.name === 'series-comment') data.title = `${this.tmdbResponse.name} > Comments`
-            else if(this.$route.name.includes('series-moreLikeThis')) data.title = `${this.tmdbResponse.name} > More Like This`
+            if(this.$route.name === 'series-detail') data.title = `${this.episodeCode} > More Info`
+            else if(this.$route.name.includes('series-cast')) data.title = `${this.episodeCode} > Actors & Crew`
+            else if(this.$route.name === 'series-comment') data.title = `${this.episodeCode} > Comments`
+            else if(this.$route.name.includes('series-moreLikeThis')) data.title = `${this.episodeCode} > More Like This`
             return data
         },
+        episodeCode() { return this.tabCode ? `${this.tmdbResponse.name} > ${this.tabCode}` : this.tmdbResponse.name }
     },
     watch: {
         objInteractions() { console.log('objInteractions watched'); this.mergeAndStore() },
@@ -67,8 +69,8 @@ export default {
             this.getObjData()
             $('.body').scrollTop(0)
         },
-        '$route.params.season'() { this.getTmdbSeasonData() },
-        '$route.params.episode'() { this.getTmdbEpisodeData() }
+        '$route.params.season'() { this.getTmdbSeasonData(); this.getTcData() },
+        '$route.params.episode'() { this.getTmdbEpisodeData(); this.getTcData() }
     },
     beforeCreate() {
         this.$store.dispatch('interactions/pluckMoviesSeries')
@@ -105,7 +107,7 @@ export default {
             this.$store.dispatch('loading/startResponseWaiting')
             const axiosRandom = this.randomString(20)
             this.axiosRandom2 = axiosRandom
-            axios.get(this.movieSeriesDataUrl(this.type, this.$route.params.id, this.$route.name === 'movie-comment' ? this.$route.params.page : 1))
+            axios.get(this.movieSeriesDataUrl(this.type, this.$route.params.id, this.seasonNumber, this.episodeNumber))
             .then(response => {
                 if(axiosRandom === this.axiosRandom2) {
                     this.$store.dispatch('movieSeriesDataSets/setDataObject', response.data.interactionData.original)
@@ -138,7 +140,7 @@ export default {
             if(this.$route.params.episode != -1) this.getTmdbEpisodeData()
         }, */
         getTmdbSeasonData() {
-            if(this.$route.params.season == -1) return
+            if(this.$route.params.season == -1) { this.$store.dispatch('loading/finishPageLoading3'); return }
             console.log('getTmdbSeasonData')
             this.$store.dispatch('loading/startPageLoading3')
             const axiosRandom = this.randomString(20)
@@ -162,12 +164,12 @@ export default {
             axios.get(this.tmdbEpisodeVideoUrl(this.$route.params.id, this.$route.params.season, this.$route.params.episode))
             .then(response => {
                 if(axiosRandom === this.axiosRandom4) {
-                    this.tmdbSeasonResponse.episodes.find(episode => episode.episode_number == this.$route.params.episode).videos = response.data
+                    Vue.set(this.tmdbSeasonResponse.episodes.find(episode => episode.episode_number == this.$route.params.episode), 'videos', response.data)
                     this.$store.dispatch('movieSeriesDataSets/setDataObject3', this.tmdbSeasonResponse)
                 }
             }).catch(error => {
             }).then(() => { this.$store.dispatch('loading/finishPageLoading4') })
-        }
+        },
     }
 }
 </script>

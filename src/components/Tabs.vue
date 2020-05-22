@@ -48,7 +48,8 @@ export default {
         },
     },
     watch: {
-        items() { this.centerTab() }
+        items() { this.centerTab() },
+        active() { this.centerTab() }
     },
     mounted: function () {
         this.centerTab()
@@ -58,7 +59,7 @@ export default {
             setTimeout(() => {
                 $('#' + this.tabId).animate({scrollLeft: $('#' + this.tabId + this.active)[0].offsetLeft + ($('#' + this.tabId + this.active).width() / 2) - ($('#' + this.tabId).width() / 2)}, 500)
             }, 200)
-        }
+        },
     },
 }
 </script>

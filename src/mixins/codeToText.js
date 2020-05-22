@@ -13,6 +13,6 @@ export default {
         },
         codeToLanguage: code => { const match = languageCodes.find(language => language.i === code); return (match && match.o) || code },
         codeToCountry: code => { const match = countryCodes.find(country => country.i === code); return (match && match.o) || code },
-        toEpisodeCode: (season, episode) => `${season ? (season > 9 ? 'S' + season : 'S0' + season) : ''}${episode ? (episode > 9 ? 'E' + episode : 'E0' + episode) : ''}`
+        toEpisodeCode: (season, episode) => `${season != -1 ? (season > 9 ? 'S' + season : 'S0' + season) : ''}${episode != -1 ? (episode > 9 ? 'E' + episode : 'E0' + episode) : ''}`
     }
 }

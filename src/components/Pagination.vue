@@ -19,13 +19,11 @@
 
 <script>
 import NoResult from '@/components/NoResult.vue'
-import Scroll from '@/components/Scroll.vue'
 
 
 export default {
     components: {
         'no-result': NoResult,
-        'scroll': Scroll,
     },
     props: {
         tmdbData: Object,

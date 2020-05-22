@@ -107,10 +107,10 @@ export default {
                 if(this.data.last_air_date) return 'margin'
             }
         },
-        genres() { return this.data.genres.map(genre => genre.name) || [] },
+        genres() { return (this.data.genres && this.data.genres.map(genre => genre.name)) || [] },
         plot() { return this.data.overview || '' },
-        directors() { return this.data.credits.crew.filter(person => person.job.includes('Director')) || [] },
-        writers() { return this.data.credits.crew.filter(person => person.job.some(job => this.writerJobs.includes(job))) || [] },
+        directors() { return this.data.credits && this.data.credits.crew.filter(person => person.job.includes('Director')) || [] },
+        writers() { return this.data.credits && this.data.credits.crew.filter(person => person.job.some(job => this.writerJobs.includes(job))) || [] },
         creators() { return this.data.created_by || [] },
         networks() { return (this.data.networks && this.data.networks.map(network => network.name)) || [] },
         original_title() { return this.data.original_title || '' },

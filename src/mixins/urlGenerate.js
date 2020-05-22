@@ -7,7 +7,7 @@ export default {
         tmdbCollectionUrl: (id) => `${process.env.VUE_APP_TMDB_API_URL}/collection/${id}?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en`,
         tmdbSeasonUrl: (id, season) => `${process.env.VUE_APP_TMDB_API_URL}/tv/${id}/season/${season}?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en&append_to_response=credits,videos`,
         tmdbEpisodeVideoUrl: (id, season, episode) => `${process.env.VUE_APP_TMDB_API_URL}/tv/${id}/season/${season}/episode/${episode}/videos?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en`,
-        movieSeriesDataUrl: (type, id) => `${process.env.VUE_APP_API_URL}/getMovieSeriesAllData/${type}/${id}`,
+        movieSeriesDataUrl: (type, id, season, episode) => `${process.env.VUE_APP_API_URL}/getMovieSeriesAllData/${type}/${id}${season?'/'+season:''}${episode?'/'+episode:''}`,
         reviewsDataUrl: (type, id, page = 1) => `${process.env.VUE_APP_API_URL}/getReviewsData/${type}/${id}?page=${page}`,
         moreLikeThisDataUrl: (movieSeriesType, type, id, page = 1) => `${process.env.VUE_APP_TMDB_API_URL}/${movieSeriesType=='series'?'tv':movieSeriesType}/${id}/${type}?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en&page=${page}`,
         

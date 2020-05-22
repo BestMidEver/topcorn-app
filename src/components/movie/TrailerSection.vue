@@ -3,8 +3,8 @@
         <div id="accordion">
             <div>
                 <div id="collapseCover" class="collapse show" data-parent="#accordion">
-                    <img v-show="showCover" class="img-fluid trailer-cover" :src="coverSrc" @load="imageLoading = false" @error="imageLoading = true">
-                    <img v-if="!showCover" class="img-fluid trailer-cover" :src="require('@/assets/9x16loading.png')"/>
+                    <img v-if="ifCover" v-show="!this.imageLoading" class="img-fluid trailer-cover" :src="coverSrc" @load="imageLoading = false" @error="imageLoading = true">
+                    <img v-if="!ifCover || this.imageLoading" class="img-fluid trailer-cover" :src="require('@/assets/9x16loading.png')"/>
                     <div v-if="!$store.state.loading.pageLoading && !$store.state.loading.pageLoading2" class="custom-over-layer h-100 d-flex flex-column justify-content-between">
                         <div class="d-flex flex-row no-gutters" style="min-height: 66px">
                             <div class="col pt-2 pl-2">
@@ -32,29 +32,16 @@
                     </div>
                 </div>
             </div>
-            <div v-if="isTrue(trailers)">
+            <div>
                 <div id="collapseFragman" class="collapse" data-parent="#accordion">
-                    <!-- <div class="d-flex flex-row no-gutters pl-2 pt-2 pb-3" style="background: #000;">
-                        <div class="col">
-                            <div class="h-100 d-flex flex-column justify-content-center pl-2">
-                                <span v-if="tagline" class="text-white h6 lead lead-small punch-line">{{ tagline }}</span>
-                            </div>
-                        </div>
-                        <div class="col pb-2 pr-2 text-right">
-                            <div>
-                                <div>
-                                    <small v-if="percentage" class="text-white">Based on your taste </small><span class="text-warning h4 d-none d-md-inline">{{ percentage }}%</span><span class="text-warning h5 d-md-none">{{ percentage }}%</span><span class="text-white"> <small>match</small></span>
-                                </div> 
-                            </div>
-                        </div>
-                    </div> -->
-                    <div v-if="!$store.state.loading.pageLoading && !hiddenTrailers" class="embed-responsive embed-responsive-1by1 trailer">
-                        <iframe class="embed-responsive-item" :src="trailerSrc" allowfullscreen></iframe>
+                    <div v-if="ifTrailer" v-show="!videoLoading" class="embed-responsive embed-responsive-1by1 trailer">
+                        <iframe class="embed-responsive-item" :src="trailerSrc" allowfullscreen @load="videoLoaded()"></iframe>
                     </div>
+                    <div v-if="!ifTrailer || videoLoading" v-show="!ifTrailer || videoLoading" class="d-flex justify-content-center" :class="(ifTrailerLoader || videoLoading) ? 'trailer-loading' : 'trailer-not-found'"><no-result class="mt-0" expandStatus="expanded"/></div>
                     <div class="d-flex flex-row no-gutters" style="background: #000;">
                         <div class="col-10 col-md-5">
                             <div class="h-100 d-flex flex-column justify-content-center pl-2">
-                                <div v-if="trailers.length > 1">
+                                <div v-if="trailers && trailers.length > 1">
                                     <button class="btn btn-lg text-muted hover-white btn-trailer" :disabled="currentTrailerIndex === 0" @click="currentTrailerIndex--"><font-awesome-icon icon="step-backward"/></button>
                                     <button class="btn btn-lg text-muted hover-white btn-trailer" :disabled="currentTrailerIndex === trailers.length - 1" @click="currentTrailerIndex++"><font-awesome-icon icon="step-forward"/></button>
                                     <div class="dropdown dnone d-inline">
@@ -73,12 +60,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="col-5 pb-2 pr-2 text-right">
-                            <div v-if="voteAverage">
-                                <div><span class="text-warning h4 d-none d-md-inline">{{ voteAverage }}</span><span class="text-warning h5 d-md-none">{{ voteAverage }}</span><span class="text-white"> <small>/10</small></span></div>
-                                <div class="text-white"><small>{{ voteCount }} {{ 'vote' | plural(voteCount, 'votes') }}</small></div>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -87,7 +68,15 @@
 </template>
 
 <script>
+import NoResult from '@/components/NoResult.vue'
+import SeriesComputeds from './SeriesComputeds.js'
+
+
 export default {
+    components: {
+        'no-result': NoResult,
+    },
+    mixins: [SeriesComputeds],
     props: {
         type: { validator: value => ['movie', 'series'].includes(value) },
     },
@@ -96,27 +85,17 @@ export default {
             imageLoading: true,
             logoLoading: true,
             currentTrailerIndex: 0,
-            hiddenTrailers: false
+            hiddenTrailers: false,
+            videoLoading: true
         }
     },
     computed: {
         data() { return this.$store.state.movieSeriesDataSets.dataObject2 },
-        seasonNumber() { return this.$route.params.season },
-        episodeNumber() { return this.$route.params.episode },
-        seasonData() { return this.$store.state.movieSeriesDataSets.dataObject3 },
-        episodeData() { return this.seasonNumber == -1 ? {} : this.seasonData.episodes.find(episode => episode.episode_number == this.episodeNumber) },
-        detailedType() {
-            if(this.type === 'movie') return 'movie'
-            if(this.episodeNumber != -1) return 'episode'
-            if(this.seasonNumber != -1) return 'season'
-            return 'series'
-        },
         trailers() {
             let dataToCheck = {}
             if(['movie', 'series'].includes(this.detailedType)) dataToCheck = this.data
             else if(this.detailedType === 'season') dataToCheck = this.seasonData
             else dataToCheck = this.episodeData
-            console.log(dataToCheck)
             return dataToCheck.videos && dataToCheck.videos.results
         },
         interactionData() { return this.$store.state.movieSeriesDataSets.dataObject },
@@ -136,23 +115,39 @@ export default {
         },
         tagline() {
             if(this.type === 'movie') return this.isTrue(this.data.tagline) ? this.data.tagline : false
-            if(this.type === 'series') return this.isAllTrue([this.data.number_of_episodes, this.data.number_of_seasons]) ? `${this.data.number_of_seasons} Seasons - ${this.data.number_of_episodes} Episodes` : false
+            if(this.detailedType === 'series') return this.isAllTrue([this.data.number_of_episodes, this.data.number_of_seasons]) ? `${this.data.number_of_seasons} Seasons - ${this.data.number_of_episodes} Episodes` : false
+            /* if(this.detailedType === 'season') return this.seasonData.air_date ? `Aired on ${this.seasonData.air_date}` : ''
+            return this.episodeData.air_date ? `Aired on ${this.episodeData.air_date}` : '' */
         },
-        percentage() { return this.interactionData.percent },
-        trailerSrc() { return `${process.env.VUE_APP_YOUTUBE_URL}/${this.trailers[this.currentTrailerIndex].key}?modestbranding=1&showinfo=0&iv_load_policy=3` },
-        voteAverage() { return this.data.vote_average },
-        voteCount() { return this.data.vote_count },
-        showCover() { return !this.$store.state.loading.pageLoading && !this.imageLoading && this.data.id == this.$route.params.id },
-        showLogo() { return !this.logoLoading && this.data.id == this.$route.params.id }
+        percentage() { return ['movie', 'series'].includes(this.detailedType) ? this.interactionData.percent : '' },
+        trailerSrc() { return this.ifTrailer && this.trailers.length > 0 && `${process.env.VUE_APP_YOUTUBE_URL}/${this.trailers[this.currentTrailerIndex].key}?modestbranding=1&showinfo=0&iv_load_policy=3` },
+        voteAverage() {
+            if(['movie', 'series'].includes(this.detailedType)) return this.data.vote_average
+            if(this.detailedType === 'season') return this.roundTo(this.seasonData.episodes.reduce((sum, episode) => sum + episode.vote_count * episode.vote_average / this.voteCount, 0), 10)
+            if(this.detailedType === 'episode') return this.roundTo(this.episodeData.vote_average, 10)
+        },
+        voteCount() {
+            if(['movie', 'series'].includes(this.detailedType)) return this.data.vote_count
+            if(this.detailedType === 'season') return this.seasonData.episodes.reduce((sum, episode) => sum + episode.vote_count, 0)
+            if(this.detailedType === 'episode') return this.episodeData.vote_count
+        },
+        ifCover() { return !this.$store.state.loading.pageLoading && this.data.id == this.$route.params.id && !(this.detailedType === 'episode' && this.$store.state.loading.pageLoading4) },
+        showLogo() { return !this.logoLoading && this.data.id == this.$route.params.id },
+        ifTrailerLoader() { return this.$store.state.loading.pageLoading || (this.detailedType === 'episode' && this.$store.state.loading.pageLoading4) || this.hiddenTrailers },
+        ifTrailer404() { return this.isFalse(this.trailers) || (this.trailers && this.trailers.length == 0) },
+        ifTrailer() { return !this.ifTrailerLoader && !this.ifTrailer404 }
     },
     watch: {
         coverSrc() { this.imageLoading = true },
         logoSrc() { this.logoLoading = true },
+        trailerSrc() { if(this.ifTrailer && this.trailers.length > 0) this.videoLoading = true },
+        tabCode() { this.currentTrailerIndex = 0 }
     },
     methods: {
         resetTrailerSection() {
             setTimeout(() => { this.hiddenTrailers = true; setTimeout(() => { this.hiddenTrailers = false }, 100) }, 200)
-        }
+        },
+        videoLoaded() { setTimeout(() => { this.videoLoading = false }, 200) }
     }
 }
 </script>
@@ -182,5 +177,13 @@ export default {
     max-height: 4rem;
     overflow: auto;
     display: -webkit-inline-box;
+}
+.trailer-loading {
+    filter: brightness(0%);
+    background: #000;
+}
+.trailer-not-found {
+    filter: invert(1);
+    background: #fff;
 }
 </style>

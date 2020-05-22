@@ -106,7 +106,22 @@ const actions = {
                 reject(error)
             }).then(() => { context.dispatch('loading/finishResponseWaiting', null, { root:true }) })
         })
-    }
+    },
+    lastSeen(context, data) {
+        context.dispatch('loading/startResponseWaiting', null, { root:true })
+        const lastSeen = data.data.seen_id > 0 ? null : 1
+        axios.post(`${process.env.VUE_APP_API_URL}/lastSeen`, {
+            obj_id: data.data.id,
+            last_seen: lastSeen
+        })
+        .then(response => {
+            data.boundedTo.forEach(boundedTo => {
+                data.data.seen_id = lastSeen
+                context.commit(boundedTo, data.data, { root: true })
+            })
+        }).catch(error => {
+        }).then(() => { context.dispatch('loading/finishResponseWaiting', null, { root:true }) })
+    },
 }
 
 export default {

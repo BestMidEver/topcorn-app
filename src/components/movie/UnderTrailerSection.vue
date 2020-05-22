@@ -1,17 +1,15 @@
 <template>
     <div class="d-flex flex-wrap justify-content-between">
-        <div v-if="['movie', 'series'].includes(type)" class="px-3 px-md-1">
+        <div v-if="['movie', 'series', 'season', 'episode'].includes(type)" class="px-3 px-md-1">
             <div class="d-flex flex-column">
                 <div class="d-flex align-items-center" style="min-height: 56px">
-                    <!-- <a class="text-dark" href="http://www.google.com/search?q=Glass 2019"> -->
-                        <skeleton-loader v-if="$store.state.loading.pageLoading2 || $store.state.loading.pageLoading" type="line" lineHeight="24px" style="width: 400px; max-width: 70vw"/>
-                        <h1 v-else class="h5 pb-2 pt-3">{{ title }}</h1>
-                    <!-- </a> -->
+                    <skeleton-loader v-if="$store.state.loading.pageLoading2 || $store.state.loading.pageLoading" type="line" lineHeight="24px" style="width: 400px; max-width: 70vw"/>
+                    <h1 v-else class="h5 pb-2 pt-3">{{ title }}</h1>
                 </div>
             </div>
         </div>
-        <div v-if="allowedButtons.length > 0" class="d-flex flex-column mt-1 mt-md-1 px-1 col-12 col-md-auto ml-auto">
-            <div id="under-trailer-button-container" class="d-flex flex-row justify-content-between text-center">
+        <div v-if="allowedButtons.length > 0" class="d-flex flex-column mt-1 px-1 ml-auto" :class="allowedButtons.length == 1 ? 'col' : 'col-12 col-md-auto'">
+            <div id="under-trailer-button-container" class="d-flex flex-row text-center" :class="allowedButtons.length == 1 ? 'justify-content-end' : 'justify-content-between'">
                 <custom-button v-if="isButtonAllowed('watch-later')" type="watch-later" :style="{order: calcButtonIndex('watch-later')}" :borderRadius="calcButtonBorderRadius('watch-later')" iconSize="22px" class="btn-sm btn-block border-0 mt-0 px-0"
                     :status="watchLaterStatus" @click="$store.dispatch('noModals/watchLater', { data: data, boundedTo: boundedTo, type: type })" :disabled="$store.state.loading.responseWaiting">
                     <div class="one-line">Watch Later</div>
@@ -28,13 +26,13 @@
                     :disabled="$store.state.loading.responseWaiting">
                     <div class="one-line">Share</div>
                 </custom-button>
-                <custom-button v-if="isButtonAllowed('vote')" type="seen" :style="{order: calcButtonIndex('vote')}" :borderRadius="calcButtonBorderRadius('vote')" iconSize="22px" status="active5" class="btn-sm btn-block border-0 mt-0 px-0"
+                <!-- <custom-button v-if="isButtonAllowed('vote')" type="seen" :style="{order: calcButtonIndex('vote')}" :borderRadius="calcButtonBorderRadius('vote')" iconSize="22px" status="active5" class="btn-sm btn-block border-0 mt-0 px-0"
                     :disabled="$store.state.loading.responseWaiting">
                     <div class="one-line">Vote</div>
-                </custom-button>
-                <custom-button v-if="isButtonAllowed('last-seen')" type="last-seen" :style="{order: calcButtonIndex('last-seen')}" :borderRadius="calcButtonBorderRadius('last-seen')" iconSize="22px" status="active" class="btn-sm btn-block border-0 mt-0 px-0"
-                    :disabled="$store.state.loading.responseWaiting">
-                    <div class="one-line">Last Seen Episode</div>
+                </custom-button> -->
+                <custom-button v-if="isButtonAllowed('last-seen')" type="last-seen" :style="{order: calcButtonIndex('last-seen'), 'min-width': '80px'}" :borderRadius="calcButtonBorderRadius('last-seen')" iconSize="22px" class="btn-sm border-0 mt-0 px-0"
+                    :status="lastSeenStatus" @click="$store.dispatch('noModals/lastSeen', { data: data, boundedTo: boundedTo })" :disabled="$store.state.loading.responseWaiting">
+                    <div class="one-line">Last Seen</div>
                 </custom-button>
                 <custom-button v-if="isButtonAllowed('edit')" type="edit" :style="{order: calcButtonIndex('edit')}" :borderRadius="calcButtonBorderRadius('edit')" iconSize="22px" status="" class="btn-sm btn-block border-0 mt-0 px-0"
                     :disabled="$store.state.loading.responseWaiting">
@@ -66,7 +64,7 @@ export default {
     props: {
         title: String,
         type: {
-            validator: value => ['movie', 'series', 'series-season-info', 'series-episode-info', 'profile'].includes(value)
+            validator: value => ['movie', 'series', 'season', 'episode', 'profile'].includes(value)
         },
         boundedTo: Array,
         data: Object
@@ -76,17 +74,19 @@ export default {
             allowedItems: {
                 'movie': ['watch-later', 'seen', 'ban', 'share'],
                 'series': ['watch-later', 'seen', 'ban', 'share'],
-                'series-season-info': [],
-                'series-episode-info': ['last-seen', 'vote', 'edit'],
+                'season': ['last-seen'],
+                'episode': ['last-seen'],
                 'profile': ['follow', 'bell']
             },
         }
     },
     computed: {
         allowedButtons: function () { return this.allowedItems[this.type] },
-        watchLaterStatus() { return this.data.later_id > 0 ? 'active' : '' },
-        seenStatus() { return this.data.rate_code > 0 ? `active${this.data.rate_code}` : '' },
-        banStatus() { return this.data.ban_id > 0 ? 'active' : '' }
+        watchLaterStatus() { return !this.$store.state.loading.responseWaiting && this.data.later_id > 0 ? 'active' : '' },
+        seenStatus() { return !this.$store.state.loading.responseWaiting && this.data.rate_code > 0 ? `active${this.data.rate_code}` : '' },
+        banStatus() { return !this.$store.state.loading.responseWaiting && this.data.ban_id > 0 ? 'active' : '' },
+        lastSeenStatus() { return !this.$store.state.loading.responseWaiting && this.data.seen_id > 0 ? 'active' : '' }
+
     },
     methods: {
         isButtonAllowed(buttonType) { return this.allowedButtons.includes(buttonType) },

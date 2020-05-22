@@ -1,7 +1,7 @@
 <template>
     <div>
         <trailer-section :type="type" class="mt-md-4"/>
-        <under-trailer-section :title="title" :type="type" :data="interactionData" :boundedTo="['interactions/setMovieInteraction', 'movieSeriesDataSets/setDataObject', 'comments/setReview']"/>
+        <under-trailer-section :title="title" :type="detailedType" :data="interactionData" :boundedTo="underTrailerSectionBoundedTo"/>
         <poster-plot-details-section :data="movieData" :type="type"/>
         <cast-section :data="movieData" :type="type"/>
         <review-section :data="reviewData" :interactionData="interactionData" :type="type" :boundedTo="[`interactions/set${capitalizeFirstLetter(type)}Interaction`, 'movieSeriesDataSets/setDataObject', 'comments/setReview']"/>
@@ -17,6 +17,7 @@ import CastSection from '@/components/movie/CastSection.vue'
 import MoreLikeThisSection from '@/components/movie/MoreLikeThisSection.vue'
 import CompressedCards from '@/components/CompressedCards.vue'
 import ReviewSection from '@/components/ReviewSection.vue'
+import SeriesComputeds from '@/components/movie/SeriesComputeds.js'
 
 
 export default {
@@ -29,6 +30,7 @@ export default {
         'cast-section': CastSection,
         'more-like-this-section': MoreLikeThisSection,
     },
+    mixins: [SeriesComputeds],
     props: {
         type: { validator: value => ['movie', 'series'].includes(value) },
     },
@@ -43,9 +45,12 @@ export default {
         interactionData() { return this.$store.state.movieSeriesDataSets.dataObject },
         reviewData() { return this.$store.state.comments.dataObject },
         title() {
-            if(this.isTrue(this.movieData.title)) return this.movieData.title
-            if(this.isTrue(this.movieData.name)) return this.movieData.name
+            if(this.detailedType === 'movie') return this.movieData.title
+            if(this.detailedType === 'series') return this.movieData.name
+            if(this.detailedType === 'season') return this.seasonData.name
+            if(this.detailedType === 'episode') return this.episodeData.name
         },
+        UnderTrailerSection() { return ['movie', 'series'].includes(this.detailedType) ? ['interactions/setMovieInteraction', 'movieSeriesDataSets/setDataObject', 'comments/setReview'] : ['movieSeriesDataSets/setDataObject'] }
     },
     methods: {
     },

@@ -16,5 +16,6 @@ Vue.mixin({
         capitalizeFirstLetter: (string) => string.charAt(0).toUpperCase() + string.slice(1),
         dateToYear: (date, seperator) => date.split(seperator || '-')[0],
         isStringStartWith: (str, startWith) => {const paths = Array.isArray(startWith) ? startWith : [startWith]; return paths.some(path => { return str.indexOf(path) === 0 })},
+        roundTo: (number, over = 1) => Math.round((number + Number.EPSILON) * over) / over
     }
 })

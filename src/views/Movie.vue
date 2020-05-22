@@ -113,7 +113,7 @@ export default {
             this.$store.dispatch('loading/startResponseWaiting')
             const axiosRandom = this.randomString(20)
             this.axiosRandom2 = axiosRandom
-            axios.get(this.movieSeriesDataUrl(this.type, this.$route.params.id, this.$route.name === 'movie-comment' ? this.$route.params.page : 1))
+            axios.get(this.movieSeriesDataUrl(this.type, this.$route.params.id))
             .then(response => {
                 if(axiosRandom === this.axiosRandom2) {
                     this.$store.dispatch('movieSeriesDataSets/setDataObject', response.data.interactionData.original)
