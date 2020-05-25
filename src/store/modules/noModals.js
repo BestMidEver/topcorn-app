@@ -111,8 +111,13 @@ const actions = {
         context.dispatch('loading/startResponseWaiting', null, { root:true })
         const lastSeen = data.data.seen_id > 0 ? null : 1
         axios.post(`${process.env.VUE_APP_API_URL}/lastSeen`, {
-            obj_id: data.data.id,
-            last_seen: lastSeen
+            series_id: data.data.id,
+            last_seen: lastSeen,
+            last_seen_episode: data.lastSeenData.last_seen_episode,
+            last_seen_season: data.lastSeenData.last_seen_season,
+            next_episode: data.lastSeenData.next_episode,
+            next_season: data.lastSeenData.next_season,
+            air_date: data.lastSeenData.air_date
         })
         .then(response => {
             data.boundedTo.forEach(boundedTo => {

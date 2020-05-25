@@ -32,7 +32,7 @@ export default {
     computed: {
         details() {
             if(this.data.character) return this.data.character
-            if(this.data.job) return this.data.job.join(', ')
+            if(this.data.job) return Array.isArray(this.data.job) ? this.data.job.join(', ') : this.data.job
         },
     }
 }

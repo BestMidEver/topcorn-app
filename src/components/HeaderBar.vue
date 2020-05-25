@@ -34,7 +34,7 @@ export default {
 .header-bar{
     position: sticky;
     top: 0;
-    z-index: 1060;
+    z-index: 1040;
     color: rgba(0,0,0,.5);
 }
 @media (min-width: 768px) {

@@ -15,7 +15,7 @@
                     <div class="one-line">Watch Later</div>
                 </custom-button>
                 <custom-button v-if="isButtonAllowed('seen')" type="seen" :style="{order: calcButtonIndex('seen')}" :borderRadius="calcButtonBorderRadius('seen')" iconSize="22px" class="btn-sm btn-block border-0 mt-0 px-0"
-                    :status="seenStatus" @click="$store.dispatch('modals/openVoteComment', { data: data, boundedTo: boundedTo, type: type })" :disabled="$store.state.loading.responseWaiting">
+                    :status="seenStatus" @click="$store.dispatch('modals/openVoteComment', { data: data, boundedTo: boundedTo, type: type, voteCommentType: 'vote' })" :disabled="$store.state.loading.responseWaiting">
                     <div class="one-line">Seen</div>
                 </custom-button>
                 <custom-button v-if="isButtonAllowed('ban')" type="ban" :style="{order: calcButtonIndex('ban')}" :borderRadius="calcButtonBorderRadius('ban')" iconSize="22px" class="btn-sm btn-block border-0 mt-0 px-0"
@@ -31,7 +31,7 @@
                     <div class="one-line">Vote</div>
                 </custom-button> -->
                 <custom-button v-if="isButtonAllowed('last-seen')" type="last-seen" :style="{order: calcButtonIndex('last-seen'), 'min-width': '80px'}" :borderRadius="calcButtonBorderRadius('last-seen')" iconSize="22px" class="btn-sm border-0 mt-0 px-0"
-                    :status="lastSeenStatus" @click="$store.dispatch('noModals/lastSeen', { data: data, boundedTo: boundedTo })" :disabled="$store.state.loading.responseWaiting">
+                    :status="lastSeenStatus" @click="$store.dispatch('noModals/lastSeen', { data: data, boundedTo: boundedTo, lastSeenData: lastSeenData })" :disabled="$store.state.loading.responseWaiting">
                     <div class="one-line">Last Seen</div>
                 </custom-button>
                 <custom-button v-if="isButtonAllowed('edit')" type="edit" :style="{order: calcButtonIndex('edit')}" :borderRadius="calcButtonBorderRadius('edit')" iconSize="22px" status="" class="btn-sm btn-block border-0 mt-0 px-0"
@@ -54,6 +54,7 @@
 <script>
 import CustomButton from '@/components/CustomButton.vue'
 import SkeletonLoader from '@/components/SkeletonLoader.vue'
+import seriesComputeds from './seriesComputeds.js'
 
 
 export default {
@@ -61,6 +62,7 @@ export default {
         'custom-button': CustomButton,
         'skeleton-loader': SkeletonLoader,
     },
+    mixins: [seriesComputeds],
     props: {
         title: String,
         type: {
@@ -85,7 +87,18 @@ export default {
         watchLaterStatus() { return !this.$store.state.loading.responseWaiting && this.data.later_id > 0 ? 'active' : '' },
         seenStatus() { return !this.$store.state.loading.responseWaiting && this.data.rate_code > 0 ? `active${this.data.rate_code}` : '' },
         banStatus() { return !this.$store.state.loading.responseWaiting && this.data.ban_id > 0 ? 'active' : '' },
-        lastSeenStatus() { return !this.$store.state.loading.responseWaiting && this.data.seen_id > 0 ? 'active' : '' }
+        lastSeenStatus() { return !this.$store.state.loading.responseWaiting && this.data.seen_id > 0 ? 'active' : '' },
+        seriesData() { return this.$store.state.movieSeriesDataSets.dataObject2 },
+        lastSeenData() {
+            const nextSeason = this.seasonNumber + 1 > this.seriesData.number_of_seasons ? null : this.seasonNumber + 1
+            return { 
+                last_seen_season: this.seasonNumber,
+                last_seen_episode: this.episodeNumber,
+                air_date: this.detailedType === 'season' ? this.seasonData.air_date : this.episodeData.air_date,
+                next_season: this.detailedType === 'season' ? nextSeason : (this.episodeNumber + 1 > this.seasonData.episodes.length ? nextSeason : this.seasonNumber),
+                next_episode: this.detailedType === 'season' ? (nextSeason ? 1 : null) : (this.episodeNumber + 1 > this.seasonData.episodes.length ? (nextSeason ? 1 : null) : this.episodeNumber + 1)
+            }
+        }
 
     },
     methods: {

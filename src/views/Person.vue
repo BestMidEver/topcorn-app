@@ -20,7 +20,6 @@
             </template>
         </div>
         <cards :type="tabType[activeIndex]" :items="[]"/> -->
-        asdf
     </div>
 </template>
 

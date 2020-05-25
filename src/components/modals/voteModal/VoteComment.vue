@@ -10,21 +10,22 @@
                 </div>
                 <div v-show="!imageLoading" class="position-relative">
                     <img class="img-fluid" :src="src" @load="imageLoading = false" @error="imageLoading = true">
-                    <rubber-stamp :rate="rateCode"/>
+                    <rubber-stamp v-if="voteType !== 'comment'" :rate="rateCode"/>
                 </div>
                 <div class="modal-body">
                     <div class="d-flex justify-content-center align-items-center">
-                        <five-star-button :rate.sync="rateCode"/>
+                        <five-star-button v-if="voteType !== 'comment'" :rate.sync="rateCode"/>
                     </div>
-                    <div v-show="voteType === 'vote + comment'" class="form-group mt-3">
+                    <div v-show="voteType.includes('comment')" class="form-group mt-3">
                         <textarea id="input_review" v-model="inputVal" rows="3" class="form-control" placeholder="Write a public comment"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
-                    <button type="button" class="btn btn-sm text-secondary border-0" @click="rateCode = -1" :disabled="$store.state.loading.responseWaiting">Haven't seen</button>
+                    <button v-if="voteType !== 'comment'" type="button" class="btn btn-sm text-secondary border-0" @click="rateCode = -1" :disabled="$store.state.loading.responseWaiting">Haven't seen</button>
                     <button v-show="voteType === 'vote'" type="button" class="btn btn-sm text-secondary border-0" @click="voteType = 'vote + comment'" :disabled="$store.state.loading.responseWaiting">Vote with a comment</button>
                     <button v-show="voteType === 'vote + comment'" type="button" class="btn btn-sm text-secondary border-0" @click="voteType = 'vote'; inputVal = review" :disabled="$store.state.loading.responseWaiting">Don't send</button>
-                    <button v-show="voteType === 'vote + comment'" type="button" class="btn btn-sm btn-primary border-0" @click="review = inputVal" :disabled="$store.state.loading.responseWaiting">Save</button>
+                    <button v-show="voteType === 'comment'" type="button" class="btn btn-sm text-secondary border-0" @click="inputVal = review" data-dismiss="modal" :disabled="$store.state.loading.responseWaiting">Cancel</button>
+                    <button v-show="voteType.includes('comment')" type="button" class="btn btn-sm btn-primary border-0" @click="review = inputVal" :disabled="$store.state.loading.responseWaiting">Save</button>
                 </div>
             </div>
         </div>
@@ -45,7 +46,7 @@ export default {
     mixins: [urlGenerate],
     data() {
         return {
-            voteType: 'vote', // vote, vote + comment
+            voteType: 'vote', // vote, vote + comment, comment
             inputVal: '',
             imageLoading: true
         }
@@ -82,6 +83,7 @@ export default {
         src() {
             if(this.isTrue(this.data.cover_path)) return `${process.env.VUE_APP_TMDB_SMALL_COVER_URL}${this.data.cover_path}`
             if(this.isTrue(this.data.backdrop_path)) return `${process.env.VUE_APP_TMDB_SMALL_COVER_URL}${this.data.backdrop_path}`
+            if(this.isTrue(this.data.still_path)) return `${process.env.VUE_APP_TMDB_SMALL_COVER_URL}${this.data.still_path}`
             this.imageLoading = true
         },
         pathTo() { return this.movieSeriesUrl(this.$store.state.modals.voteCommentDataType, this.data.id) },
@@ -91,7 +93,6 @@ export default {
         pathTo() {
             this.voteType = this.$store.state.modals.voteCommentType
             this.$store.dispatch('modals/getUserReview')
-
         },
         review(val) { this.inputVal = val }
     },

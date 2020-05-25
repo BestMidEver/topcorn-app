@@ -1,7 +1,7 @@
 <template>
     <div class="row no-gutters" :class="isFullScreen ? 'pt-md-3' : 'mt-5'">
         <div class="col-12 col-md-3 col-lg-3">
-            <img class="w-100" :class="isFullScreen ? 'd-inline mb-3 mb-md-0' : 'd-none d-md-inline'" :src="require('@/assets/2x3loading.png')"/>
+            <img class="w-100" :class="isFullScreen ? 'd-inline mb-3 mb-md-0' : 'd-none d-md-inline'" :src="loadingSrc"/>
         </div>
         <div class="col-12 col-md-9 col-lg-6">
             <div>
@@ -34,15 +34,20 @@
 
 <script>
 import SkeletonLoader from '@/components/SkeletonLoader.vue'
+import seriesComputeds from './seriesComputeds.js'
 
 
 export default {
     components: {
         'skeleton-loader': SkeletonLoader,
     },
+    mixins: [seriesComputeds],
     props: {
         isFullScreen: Boolean
     },
+    computed: {
+        loadingSrc() { return this.detailedType === 'episode' ? require('@/assets/9x16loading.png') : require('@/assets/2x3loading.png') },
+    }
 }
 </script>
 

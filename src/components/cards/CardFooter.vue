@@ -16,7 +16,7 @@
                 </div>
                 <div class="col-7">
                     <custom-button type="seen" borderRadius="none" :status="seenStatus" class="btn-sm btn-block border-0"
-                        @click="$store.dispatch('modals/openVoteComment', { data: data, boundedTo: boundedTo, type: dataType })" :disabled="$store.state.loading.responseWaiting"> Seen</custom-button>
+                        @click="$store.dispatch('modals/openVoteComment', { data: data, boundedTo: boundedTo, type: dataType, voteCommentType: 'vote' })" :disabled="$store.state.loading.responseWaiting"> Seen</custom-button>
                 </div>
             </template>
             <div class="col">

@@ -24,6 +24,11 @@ import MovieSeriesComment from '@/components/movie/MovieSeriesComment.vue'
 import MovieSeriesMoreLikeThis from '@/components/movie/MovieSeriesMoreLikeThis.vue'
 import Series from '@/views/Series.vue'
 import Person from '@/views/Person.vue'
+import PersonProfile from '@/components/person/PersonProfile.vue'
+import PersonMovie from '@/components/person/PersonMovie.vue'
+import PersonSeries from '@/components/person/PersonSeries.vue'
+import PersonImage from '@/components/person/PersonImage.vue'
+import PersonComment from '@/components/person/PersonComment.vue'
 import Profile from '@/views/Profile.vue'
 import Settings from '@/views/Settings.vue'
 
@@ -70,13 +75,21 @@ const routes = [
       { path: '/series/detail/:id/:season/:episode', name: 'series-detail', component: MovieSeriesDetail, props: { type: 'series' } },
       { path: '/series/cast/:id/:season/:episode/:page', name: 'series-cast-cast', component: MovieSeriesCast, props: { type: 'series' } },
       { path: '/series/crew/:id/:season/:episode/:page', name: 'series-cast-crew', component: MovieSeriesCast, props: { type: 'series' } },
+      { path: '/series/guest/:id/:season/:episode/:page', name: 'series-cast-guest', component: MovieSeriesCast, props: { type: 'series' } },
       { path: '/series/comment/:id/:season/:episode/:page', name: 'series-comment', component: MovieSeriesComment, props: { type: 'series' } },
-      { path: '/series/recommendations/:id/:page', name: 'series-moreLikeThis-recommendations', component: MovieSeriesMoreLikeThis, props: { type: 'series' } },
-      { path: '/series/similar/:id/:page', name: 'series-moreLikeThis-similar', component: MovieSeriesMoreLikeThis, props: { type: 'series' } },
+      { path: '/series/recommendations/:id/:season/:episode/:page', name: 'series-moreLikeThis-recommendations', component: MovieSeriesMoreLikeThis, props: { type: 'series' } },
+      { path: '/series/similar/:id/:season/:episode/:page', name: 'series-moreLikeThis-similar', component: MovieSeriesMoreLikeThis, props: { type: 'series' } },
     ]
   },
-  //{ path: '/series', name: 'Series', component: Series, meta: { requiresAuth: true }   },
-  { path: '/person', name: 'Person', component: Person, meta: { requiresAuth: true }   },
+  { path: '/person/:tab/:id', name: 'person', component: Person, meta: { requiresAuth: true },
+    children: [
+      { path: '/person/profile/:id', name: 'person-profile', component: PersonProfile },
+      { path: '/person/movie/:id/:page', name: 'person-movie', component: PersonMovie },
+      { path: '/person/series/:id/:page', name: 'person-series', component: PersonSeries },
+      { path: '/person/image/:id/:page', name: 'person-image', component: PersonImage },
+      { path: '/person/comment/:id/:page', name: 'person-comment', component: PersonComment },
+    ]
+  },
   { path: '/profile', name: 'Profile', component: Profile, meta: { requiresAuth: true }   },
   { path: '/settings', name: 'Settings', component: Settings, meta: { requiresAuth: true }   },
 ]

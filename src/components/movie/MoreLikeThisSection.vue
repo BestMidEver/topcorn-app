@@ -1,7 +1,7 @@
 <template>
     <div>
         <section-heading v-if="!isFullScreen" title="More Like This" class="mt-5">
-            <router-link :to="movieSeriesUrl(type, data.id, 'recommendations')" replace type="text" class="btn-sm btn-block border-0 mr-1 text-secondary" :class="buttonClass"><div class="one-line">Show All</div></router-link>
+            <router-link :to="movieSeriesUrl(type, $route.params.id, 'recommendations')" replace type="text" class="btn-sm btn-block border-0 mr-1 text-secondary" :class="buttonClass"><div class="one-line">Show All</div></router-link>
         </section-heading>
         <tabs v-if="isFullScreen" :items="items" :itemTypes="itemTypes" :activeType.sync="activeType"/>
         <cards :type="type" :tmdbData="tmdbData" :loading="$store.state.loading.pageLoading" :boundedTo="['interactions/setMovieInteraction']"
@@ -48,7 +48,7 @@ export default {
                 return this.$route.name.split('-')[2]
             },
             set(val) {
-                this.$router.replace(`/${this.type}/${val}/${this.$route.params.id}/1`)
+                this.$router.replace(this.movieSeriesUrl(this.type, this.$route.params.id, val))
             }
         }
     },

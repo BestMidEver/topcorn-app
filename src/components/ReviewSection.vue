@@ -2,9 +2,9 @@
     <div>
         <section-heading v-if="!isFullScreen" title="Comments" :expandStatus="isFullScreen ? 'expanded' : 'compressed'" :class="isFullScreen ? 'pt-3' : 'mt-5'">
             <template v-if="!$store.state.loading.pageLoading2">
-                <button class="btn btn-sm btn-block border-0 mr-1 text-secondary" @click="$store.dispatch('modals/openVoteComment', { data: interactionData, boundedTo: boundedTo, type: type, commentExpanded: true })"
+                <button class="btn btn-sm btn-block border-0 mr-1 text-secondary" @click="$store.dispatch('modals/openVoteComment', { data: interactionData, boundedTo: boundedTo, type: type, voteCommentType: ['season', 'episode'].includes(detailedType)?'comment':'vote + comment' })"
                     :loading="$store.state.loading.pageLoading2"><div class="one-line">{{ commentButtonText }}</div></button>
-                <router-link v-if="reviewCount > 2" :to="movieSeriesUrl(type, $route.params.id, 'comment')" class="btn-sm btn-block border-0 mr-1 text-secondary mt-0"><div class="one-line">Show All</div></router-link>
+                <router-link v-if="reviewCount > 2" :to="movieSeriesUrl(type, $route.params.id, 'comment', seasonNumber, episodeNumber)" replace class="btn-sm btn-block border-0 mr-1 text-secondary mt-0"><div class="one-line">Show All</div></router-link>
             </template>
         </section-heading>
         <reviews :data="data" :boundedTo="boundedTo" :expandStatus="isFullScreen ? 'expanded' : 'compressed'" :loading="$store.state.loading.pageLoading2"/>
@@ -16,6 +16,7 @@ import SectionHeading from '@/components/SectionHeading.vue'
 import CustomButton from '@/components/CustomButton.vue'
 import Reviews from '@/components/reviews/Reviews.vue'
 import urlGenerate from '@/mixins/urlGenerate'
+import seriesComputeds from '@/components/movie/seriesComputeds.js'
 
 
 export default {
@@ -24,7 +25,7 @@ export default {
         'custom-button': CustomButton,
         'reviews': Reviews,
     },
-    mixins: [urlGenerate],
+    mixins: [urlGenerate, seriesComputeds],
     props: {
         data: Object,
         isFullScreen: Boolean,

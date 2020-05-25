@@ -1,7 +1,7 @@
 <template>
     <div>
         <header-bar :title="headerData.title" :to="headerData.to" :goBack="headerData.goBack" :loading="$store.state.loading.pageLoading"/>
-        <series-navbar :seasons="tmdbResponse.seasons" :seasonData="tmdbSeasonResponse"/>
+        <series-navbar v-if="!$route.name.includes('moreLikeThis')" :seasons="tmdbResponse.seasons"/>
         <router-view></router-view>
     </div>
 </template>
@@ -15,7 +15,7 @@ import urlGenerate from '@/mixins/urlGenerate'
 import lodash from 'lodash'
 import HeaderBar from '@/components/HeaderBar.vue'
 import SeriesNavbar from '@/components/movie/SeriesNavbar'
-import SeriesComputeds from '@/components/movie/SeriesComputeds.js'
+import seriesComputeds from '@/components/movie/seriesComputeds.js'
  
 
 Vue.use(VueAxios, axios, lodash)
@@ -28,6 +28,7 @@ function initialState (){
         tmdbResponse: tmdbResponse,
         tmdbSeasonResponse: {},
         tmdbEpisodeResponse: {},
+        interactionData: {},
         axiosRandom: '',
         axiosRandom2: '',
         axiosRandom3: '',
@@ -40,7 +41,7 @@ export default {
         'header-bar': HeaderBar,
         'series-navbar': SeriesNavbar
     },
-    mixins: [tmdbMerge, urlGenerate, SeriesComputeds],
+    mixins: [tmdbMerge, urlGenerate, seriesComputeds],
     props: {
         type: { validator: value => ['movie', 'series'].includes(value) },
     },
@@ -49,10 +50,9 @@ export default {
         movieSeriesType() { return this.type },
         objInteractions() { return this.$store.state.interactions[this.type + 'Interactions'] },
         obj() { return `${this.type}-${this.$route.params.id}` },
-        /* tabObj() { return `${this.$route.params.season}-${this.$route.params.episode}` }, */
         headerData() {
             if(this.$route.name === 'series-profile') return { title: this.episodeCode, goBack: true }
-            let data = { to: this.movieSeriesUrl(this.type, this.$route.params.id) }
+            let data = { to: this.movieSeriesUrl(this.type, this.$route.params.id, 'profile' ,this.seasonNumber, this.episodeNumber) }
             if(this.$route.name === 'series-detail') data.title = `${this.episodeCode} > More Info`
             else if(this.$route.name.includes('series-cast')) data.title = `${this.episodeCode} > Actors & Crew`
             else if(this.$route.name === 'series-comment') data.title = `${this.episodeCode} > Comments`
@@ -70,7 +70,9 @@ export default {
             $('.body').scrollTop(0)
         },
         '$route.params.season'() { this.getTmdbSeasonData(); this.getTcData() },
-        '$route.params.episode'() { this.getTmdbEpisodeData(); this.getTcData() }
+        '$route.params.episode'() { this.getTmdbEpisodeData(); this.getTcData() },
+        'interactionData'() { console.log('interactionData watched', this.interactionData.name); this.$store.dispatch('movieSeriesDataSets/setDataObject', this.interactionData) },
+
     },
     beforeCreate() {
         this.$store.dispatch('interactions/pluckMoviesSeries')
@@ -94,9 +96,10 @@ export default {
             .then(response => {
                 if(axiosRandom === this.axiosRandom) {
                     this.tmdbResponse = response.data
+                    //this.mergeInteractionData()
                     console.log('tmdb responsed')
                     this.sortTrailers()
-                    this.groupCrew()
+                    this.groupCrew(this.tmdbResponse.credits.crew)
                 }
             }).catch(error => {
                 this.$store.dispatch('movieSeriesDataSets/setDataObject2', this.tmdbResponse0)
@@ -110,10 +113,13 @@ export default {
             axios.get(this.movieSeriesDataUrl(this.type, this.$route.params.id, this.seasonNumber, this.episodeNumber))
             .then(response => {
                 if(axiosRandom === this.axiosRandom2) {
-                    this.$store.dispatch('movieSeriesDataSets/setDataObject', response.data.interactionData.original)
+                    this.interactionData = response.data.interactionData.original
+                    //this.$store.dispatch('movieSeriesDataSets/setDataObject', this.interactionData)
+                    this.mergeInteractionData()
                     this.$store.dispatch('comments/setDataObject', response.data.reviews)
                 }
             }).catch(error => {
+                this.interactionData = {}
                 this.$store.dispatch('movieSeriesDataSets/setDataObject', {})
                 this.$store.dispatch('comments/setDataObject', {})
             }).then(() => {
@@ -124,9 +130,9 @@ export default {
         sortTrailers() {
             this.tmdbResponse.videos.results = this.tmdbResponse.videos.results.filter(trailer => trailer.site == 'YouTube').sort((a, b) => a.type === 'Trailer' ? -1 : 1)
         },
-        groupCrew() {
-            this.tmdbResponse.credits.crew = lodash.groupBy(this.tmdbResponse.credits.crew, person => person.id)
-            this.tmdbResponse.credits.crew = Object.values(this.tmdbResponse.credits.crew).map(person => { person[0].job = person.map(copy => copy.job); return person[0] })
+        groupCrew(crew) {
+            crew = lodash.groupBy(crew, person => person.id)
+            crew = Object.values(crew).map(person => { person[0].job = person.map(copy => copy.job); return person[0] })
         },
         mergeAndStore() {
             this.tmdbResponse.recommendations = this.mergeTmdbResponse(this.tmdbResponse.recommendations || this.tmdbResponse0)
@@ -135,10 +141,6 @@ export default {
             console.log('setDataObject2', this.tmdbResponse.title)
             this.$store.dispatch('movieSeriesDataSets/setDataObject2', this.tmdbResponse)
         },
-        /* getTabData() {
-            if(this.$route.params.season != -1) this.getTmdbSeasonData()
-            if(this.$route.params.episode != -1) this.getTmdbEpisodeData()
-        }, */
         getTmdbSeasonData() {
             if(this.$route.params.season == -1) { this.$store.dispatch('loading/finishPageLoading3'); return }
             console.log('getTmdbSeasonData')
@@ -149,7 +151,17 @@ export default {
             .then(response => {
                 if(axiosRandom === this.axiosRandom3) {
                     this.tmdbSeasonResponse = response.data
+                    this.groupCrew(this.tmdbSeasonResponse.credits.crew)
+                    this.tmdbSeasonResponse.episodes.forEach(episode => {
+                        this.groupCrew(episode.crew)
+                        Vue.set(episode, 'credits', {
+                            crew: episode.crew,
+                            guest: episode.guest_stars,
+                            cast: this.tmdbSeasonResponse.credits.cast
+                        })
+                    })
                     this.$store.dispatch('movieSeriesDataSets/setDataObject3', response.data)
+                    this.mergeInteractionData()
                 }
             }).catch(error => {
                 this.$store.dispatch('movieSeriesDataSets/setDataObject3', this.tmdbResponse0)
@@ -166,10 +178,21 @@ export default {
                 if(axiosRandom === this.axiosRandom4) {
                     Vue.set(this.tmdbSeasonResponse.episodes.find(episode => episode.episode_number == this.$route.params.episode), 'videos', response.data)
                     this.$store.dispatch('movieSeriesDataSets/setDataObject3', this.tmdbSeasonResponse)
+                    this.mergeInteractionData()
                 }
             }).catch(error => {
             }).then(() => { this.$store.dispatch('loading/finishPageLoading4') })
         },
+        mergeInteractionData() {
+            if(this.detailedType === 'season') {
+                Vue.set(this.interactionData, 'name', `${this.tabCode}${this.seasonData.name?' • '+this.seasonData.name:''}`)
+                Vue.set(this.interactionData, 'backdrop_path', this.tmdbResponse.backdrop_path)
+            }
+            if(this.detailedType === 'episode') {
+                Vue.set(this.interactionData, 'name', `${this.tabCode}${this.episodeData.name?' • '+this.episodeData.name:''}`)
+                Vue.set(this.interactionData, 'still_path', this.episodeData.still_path)
+            }
+        }
     }
 }
 </script>

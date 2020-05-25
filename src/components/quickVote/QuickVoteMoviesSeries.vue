@@ -47,7 +47,7 @@ axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getIte
 function initialState (){
     return {
         voteType0: 'vote',
-        voteType: 'vote', // vote, vote + comment
+        voteType: 'vote', // vote, vote + comment, comment
         imageLoading: true,
         inputVal: '',
         rawData: [{}],

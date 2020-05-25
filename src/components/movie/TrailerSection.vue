@@ -35,9 +35,11 @@
             <div>
                 <div id="collapseFragman" class="collapse" data-parent="#accordion">
                     <div v-if="ifTrailer" v-show="!videoLoading" class="embed-responsive embed-responsive-1by1 trailer">
-                        <iframe class="embed-responsive-item" :src="trailerSrc" allowfullscreen @load="videoLoaded()"></iframe>
+                        <iframe class="embed-responsive-item" style="background: #000" :src="trailerSrc" allowfullscreen @load="videoLoaded()"></iframe>
                     </div>
-                    <div v-if="!ifTrailer || videoLoading" v-show="!ifTrailer || videoLoading" class="d-flex justify-content-center" :class="(ifTrailerLoader || videoLoading) ? 'trailer-loading' : 'trailer-not-found'"><no-result class="mt-0" expandStatus="expanded"/></div>
+                    <div v-show="!ifTrailer || videoLoading">
+                        <div class="d-flex justify-content-center" :class="(ifTrailerLoader || videoLoading || hiddenTrailers) ? 'trailer-loading' : 'trailer-not-found'"><no-result class="mt-0" expandStatus="expanded"/></div>
+                    </div>
                     <div class="d-flex flex-row no-gutters" style="background: #000;">
                         <div class="col-10 col-md-5">
                             <div class="h-100 d-flex flex-column justify-content-center pl-2">
@@ -69,26 +71,27 @@
 
 <script>
 import NoResult from '@/components/NoResult.vue'
-import SeriesComputeds from './SeriesComputeds.js'
+import seriesComputeds from './seriesComputeds.js'
 
+function initialState (){
+    return {
+        imageLoading: true,
+        logoLoading: true,
+        currentTrailerIndex: 0,
+        hiddenTrailers: false,
+        videoLoading: true
+    }
+}
 
 export default {
     components: {
         'no-result': NoResult,
     },
-    mixins: [SeriesComputeds],
+    mixins: [seriesComputeds],
     props: {
         type: { validator: value => ['movie', 'series'].includes(value) },
     },
-    data() {
-        return {
-            imageLoading: true,
-            logoLoading: true,
-            currentTrailerIndex: 0,
-            hiddenTrailers: false,
-            videoLoading: true
-        }
-    },
+    data() { return initialState() },
     computed: {
         data() { return this.$store.state.movieSeriesDataSets.dataObject2 },
         trailers() {
@@ -123,7 +126,7 @@ export default {
         trailerSrc() { return this.ifTrailer && this.trailers.length > 0 && `${process.env.VUE_APP_YOUTUBE_URL}/${this.trailers[this.currentTrailerIndex].key}?modestbranding=1&showinfo=0&iv_load_policy=3` },
         voteAverage() {
             if(['movie', 'series'].includes(this.detailedType)) return this.data.vote_average
-            if(this.detailedType === 'season') return this.roundTo(this.seasonData.episodes.reduce((sum, episode) => sum + episode.vote_count * episode.vote_average / this.voteCount, 0), 10)
+            if(this.detailedType === 'season') return this.seasonData.episodes && this.roundTo(this.seasonData.episodes.reduce((sum, episode) => sum + episode.vote_count * episode.vote_average / this.voteCount, 0), 10)
             if(this.detailedType === 'episode') return this.roundTo(this.episodeData.vote_average, 10)
         },
         voteCount() {
@@ -141,13 +144,15 @@ export default {
         coverSrc() { this.imageLoading = true },
         logoSrc() { this.logoLoading = true },
         trailerSrc() { if(this.ifTrailer && this.trailers.length > 0) this.videoLoading = true },
-        tabCode() { this.currentTrailerIndex = 0 }
+        tabCode() { this.currentTrailerIndex = 0 },
+        currentTrailerIndex() { this.resetTrailerSection() },
+        '$route.params.id'() { Object.assign(this.$data, initialState()); $('#collapseCover').collapse('show') }
     },
     methods: {
         resetTrailerSection() {
-            setTimeout(() => { this.hiddenTrailers = true; setTimeout(() => { this.hiddenTrailers = false }, 100) }, 200)
+            setTimeout(() => { this.hiddenTrailers = true; setTimeout(() => { this.hiddenTrailers = false }, 50) }, 50)
         },
-        videoLoaded() { setTimeout(() => { this.videoLoading = false }, 200) }
+        videoLoaded() { setTimeout(() => { this.videoLoading = false }, 100) }
     }
 }
 </script>
@@ -186,4 +191,5 @@ export default {
     filter: invert(1);
     background: #fff;
 }
+.btn-trailer:disabled { color: #000!important }
 </style>
