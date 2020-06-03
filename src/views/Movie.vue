@@ -26,6 +26,7 @@ function initialState (){
         axiosRandom: '',
         axiosRandom2: '',
         axiosRandom3: '',
+        interactionDataResponse: {}
     }
 }
 
@@ -50,7 +51,9 @@ export default {
             else if(this.$route.name === 'movie-comment') data.title = `${this.tmdbResponse.title} > Comments`
             else if(this.$route.name.includes('movie-moreLikeThis')) data.title = `${this.tmdbResponse.title} > More Like This`
             return data
-        }
+        },
+        interactionData() { return this.isTrue(this.interactionDataResponse) ? this.interactionDataResponse : this.createdInteractionData },
+        createdInteractionData() { return { ban_id: null, backdrop_path: this.tmdbResponse.backdrop_path, id: this.tmdbResponse.id, later_id: null, original_title: this.tmdbResponse.original_title, rate_code: null, release_date: this.tmdbResponse.release_date, title: this.tmdbResponse.title } }
     },
     watch: {
         objInteractions() { console.log('objInteractions watched'); this.mergeAndStore() },
@@ -60,6 +63,7 @@ export default {
             this.getObjData()
             $('.body').scrollTop(0)
         },
+        interactionData() { console.log('interactionData watched', this.interactionData); this.$store.dispatch('movieSeriesDataSets/setDataObject', this.interactionData) }
     },
     beforeCreate() {
         this.$store.dispatch('interactions/pluckMoviesSeries')
@@ -116,11 +120,12 @@ export default {
             axios.get(this.movieSeriesDataUrl(this.type, this.$route.params.id))
             .then(response => {
                 if(axiosRandom === this.axiosRandom2) {
-                    this.$store.dispatch('movieSeriesDataSets/setDataObject', response.data.interactionData.original)
+                    this.interactionDataResponse = response.data.interactionData.original
+                    //this.$store.dispatch('movieSeriesDataSets/setDataObject', response.data.interactionData.original)
                     this.$store.dispatch('comments/setDataObject', response.data.reviews)
                 }
             }).catch(error => {
-                this.$store.dispatch('movieSeriesDataSets/setDataObject', {})
+                //this.$store.dispatch('movieSeriesDataSets/setDataObject', {})
                 this.$store.dispatch('comments/setDataObject', {})
             }).then(() => {
                 this.$store.dispatch('loading/finishPageLoading2')

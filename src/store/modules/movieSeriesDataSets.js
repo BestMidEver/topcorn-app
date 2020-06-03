@@ -23,7 +23,7 @@ const actions = {
     setDataObject(context, data) { context.commit('setDataObject', { data: data, index: '' }) },
     setDataObject2(context, data) { context.commit('setDataObject', { data: data, index: 2 }) },
     setDataObject3(context, data) { context.commit('setDataObject', { data: data, index: 3 }) },
-    setDataObjectProperty(context, data) { context.commit('setDataObject', data) },
+    setDataObjectProperty(context, data) { context.commit('setDataObjectProperty', data) },
 }
 
 export default {

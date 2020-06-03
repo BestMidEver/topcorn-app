@@ -1,5 +1,5 @@
 <template>
-    <div class="stars-container ml-2" :class="computedClass">
+    <div class="stars-container ml-2" :class="computedClass" style="min-width: 89px">
         <span v-for="index in 5" :key="`s${index}`" class="btn btn-sm p-0"><font-awesome-icon :icon="[rate > index - 1 ? 'fas' : 'far', 'star']"/></span>
     </div>
 </template>

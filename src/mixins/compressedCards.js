@@ -15,8 +15,10 @@ export default {
                 return ''
             }
             if(['profile-image-card'].includes(this.type)) {
-                if(this.dataLength < 3) return 'd-none'
-                if(this.dataLength < 4) return 'd-sm-none'
+                if(this.dataLength < 2) return 'd-none'
+                if(this.dataLength < 3) return 'd-md-none'
+                if(this.dataLength < 4) return 'd-lg-none'
+                if(this.dataLength < 5) return 'd-xl-none'
                 return ''
             }
         }

@@ -4,7 +4,8 @@
         <under-trailer-section :title="title" :type="detailedType" :data="interactionData" :boundedTo="underTrailerSectionBoundedTo"/>
         <poster-plot-details-section :data="objData" :type="type"/>
         <cast-section :data="objData" :type="type"/>
-        <review-section :data="reviewData" :interactionData="interactionData" :type="type" :boundedTo="[`interactions/set${capitalizeFirstLetter(type)}Interaction`, 'movieSeriesDataSets/setDataObject', 'comments/setReview']"/>
+        <review-section :data="reviewData" :interactionData="interactionData" :type="type" :loading="$store.state.loading.pageLoading2"
+            :boundedTo="[`interactions/set${capitalizeFirstLetter(type)}Interaction`, 'movieSeriesDataSets/setDataObject', 'comments/setReview']"/>
         <more-like-this-section v-show="['movie', 'series'].includes(detailedType)" :data="movieData" :type="type"/>
     </div>
 </template>

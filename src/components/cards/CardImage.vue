@@ -25,6 +25,7 @@ export default {
             if(this.isTrue(this.data.profile_path)) return `${process.env.VUE_APP_TMDB_POSTER_URL}${this.data.profile_path}`
             if(this.isTrue(this.data.facebook_profile_path)) return `${this.data.facebook_profile_path}&height=450&width=300`
             if(this.isTrue(this.data.cover_path)) return `${process.env.VUE_APP_TMDB_SMALL_COVER_URL}${this.data.cover_path}`
+            if(this.isTrue(this.data.file_path)) return `${process.env.VUE_APP_TMDB_SMALL_COVER_URL}${this.data.file_path}`
             return require('@/assets/200x300logo.png')
         },
     },

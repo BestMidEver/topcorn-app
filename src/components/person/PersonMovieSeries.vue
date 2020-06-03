@@ -1,18 +1,19 @@
 <template>
     <div>
-        <person-image-section :data="personData" class="mt-md-4" :isFullScreen="true"/>
+        <person-movie-series-section :data="personData" class="mt-2" :type="type" :isFullScreen="true"/>
     </div>
 </template>
 
 <script>
-import PersonImageSection from '@/components/person/PersonImageSection.vue'
+import PersonMovieSeriesSection from '@/components/person/PersonMovieSeriesSection.vue'
 
 
 export default {
     components: {
-        'person-image-section': PersonImageSection,
+        'person-movie-series-section': PersonMovieSeriesSection,
     },
     props: {
+        type: String
     },
     data() {
         return {

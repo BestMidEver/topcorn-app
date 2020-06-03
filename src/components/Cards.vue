@@ -1,10 +1,10 @@
 <template>
     <div style="overflow: hidden;">
-        <div v-show="loading" :class="containerClass">
+        <div v-show="loading" :class="containerClass" class="card-group no-gutters marginClass">
             <skeleton-loader v-for="i in 12" :key="i" :type="skeletonLoaderType"/>
         </div>
         <div v-show="!loading">
-            <div :class="containerClass">
+            <div :class="containerClass" class="card-group no-gutters marginClass">
                 <template v-if="['movie', 'series'].includes(type)">
                     <movie-series-card v-for="card in results" :key="`card-${card.id}`" :data="card" :boundedTo="boundedTo" :type="type"/>
                 </template>
@@ -18,7 +18,7 @@
                     <list-card v-for="card in results" :key="`card-${card.id}`" :data="card"/>
                 </template>
                 <template v-else-if="type === 'profile-image-card'">
-                    <profile-image-card v-for="a in 12" :link="{ name: 'Avengers: Endgame', year: '2019' }"/>
+                    <profile-image-card v-for="card in results" :key="`card-${card.file_path}`" :data="card"/>
                 </template>
             </div>
             <pagination :expandStatus="expandStatus" :tmdbData="tmdbData" :tcData="tcData" :tcAllResults="tcAllResults" :itemPerPage="itemPerPage"/>
@@ -52,7 +52,7 @@ export default {
         tcData: Object,
         tcAllResults: Array,
         boundedTo: Array,
-        isCardColumns: Boolean,
+        //isCardColumns: Boolean,
         expandStatus: {
             validator: value => ['expanded', 'compressed'].includes(value)
         },
@@ -68,7 +68,7 @@ export default {
             let containerClass = ''
             if(this.expandStatus) containerClass += this.expandStatus + ' '
             if(this.type) containerClass += this.type + ' '
-            containerClass += this.isCardColumns ? 'card-columns' : 'card-group no-gutters marginClass'
+            //containerClass += this.isCardColumns ? 'card-columns' : 'card-group no-gutters marginClass'
             return containerClass
         },
         results() {
@@ -89,24 +89,23 @@ export default {
 <style scoped>
 .marginClass{ margin: -0.5rem -0.25rem 0px -0.25rem; }
 .card-columns{ -webkit-column-gap: 0.5rem; -moz-column-gap: 0.5rem; column-gap: 0.5rem; }
-.compressed.movie > div:nth-child(n+3), .compressed.series > div:nth-child(n+3), .compressed.list > div:nth-child(n+3), .compressed.profile-image-card > div:nth-child(n+3),
+.compressed.movie > div:nth-child(n+3), .compressed.series > div:nth-child(n+3), .compressed.list > div:nth-child(n+3), .compressed.profile-image-card > div:nth-child(n+2),
 .compressed.person > div:nth-child(n+4){ display: none }
 @media (min-width: 576px) {
-    .compressed.person > div:nth-child(n), .compressed.profile-image-card > div:nth-child(n){ display: block }
-    .compressed.profile-image-card > div:nth-child(n+4),
+    .compressed.person > div:nth-child(n){ display: block }
     .compressed.person > div:nth-child(n+5){ display: none }
 }
 @media (min-width: 768px) {
     .compressed.person > div:nth-child(n), .compressed.movie > div:nth-child(n), .compressed.series > div:nth-child(n), .compressed.list > div:nth-child(n), .compressed.list > div:nth-child(n), .compressed.profile-image-card > div:nth-child(n){ display: block }
-    .compressed.movie > div:nth-child(n+4), .compressed.series > div:nth-child(n+4), .compressed.list > div:nth-child(n+4), .compressed.profile-image-card > div:nth-child(n+4),
+    .compressed.movie > div:nth-child(n+4), .compressed.series > div:nth-child(n+4), .compressed.list > div:nth-child(n+4), .compressed.profile-image-card > div:nth-child(n+3),
     .compressed.person > div:nth-child(n+7){ display: none }
 }
 @media (min-width: 992px) {
-    .compressed.movie > div:nth-child(n), .compressed.series > div:nth-child(n), .compressed.list > div:nth-child(n){ display: block }
-    .compressed.movie > div:nth-child(n+5), .compressed.series > div:nth-child(n+5), .compressed.list > div:nth-child(n+5){ display: none }
+    .compressed.movie > div:nth-child(n), .compressed.series > div:nth-child(n), .compressed.list > div:nth-child(n), .compressed.profile-image-card > div:nth-child(n){ display: block }
+    .compressed.movie > div:nth-child(n+5), .compressed.series > div:nth-child(n+5), .compressed.list > div:nth-child(n+5), .compressed.profile-image-card > div:nth-child(n+4){ display: none }
 }
 @media (min-width: 1200px) {
-    .compressed.movie > div:nth-child(n), .compressed.series > div:nth-child(n), .compressed.list > div:nth-child(n){ display: block }
-    .compressed.movie > div:nth-child(n+7), .compressed.series > div:nth-child(n+7), .compressed.list > div:nth-child(n+7){ display: none }
+    .compressed.movie > div:nth-child(n), .compressed.series > div:nth-child(n), .compressed.list > div:nth-child(n), .compressed.profile-image-card > div:nth-child(n){ display: block }
+    .compressed.movie > div:nth-child(n+7), .compressed.series > div:nth-child(n+7), .compressed.list > div:nth-child(n+7), .compressed.profile-image-card > div:nth-child(n+5){ display: none }
 }
 </style>

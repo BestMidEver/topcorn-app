@@ -4,7 +4,7 @@
         <div v-show="!isPageLoading" class="row no-gutters" :class="isFullScreen ? 'pt-md-3' : 'mt-5'">
             <div class="col-12 col-md-3 col-lg-3">
                 <div v-show="!imageLoading">
-                    <img @load="imageLoading = false" class="w-100" :class="isFullScreen ? 'd-inline mb-3 mb-md-0' : 'd-none d-md-inline'" :src="src" @error="$event.target.src = errorSrc">
+                    <img class="w-100" :class="isFullScreen ? 'd-inline mb-3 mb-md-0' : 'd-none d-md-inline'" :src="src" @load="imageLoading = false" @error="$event.target.src = errorSrc">
                 </div>
                 <img v-if="imageLoading" class="w-100" :class="isFullScreen ? 'd-inline mb-3 mb-md-0' : 'd-none d-md-inline'" :src="loadingSrc"/>
             </div>
@@ -40,7 +40,7 @@
                             <span v-for="(creator, index) in creators" :key="index">{{ index > 0 ? ', ' : ' ' }}<router-link :to="personUrl(creator.id)" class="link">{{ creator.name }}</router-link></span>
                         </plot-detail>
                         <plot-detail v-if="isTrue(writers)" :title="['Writer', 'Writers']" :count="writers.length" :class="isFullScreen ? 'd-block' : 'd-none d-lg-block'" class="mt-3">
-                            <span v-for="(writer, index) in writers" :key="index">{{ index > 0 ? ', ' : ' ' }}<router-link :to="personUrl(writer.id)" class="link">{{ writer.name }} <small class="text-muted">({{ writer.job.filter(job => writerJobs.includes(job)).join(', ') }})</small></router-link></span>
+                            <span v-for="(writer, index) in writers" :key="index">{{ index > 0 ? ', ' : ' ' }}<router-link :to="personUrl(writer.id)" class="link">{{ writer.name }} <small class="text-muted">({{ (Array.isArray(writer.job) ? writer.job : [writer.job]).filter(job => writerJobs.includes(job)).join(', ') }})</small></router-link></span>
                         </plot-detail>
                         <plot-detail v-if="isTrue(seasonEpisodeAirDate)" title="Air Date" class="mt-3">{{ seasonEpisodeAirDate }}</plot-detail>
                         <plot-detail v-if="isTrue(networks)" :title="['Network', 'Networks']" :count="networks.length" :class="isFullScreen ? 'd-block' : 'd-none d-lg-block'" class="mt-3">

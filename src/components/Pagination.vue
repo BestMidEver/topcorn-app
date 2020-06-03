@@ -59,7 +59,7 @@ export default {
             if(this.$route.params.page != to) {
                 let params = this.$route.params
                 params.page = to
-                this.$router.replace({ name: this.$route.name, params: params })
+                this.$router.replace({ name: this.$route.name, params: params, query: this.$route.query })
             }
             this.centerTab()
         },

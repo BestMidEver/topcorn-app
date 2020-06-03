@@ -27,7 +27,7 @@ export default {
         activeType: [String, Number],
         disabled: Boolean
     },
-    data: function() {
+    data() {
         return {
             tabId: 'tab' + this.randomString()
         }

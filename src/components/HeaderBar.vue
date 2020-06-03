@@ -2,7 +2,7 @@
     <div class="header-bar bg-white bottom-line top-line row text-center no-gutters">
         <div class="col-1 d-flex align-items-center">
             <div class="d-flex">
-                <a @click="backAction()" class="px-3 py-1 text-secondary">
+                <a @click="backAction()" class="px-3 py-1" style="color: var(--secondary)!important">
                     <font-awesome-icon :icon="['fas', 'chevron-left']"/>
                 </a>
             </div>

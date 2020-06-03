@@ -34,7 +34,7 @@ const mutations = {
 
 const actions = {
     resetState ({ commit }) { commit('resetState') },
-    openVoteComment(context, data) {
+    openVoteComment(context, data) {console.log(data)
         context.commit('setVoteCommentData', data.data)
         context.commit('setVoteCommentDataBoundedTo', data.boundedTo)
         context.commit('setVoteCommentDataType', data.type)

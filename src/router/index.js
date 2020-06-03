@@ -25,8 +25,8 @@ import MovieSeriesMoreLikeThis from '@/components/movie/MovieSeriesMoreLikeThis.
 import Series from '@/views/Series.vue'
 import Person from '@/views/Person.vue'
 import PersonProfile from '@/components/person/PersonProfile.vue'
-import PersonMovie from '@/components/person/PersonMovie.vue'
-import PersonSeries from '@/components/person/PersonSeries.vue'
+import PersonDetail from '@/components/person/PersonDetail.vue'
+import PersonMovieSeries from '@/components/person/PersonMovieSeries.vue'
 import PersonImage from '@/components/person/PersonImage.vue'
 import PersonComment from '@/components/person/PersonComment.vue'
 import Profile from '@/views/Profile.vue'
@@ -84,8 +84,9 @@ const routes = [
   { path: '/person/:tab/:id', name: 'person', component: Person, meta: { requiresAuth: true },
     children: [
       { path: '/person/profile/:id', name: 'person-profile', component: PersonProfile },
-      { path: '/person/movie/:id/:page', name: 'person-movie', component: PersonMovie },
-      { path: '/person/series/:id/:page', name: 'person-series', component: PersonSeries },
+      { path: '/person/detail/:id', name: 'person-detail', component: PersonDetail },
+      { path: '/person/movie/:id/:page', name: 'person-movie', component: PersonMovieSeries, props: { type: 'movie' } },
+      { path: '/person/series/:id/:page', name: 'person-series', component: PersonMovieSeries, props: { type: 'series' } },
       { path: '/person/image/:id/:page', name: 'person-image', component: PersonImage },
       { path: '/person/comment/:id/:page', name: 'person-comment', component: PersonComment },
     ]

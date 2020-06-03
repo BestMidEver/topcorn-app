@@ -37,7 +37,7 @@ export default {
         text: String,
         maxChar: {
             type: Number,
-            default: 400
+            default: 240
         }
     },
     data() {

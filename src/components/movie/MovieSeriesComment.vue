@@ -1,6 +1,7 @@
 <template>
     <div>
-        <review-section :data="reviewData" :interactionData="interactionData" :type="type" :boundedTo="[`interactions/set${capitalizeFirstLetter(type)}Interaction`, 'movieSeriesDataSets/setDataObject', 'comments/setReview']" :isFullScreen="true"/>
+        <review-section :data="reviewData" :interactionData="interactionData" :type="type" :loading="$store.state.loading.pageLoading4"
+            :boundedTo="[`interactions/set${capitalizeFirstLetter(type)}Interaction`, 'movieSeriesDataSets/setDataObject', 'comments/setReview', 'comments/setReview2']" :isFullScreen="true"/>
     </div>
 </template>
 
@@ -31,7 +32,7 @@ export default {
         }
     },
     computed: {
-        reviewData() { return this.$store.state.comments.dataObject },
+        reviewData() { return this.$store.state.comments.dataObject2 },
         interactionData() { return this.$store.state.movieSeriesDataSets.dataObject },
     },
     watch: {
@@ -39,20 +40,23 @@ export default {
             if(val !== this.reviewData.current_page) this.getReviewPage()
         },
     },
+    created() {
+        this.getReviewPage()
+    },
     methods: {
         getReviewPage() {
-            this.$store.dispatch('loading/startPageLoading2')
+            this.$store.dispatch('loading/startPageLoading4')
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
             axios.get(this.reviewsDataUrl(this.type, this.$route.params.id, this.$route.params.page))
             .then(response => {
                 if(axiosRandom === this.axiosRandom) {
-                    this.$store.dispatch('comments/setDataObject', response.data)
+                    this.$store.dispatch('comments/setDataObject2', response.data)
                 }
             }).catch(error => {
-                this.$store.dispatch('comments/setDataObject', {})
+                this.$store.dispatch('comments/setDataObject2', {})
             }).then(() => {
-                this.$store.dispatch('loading/finishPageLoading2')
+                this.$store.dispatch('loading/finishPageLoading4')
             })
         }
     },

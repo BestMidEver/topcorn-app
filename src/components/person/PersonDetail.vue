@@ -1,16 +1,16 @@
 <template>
     <div>
-        <person-image-section :data="personData" class="mt-md-4" :isFullScreen="true"/>
+        <person-cover-section :data="personData" class="mt-md-4" :isFullScreen="true"/>
     </div>
 </template>
 
 <script>
-import PersonImageSection from '@/components/person/PersonImageSection.vue'
+import PersonCoverSection from '@/components/profile/PersonCoverSection.vue'
 
 
 export default {
     components: {
-        'person-image-section': PersonImageSection,
+        'person-cover-section': PersonCoverSection,
     },
     props: {
     },

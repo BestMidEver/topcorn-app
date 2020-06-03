@@ -1,13 +1,13 @@
 <template>
     <div>
         <section-heading v-if="!isFullScreen" title="Comments" :expandStatus="isFullScreen ? 'expanded' : 'compressed'" :class="isFullScreen ? 'pt-3' : 'mt-5'">
-            <template v-if="!$store.state.loading.pageLoading2">
-                <button class="btn btn-sm btn-block border-0 mr-1 text-secondary" @click="$store.dispatch('modals/openVoteComment', { data: interactionData, boundedTo: boundedTo, type: type, voteCommentType: ['season', 'episode'].includes(detailedType)?'comment':'vote + comment' })"
-                    :loading="$store.state.loading.pageLoading2"><div class="one-line">{{ commentButtonText }}</div></button>
+            <template v-if="!loading">
+                <button class="btn btn-sm btn-block border-0 mr-1 text-secondary" @click="$store.dispatch('modals/openVoteComment', { data: interactionData, boundedTo: boundedTo, type: type, voteCommentType: type==='person'||['season', 'episode'].includes(detailedType)?'comment':'vote + comment' })"
+                    :loading="loading"><div class="one-line">{{ commentButtonText }}</div></button>
                 <router-link v-if="reviewCount > 2" :to="movieSeriesUrl(type, $route.params.id, 'comment', seasonNumber, episodeNumber)" replace class="btn-sm btn-block border-0 mr-1 text-secondary mt-0"><div class="one-line">Show All</div></router-link>
             </template>
         </section-heading>
-        <reviews :data="data" :boundedTo="boundedTo" :expandStatus="isFullScreen ? 'expanded' : 'compressed'" :loading="$store.state.loading.pageLoading2"/>
+        <reviews :data="data" :boundedTo="boundedTo" :expandStatus="isFullScreen ? 'expanded' : 'compressed'" :loading="loading"/>
     </div>
 </template>
 
@@ -31,7 +31,8 @@ export default {
         isFullScreen: Boolean,
         boundedTo: Array,
         interactionData: Object,
-        type: String
+        type: String,
+        loading: Boolean
     },
     data() {
         return {

@@ -28,7 +28,7 @@ function initialState (){
         tmdbResponse: tmdbResponse,
         tmdbSeasonResponse: {},
         tmdbEpisodeResponse: {},
-        interactionData: {},
+        interactionDataResponse: {},
         axiosRandom: '',
         axiosRandom2: '',
         axiosRandom3: '',
@@ -59,7 +59,9 @@ export default {
             else if(this.$route.name.includes('series-moreLikeThis')) data.title = `${this.episodeCode} > More Like This`
             return data
         },
-        episodeCode() { return this.tabCode ? `${this.tmdbResponse.name} > ${this.tabCode}` : this.tmdbResponse.name }
+        episodeCode() { return this.tabCode ? `${this.tmdbResponse.name} > ${this.tabCode}` : this.tmdbResponse.name },
+        interactionData() { return this.isTrue(this.interactionDataResponse) ? this.interactionDataResponse : this.createdInteractionData },
+        createdInteractionData() { return { ban_id: null, backdrop_path: this.tmdbResponse.backdrop_path, id: this.tmdbResponse.id, later_id: null, original_name: this.tmdbResponse.original_name, rate_code: null, first_air_date: this.tmdbResponse.first_air_date, name: this.tmdbResponse.name } }
     },
     watch: {
         objInteractions() { console.log('objInteractions watched'); this.mergeAndStore() },
@@ -71,7 +73,7 @@ export default {
         },
         '$route.params.season'() { this.getTmdbSeasonData(); this.getTcData() },
         '$route.params.episode'() { this.getTmdbEpisodeData(); this.getTcData() },
-        'interactionData'() { console.log('interactionData watched', this.interactionData.name); this.$store.dispatch('movieSeriesDataSets/setDataObject', this.interactionData) },
+        interactionData() { console.log('interactionData watched', this.interactionData.name); this.$store.dispatch('movieSeriesDataSets/setDataObject', this.interactionData) },
 
     },
     beforeCreate() {
@@ -113,13 +115,13 @@ export default {
             axios.get(this.movieSeriesDataUrl(this.type, this.$route.params.id, this.seasonNumber, this.episodeNumber))
             .then(response => {
                 if(axiosRandom === this.axiosRandom2) {
-                    this.interactionData = response.data.interactionData.original
+                    this.interactionDataResponse = response.data.interactionData.original
                     //this.$store.dispatch('movieSeriesDataSets/setDataObject', this.interactionData)
                     this.mergeInteractionData()
                     this.$store.dispatch('comments/setDataObject', response.data.reviews)
                 }
             }).catch(error => {
-                this.interactionData = {}
+                //this.interactionData = {}
                 this.$store.dispatch('movieSeriesDataSets/setDataObject', {})
                 this.$store.dispatch('comments/setDataObject', {})
             }).then(() => {

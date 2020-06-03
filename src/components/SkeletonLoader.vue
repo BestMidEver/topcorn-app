@@ -59,7 +59,7 @@ export default {
         headingStyle() {
           const style = { width: this.calcRandomWidth() }
           if(this.type === 'small') style.height = '19px'
-          else style.height = '21px'
+          else style.height = '17px'
           return style
         },
         isTextCenter() {
