@@ -22,7 +22,7 @@ export default {
         'custom-input': CustomInput,
         'submit-button': SubmitButton,
     },
-    data: function() {
+    data() {
         return {
             email: '',
             password: '',

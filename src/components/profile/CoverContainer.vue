@@ -1,15 +1,15 @@
 <template>
     <div class="position-relative" style="overflow: auto;">
         <div v-show="ifCoverImage">
-            <img class="img-fluid" :class="isFullScreen ? 'trailer-cover-full-screen' : 'trailer-cover'" :src="coverSrc" @load="coverImageLoading = false" @error="$event.target.src = require('@/assets/9x16loading.png')">
+            <img class="img-fluid" :class="isFullScreen ? 'trailer-cover-full-screen' : 'trailer-cover'" :src="coverSrc || require('@/assets/9x16loading.png')" @load="coverImageLoading = false" @error="$event.target.src = require('@/assets/9x16loading.png')">
         </div>
         <img v-if="!ifCoverImage" class="w-100" :class="isFullScreen ? 'trailer-cover-full-screen' : 'trailer-cover'" :src="require('@/assets/9x16loading.png')"/>
         <div class="card-img-overlay p-0">
             <div class="h-100 d-flex flex-column justify-content-center">
-                <div class="d-flex flex-row justify-content-center justify-content-md-start mx-3 mb-md-0" :class="isAnyLink ? 'mb-5' : ''">
+                <div class="d-flex flex-row justify-content-center justify-content-md-start mx-3 mb-md-0">
                     <div class="d-flex flex-column">
                         <div v-show="ifProfileImage">
-                            <img class="img-thumbnail profile-pic" :src="profileSrc" @load="profileImageLoading = false" @error="$event.target.src = require('@/assets/2x3loading.png')">
+                            <img class="img-thumbnail profile-pic" :src="profileSrc || require('@/assets/2x3loading.png')" @load="profileImageLoading = false" @error="$event.target.src = require('@/assets/2x3loading.png')">
                         </div>
                         <img v-if="!ifProfileImage" class="img-thumbnail profile-pic w-100" :src="require('@/assets/2x3loading.png')"/>
                     </div>
@@ -30,8 +30,8 @@
                 <external-links :externalIds="externalIds" :homePage="homePage"/>
             </div>
             <div v-if="isOwnProfile || !isFullScreen" class="right-top">
-                <router-link v-if="!isFullScreen && !pageLoading" :to="personUrl($route.params.id, 'detail')" replace type="text" class="btn-sm btn-block border-0 text-white one-line"><div>More Info</div></router-link>
-                <router-link v-if="isOwnProfile" to="/profile"><font-awesome-icon class="text-white" :icon="['fas', 'cog']"/></router-link>
+                <router-link v-if="!isFullScreen && !pageLoading" :to="toMore" replace type="text" class="btn-sm btn-block border-0 text-white one-line"><div>More Info</div></router-link>
+                <router-link v-if="isOwnProfile && isFullScreen" :to="this.settingsUrl()"><font-awesome-icon class="text-white" :icon="['fas', 'cog']"/></router-link>
             </div>
         </div>
     </div>
@@ -52,9 +52,8 @@ export default {
         profileSrc: String,
         isOwnProfile: Boolean,
         type: {
-            validator: value => ['small'].includes(value)
+            validator: value => ['person', 'user'].includes(value)
         },
-        links: Object,
         isFullScreen: Boolean,
         externalIds: Object,
         homePage: String
@@ -69,7 +68,11 @@ export default {
         pageLoading() { return this.$store.state.loading.pageLoading },
         isAnyLink() { return this.isFullScreen },
         ifCoverImage() { return !this.coverImageLoading && !this.pageLoading },
-        ifProfileImage() { return !this.profileImageLoading && !this.pageLoading }
+        ifProfileImage() { return !this.profileImageLoading && !this.pageLoading },
+        toMore() {
+            if(this.type === 'person') return this.personUrl(this.$route.params.id, 'detail')
+            if(this.type === 'user') return this.userUrl(this.$route.params.id, 'detail')
+        }
     },
     watch: {
     }

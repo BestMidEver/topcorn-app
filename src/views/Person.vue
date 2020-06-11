@@ -104,7 +104,7 @@ export default {
             returnObj.results = [...data.cast.map(obj => { obj.job = 'Actor'; return obj }), ...data.crew]
             returnObj.jobTypes = lodash.groupBy(returnObj.results, obj => obj.job)
             returnObj.jobTypes = Object.entries(returnObj.jobTypes).map(type => { return { job: type[0], count: type[1].length } })
-            returnObj.genres = returnObj.results.map(obj => obj.genre_ids).reduce((a, c) => [...new Set([...a ,...c])], [])
+            returnObj.genres = returnObj.results.map(obj => obj.genre_ids).reduce((a, c) => [...new Set([...a, ...c])], [])
             returnObj.genres = returnObj.genres.map(genre => { return { name: this.codeToGenre(genre), id: genre } })
             returnObj.results = lodash.groupBy(returnObj.results, obj => obj.id)
             returnObj.results = Object.values(returnObj.results).map(obj => { obj[0].job = obj.map(copy => copy.job); return obj[0] })

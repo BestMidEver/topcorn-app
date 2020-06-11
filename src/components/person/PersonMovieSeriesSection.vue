@@ -15,6 +15,7 @@ import urlGenerate from '@/mixins/urlGenerate'
 import Cards from '@/components/Cards.vue'
 import compressedCards from '@/mixins/compressedCards'
 import FilterSorter from '@/components/filterSorter/FilterSorter.vue'
+import filterSorterDefaultFilters from '@/components/filterSorter/filterSorterDefaultFilters'
 import filterSorterAdapter from '@/components/filterSorter/filterSorterAdapter'
 
 
@@ -24,7 +25,7 @@ export default {
         'cards': Cards,
         'filter-sorter': FilterSorter
     },
-    mixins: [urlGenerate, compressedCards, filterSorterAdapter],
+    mixins: [urlGenerate, compressedCards, filterSorterDefaultFilters, filterSorterAdapter],
     props: {
         data: Object,
         isFullScreen: Boolean,

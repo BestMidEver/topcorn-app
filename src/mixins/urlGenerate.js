@@ -10,6 +10,9 @@ export default {
         tmdbPersonUrl: (id) => `${process.env.VUE_APP_TMDB_API_URL}/person/${id}?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en&append_to_response=movie_credits,tv_credits,external_ids,tagged_images,images`,
         movieSeriesDataUrl: (type, id, season, episode) => `${process.env.VUE_APP_API_URL}/getMovieSeriesAllData/${type}/${id}${season||season===0?'/'+season:''}${episode||episode===0?'/'+episode:''}`,
         personDataUrl: (id) => `${process.env.VUE_APP_API_URL}/getPersonAllData/${id}`,
+        userDataUrl: () => `${process.env.VUE_APP_API_URL}/getUserAllData`,
+        userDetailDataUrl: (id) => `${process.env.VUE_APP_API_URL}/getUserDetailData/${id}`,
+        userInteractionSetUrl: (page = 1) => `${process.env.VUE_APP_API_URL}/getUserInteractionSet?page=${page}`,
         reviewsDataUrl: (type, id, page = 1) => `${process.env.VUE_APP_API_URL}/${type==='person'?'getPersonReviewsData':'getReviewsData/'+type}/${id}?page=${page}`,
         moreLikeThisDataUrl: (movieSeriesType, type, id, page = 1) => `${process.env.VUE_APP_TMDB_API_URL}/${movieSeriesType=='series'?'tv':movieSeriesType}/${id}/${type}?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en&page=${page}`,
         
@@ -17,7 +20,8 @@ export default {
         // page urls
         movieSeriesUrl: (type, id, tab = 'profile', season = -1, episode = -1) => `/${type}/${tab}/${id}${type === 'series' ? '/' + season + '/' + episode : ''}${['cast', 'comment', 'recommendations', 'similar', 'collection'].includes(tab)?'/1':''}`,
         personUrl: (id, tab = 'profile') => `/person/${tab}/${id}${['movie', 'series', 'image'].includes(tab)?'/1':''}`,
-        userUrl: (id) => `/user/${id}`,
+        userUrl: (id, tab = 'profile') => `/user/${tab}/${id}${['movie', 'series', 'comment', 'user'].includes(tab)?'/1':''}`,
+        settingsUrl: (tab = 'profile') => `/settings/${tab}`,
 
         // route
         changeParams(paramsObj) {

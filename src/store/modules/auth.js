@@ -6,7 +6,8 @@ import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 
 const state = {
-    token: localStorage.getItem('access_token') || null
+    token: localStorage.getItem('access_token') || null,
+    userId: localStorage.getItem('userId') || null
 }
 
 const getters = {
@@ -21,6 +22,9 @@ const mutations = {
     },
     destroyToken(state) {
       state.token = null
+    },
+    setUserId(state, id) {
+      state.userId = id
     }
 }
 
@@ -34,6 +38,7 @@ const actions = {
                 const token = response.data.access_token
                 localStorage.setItem('access_token', token)
                 context.commit('retrieveToken', token)
+                context.dispatch('getSimpleUserData')
                 resolve(response)
             }).catch(error => {
                 reject(error)
@@ -71,6 +76,15 @@ const actions = {
                 })
             })
         }
+    },
+    getSimpleUserData(context) {
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
+        axios.get(process.env.VUE_APP_API_URL + '/getSimpleUserData')
+        .then(response => {
+            localStorage.setItem('userId', response.data.id)
+            context.commit('setUserId', response.data.id)
+            this.$forceUpdate()
+        })
     }
 }
 

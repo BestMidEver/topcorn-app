@@ -1,7 +1,9 @@
 <template>
     <div>
         <div class="d-flex justify-content-between pl-3 pl-md-1 pr-1">
-            <div class="h6 d-flex align-items-center mb-0">{{ author }} <five-star v-if="rate > 0" :rate="rate"/></div>
+            <div class="h6 d-flex align-items-center mb-0">
+                <router-link v-if="to" :to="to" class="text-dark">{{ author }}</router-link><span v-else class="text-muted">{{ author }}</span> <five-star v-if="rate > 0" :rate="rate"/>
+            </div>
             <div class="h6 mb-0">
                 <div v-if="data.is_mine == 1" class="btn btn-sm btn-block px-lg-4 d-flex align-items-center" style="cursor: auto">
                     <font-awesome-icon :icon="['far', 'heart']" style="fontSize: 22px" class="text-muted"/>
@@ -41,6 +43,7 @@
 <script>
 import CustomButton from '@/components/CustomButton.vue'
 import FiveStar from './FiveStar.vue'
+import urlGenerate from '@/mixins/urlGenerate'
 
 
 export default {
@@ -48,13 +51,23 @@ export default {
         'custom-button': CustomButton,
         'five-star': FiveStar,
     },
+    mixins: [urlGenerate],
     props: {
         data: Object,
         boundedTo: Array,
     },
     computed: {
-        results() { return this.data.data },
+        //results() { return this.data.data },
+        objName() { if(this.data.hasOwnProperty('obj_name')) return this.data.obj_name },
+        to() {
+            if(this.objName){
+                if(['movie', 'series'].includes(this.data.type)) return this.movieSeriesUrl(this.data.type, this.data.movie_series_id)
+                if(this.data.type === 'person') return this.personUrl(this.data.movie_series_id)
+            }
+            if(this.data.user_id) return this.userUrl(this.data.user_id)
+        },
         author() {
+            if(this.objName) return this.objName
             if(this.data.author) return this.data.author
             if(this.data.name) return this.data.name
         },
@@ -65,7 +78,7 @@ export default {
         },
         isLong() { return this.short !== this.newLinedContent },
         isLiked() { return this.data.is_liked == 1 },
-        rate() { return this.data.rate }
+        rate() { return this.data.rate },
     },
     methods: {
         likeButtonClicked() {

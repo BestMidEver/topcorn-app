@@ -14,9 +14,12 @@ export default {
         homePage: String
     },
     computed: {
-        facebookLink() { return this.externalIds && this.externalIds.facebook_id && `${process.env.VUE_APP_FACEBOOK_URL}/${this.externalIds.facebook_id}` },
-        instagramLink() { return this.externalIds && this.externalIds.instagram_id && `${process.env.VUE_APP_INSTAGRAM_URL}/${this.externalIds.instagram_id}` },
-        twitterLink() { return this.externalIds && this.externalIds.twitter_id && `${process.env.VUE_APP_TWITTER_URL}/${this.externalIds.twitter_id}` },
+        facebookId() { return this.externalIds && (this.externalIds.facebook_link || (!this.externalIds.hasOwnProperty('facebook_link') && this.externalIds.facebook_id)) },
+        facebookLink() { return this.facebookId && `${process.env.VUE_APP_FACEBOOK_URL}/${this.facebookId}` },
+        instagramId() { return this.externalIds && (this.externalIds.instagram_id || this.externalIds.instagram_link) },
+        instagramLink() { return this.instagramId && `${process.env.VUE_APP_INSTAGRAM_URL}/${this.instagramId}` },
+        twitterId() { return this.externalIds && (this.externalIds.twitter_id || this.externalIds.twitter_link) },
+        twitterLink() { return this.twitterId && `${process.env.VUE_APP_TWITTER_URL}/${this.twitterId}` },
     }
 }
 </script>

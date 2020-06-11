@@ -17,8 +17,10 @@ const mutations = {
             found.rate = data.data.rate_code
         } else if(typeof data === 'object') {
             let index = state.dataObject.data.findIndex(obj => obj.id === data.id)
-            if(index >= 0) Vue.set(state.dataObject.data, index, data)
-            else state.dataObject.data.unshift(data)
+            if(index >= 0) {
+                if(state.dataObject.data[index].obj_name) data.obj_name = state.dataObject.data[index].obj_name
+                Vue.set(state.dataObject.data, index, data)
+            }else state.dataObject.data.unshift(data)
         } else {
             state.dataObject.data = state.dataObject.data.filter(review => review.id !== data)
         }

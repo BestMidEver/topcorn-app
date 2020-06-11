@@ -6,7 +6,7 @@
         <div v-show="!loading">
             <div :class="containerClass" class="card-group no-gutters marginClass">
                 <template v-if="['movie', 'series'].includes(type)">
-                    <movie-series-card v-for="card in results" :key="`card-${card.id}`" :data="card" :boundedTo="boundedTo" :type="type"/>
+                    <movie-series-card v-for="card in results" :key="`card-${card.id}`" :data="card" :boundedTo="boundedTo" :type="type" :cardType="cardType"/>
                 </template>
                 <template v-else-if="type === 'person'">
                     <person-card v-for="(card, index) in results" :key="`card-${index}-${card.id}`" :data="card"/>
@@ -21,7 +21,7 @@
                     <profile-image-card v-for="card in results" :key="`card-${card.file_path}`" :data="card"/>
                 </template>
             </div>
-            <pagination :expandStatus="expandStatus" :tmdbData="tmdbData" :tcData="tcData" :tcAllResults="tcAllResults" :itemPerPage="itemPerPage"/>
+            <pagination :expandStatus="expandStatus" :tmdbData="tmdbData" :tcData="tcData" :tcAllResults="tcAllResults" :itemPerPage="itemPerPage" :loading="loading"/>
         </div>
     </div>
 </template>
@@ -53,6 +53,7 @@ export default {
         tcAllResults: Array,
         boundedTo: Array,
         //isCardColumns: Boolean,
+        cardType: String,
         expandStatus: {
             validator: value => ['expanded', 'compressed'].includes(value)
         },
@@ -90,15 +91,15 @@ export default {
 .marginClass{ margin: -0.5rem -0.25rem 0px -0.25rem; }
 .card-columns{ -webkit-column-gap: 0.5rem; -moz-column-gap: 0.5rem; column-gap: 0.5rem; }
 .compressed.movie > div:nth-child(n+3), .compressed.series > div:nth-child(n+3), .compressed.list > div:nth-child(n+3), .compressed.profile-image-card > div:nth-child(n+2),
-.compressed.person > div:nth-child(n+4){ display: none }
+.compressed.person > div:nth-child(n+4), .compressed.user > div:nth-child(n+4){ display: none }
 @media (min-width: 576px) {
-    .compressed.person > div:nth-child(n){ display: block }
-    .compressed.person > div:nth-child(n+5){ display: none }
+    .compressed.person > div:nth-child(n), .compressed.user > div:nth-child(n){ display: block }
+    .compressed.person > div:nth-child(n+5), .compressed.user > div:nth-child(n+5){ display: none }
 }
 @media (min-width: 768px) {
-    .compressed.person > div:nth-child(n), .compressed.movie > div:nth-child(n), .compressed.series > div:nth-child(n), .compressed.list > div:nth-child(n), .compressed.list > div:nth-child(n), .compressed.profile-image-card > div:nth-child(n){ display: block }
+    .compressed.person > div:nth-child(n), .compressed.user > div:nth-child(n), .compressed.movie > div:nth-child(n), .compressed.series > div:nth-child(n), .compressed.list > div:nth-child(n), .compressed.list > div:nth-child(n), .compressed.profile-image-card > div:nth-child(n){ display: block }
     .compressed.movie > div:nth-child(n+4), .compressed.series > div:nth-child(n+4), .compressed.list > div:nth-child(n+4), .compressed.profile-image-card > div:nth-child(n+3),
-    .compressed.person > div:nth-child(n+7){ display: none }
+    .compressed.person > div:nth-child(n+7), .compressed.user > div:nth-child(n+7){ display: none }
 }
 @media (min-width: 992px) {
     .compressed.movie > div:nth-child(n), .compressed.series > div:nth-child(n), .compressed.list > div:nth-child(n), .compressed.profile-image-card > div:nth-child(n){ display: block }

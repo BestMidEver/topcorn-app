@@ -33,6 +33,7 @@ export default {
         expandStatus: {
             validator: value => ['expanded', 'compressed'].includes(value)
         },
+        loading: Boolean
     },
     computed: {
         totalPages() {
@@ -43,11 +44,12 @@ export default {
         currentPage() { return parseInt(this.$route.params.page) },
         firstPageClass() { return (this.currentPage === 1 ? 'disabled ' : '') },
         lastPageClass() { return (this.currentPage === this.totalPages ? 'disabled ' : '') },
-        loading() { return this.$store.state.loading.pageLoading },
         showNoResult() {
-            if(this.tmdbData) return !(this.tmdbData.results.length > 0)
-            if(this.tcData) return !(this.tcData.data.length > 0)
+            if(this.loading) return false
+            if(this.tmdbData && this.tmdbData.results) return !(this.tmdbData.results.length > 0)
+            if(this.tcData && this.tcData.data) return !(this.tcData.data.length > 0)
             if(this.tcAllResults) return !(this.tcAllResults.length > 0)
+            return false
         },
     },
     watch: {

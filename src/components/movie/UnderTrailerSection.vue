@@ -34,17 +34,18 @@
                     :status="lastSeenStatus" @click="$store.dispatch('noModals/lastSeen', { data: data, boundedTo: boundedTo, lastSeenData: lastSeenData })" :disabled="$store.state.loading.responseWaiting">
                     <div class="one-line">Last Seen</div>
                 </custom-button>
-                <custom-button v-if="isButtonAllowed('edit')" type="edit" :style="{order: calcButtonIndex('edit')}" :borderRadius="calcButtonBorderRadius('edit')" iconSize="22px" status="" class="btn-sm btn-block border-0 mt-0 px-0"
+                <custom-button v-if="isButtonAllowed('edit')" type="edit" :style="{order: calcButtonIndex('edit')}" :borderRadius="calcButtonBorderRadius('edit')" iconSize="22px" class="btn-sm btn-block border-0 mt-0 px-0"
                     :disabled="$store.state.loading.responseWaiting">
                     <div class="one-line">Comment</div>
                 </custom-button>
-                <custom-button v-if="isButtonAllowed('follow')" type="follow" :style="{order: calcButtonIndex('follow')}" :borderRadius="calcButtonBorderRadius('follow')" iconSize="22px" status="active" class="btn-sm btn-block border-0 mt-0 px-0"
-                    :disabled="$store.state.loading.responseWaiting">
+                <custom-button v-if="isButtonAllowed('follow')" type="follow" :style="{order: calcButtonIndex('follow')}" :borderRadius="calcButtonBorderRadius('follow')" iconSize="22px" class="btn-sm btn-block border-0 mt-0 px-0"
+                    :status="followStatus" @click="$store.dispatch('noModals/follow', { data: data, boundedTo: boundedTo })" :disabled="$store.state.loading.responseWaiting">
                     <div class="one-line">Following</div>
                 </custom-button>
-                <custom-button v-if="isButtonAllowed('bell')" type="bell" :style="{order: calcButtonIndex('bell')}" :borderRadius="calcButtonBorderRadius('bell')" iconSize="22px" status="active" class="btn-sm btn-block border-0 mt-0 px-0"
-                    :disabled="$store.state.loading.responseWaiting">
-                    <div class="one-line">Notify</div>
+                <custom-button v-if="isButtonAllowed('bell')" type="bell" :style="{order: calcButtonIndex('bell')}" :borderRadius="calcButtonBorderRadius('bell')" iconSize="22px" class="btn-sm btn-block border-0 mt-0 px-0"
+                    :status="notifyByStatus" @click="$store.dispatch('noModals/getNotified', { data: data, boundedTo: boundedTo, type: type })" :disabled="$store.state.loading.responseWaiting">
+                    <div class="one-line">Get Notified</div>
+                    <div class="one-line">(Bumper To Bumper)</div>
                 </custom-button>
             </div>
         </div>
@@ -66,7 +67,7 @@ export default {
     props: {
         title: String,
         type: {
-            validator: value => ['movie', 'series', 'season', 'episode', 'profile'].includes(value)
+            validator: value => ['movie', 'series', 'season', 'episode', 'user'].includes(value)
         },
         boundedTo: Array,
         data: Object
@@ -78,7 +79,7 @@ export default {
                 'series': ['watch-later', 'seen', 'ban', 'share'],
                 'season': ['last-seen'],
                 'episode': ['last-seen'],
-                'profile': ['follow', 'bell']
+                'user': ['follow', 'bell']
             },
         }
     },
@@ -88,6 +89,8 @@ export default {
         seenStatus() { return !this.$store.state.loading.responseWaiting && this.data.rate_code > 0 ? `active${this.data.rate_code}` : '' },
         banStatus() { return !this.$store.state.loading.responseWaiting && this.data.ban_id > 0 ? 'active' : '' },
         lastSeenStatus() { return !this.$store.state.loading.responseWaiting && this.data.seen_id > 0 ? 'active' : '' },
+        followStatus() { return !this.$store.state.loading.responseWaiting && this.data.following_id > 0 ? 'active' : '' },
+        notifyByStatus() { return !this.$store.state.loading.responseWaiting && this.data.notified_by_id > 0 ? 'active' : '' },
         seriesData() { return this.$store.state.movieSeriesDataSets.dataObject2 },
         lastSeenData() {
             const nextSeason = this.seasonNumber + 1 > this.seriesData.number_of_seasons ? null : this.seasonNumber + 1

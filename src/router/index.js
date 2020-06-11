@@ -29,7 +29,12 @@ import PersonDetail from '@/components/person/PersonDetail.vue'
 import PersonMovieSeries from '@/components/person/PersonMovieSeries.vue'
 import PersonImage from '@/components/person/PersonImage.vue'
 import PersonComment from '@/components/person/PersonComment.vue'
-import Profile from '@/views/Profile.vue'
+import User from '@/views/User.vue'
+import UserProfile from '@/components/user/UserProfile.vue'
+import UserDetail from '@/components/user/UserDetail.vue'
+import UserMovieSeries from '@/components/user/UserMovieSeries.vue'
+import UserComment from '@/components/user/UserComment.vue'
+import UserUser from '@/components/user/UserUser.vue'
 import Settings from '@/views/Settings.vue'
 
 Vue.use(VueRouter)
@@ -91,7 +96,15 @@ const routes = [
       { path: '/person/comment/:id/:page', name: 'person-comment', component: PersonComment },
     ]
   },
-  { path: '/profile', name: 'Profile', component: Profile, meta: { requiresAuth: true }   },
+  { path: '/user/:tab/:id', name: 'user', component: User, meta: { requiresAuth: true },
+    children: [
+      { path: '/user/profile/:id', name: 'user-profile', component: UserProfile },
+      { path: '/user/detail/:id', name: 'user-detail', component: UserDetail },
+      { path: '/user/comment/:id/:page', name: 'user-comment', component: UserComment },
+      { path: '/user/user/:id/:page', name: 'user-user', component: UserUser },
+      { path: '/user/:tab/:id/:page', name: 'user-movieSeries', component: UserMovieSeries },
+    ]
+  },
   { path: '/settings', name: 'Settings', component: Settings, meta: { requiresAuth: true }   },
 ]
 

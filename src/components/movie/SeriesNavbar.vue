@@ -3,26 +3,22 @@
         <div :style="{ 'min-height': activeSeasonType == -1 ? '38px' : '39px'}">
             <tabs v-if="!$store.state.loading.pageLoading" :items="seasonTabItems" :itemTypes="seasonTabTypes" :activeType.sync="activeSeasonType" :class="activeSeasonType !== -1 ? 'bottom-line' : ''"/>
         </div>
-        <!-- <div v-else style="height: 39px"></div> -->
         <div :style="{ 'min-height': (activeSeasonType != -1 && ($store.state.loading.pageLoading || $store.state.loading.pageLoading3)) ? '42px' : ''}">
             <tabs v-if="!$store.state.loading.pageLoading && activeSeasonType !== -1 && !$store.state.loading.pageLoading3" :items="episodeTabItems" :itemTypes="episodeTabTypes"
                 :activeType.sync="activeEpisodeType" class="mt-1" :class="$route.name.includes('series-cast') ? 'bottom-line' : ''"/>
         </div>
-        <!-- <div v-if="$store.state.loading.pageLoading || $store.state.loading.pageLoading3" style="height: 42px"></div> -->
     </div>
 </template>
 
 <script>
 import Tabs from '@/components/Tabs.vue'
 import codeToText from '@/mixins/codeToText'
-import SkeletonLoader from '@/components/SkeletonLoader.vue'
 import seriesComputeds from '@/components/movie/seriesComputeds.js'
 
 
 export default {
     components: {
         'tabs': Tabs,
-        'skeleton-loader': SkeletonLoader,
     },
     mixins: [codeToText, seriesComputeds],
     props: {

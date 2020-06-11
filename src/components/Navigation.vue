@@ -15,7 +15,7 @@
             <!-- Mobile Search button -->
             <ul class="navbar-nav text-center">
                 <li class="nav-item">
-                    <router-link :to="searchTo" class="nav-link d-md-none" :class="{ active: isActive('/search') }">
+                    <router-link :to="searchTo" class="nav-link d-md-none" :class="{ active: isSearch }">
                         <font-awesome-icon icon="search"/>
                         <div class="extra-small">Search</div>
                     </router-link>
@@ -25,27 +25,17 @@
             <!-- Mobile Quick Vote button -->
             <ul class="navbar-nav text-center">
                 <li class="nav-item">
-                    <router-link :to="quickVoteTo" class="nav-link d-md-none" :class="{ active: isActive('/quick-vote') }">
+                    <router-link :to="quickVoteTo" class="nav-link d-md-none" :class="{ active: isQuickVote }">
                         <font-awesome-icon icon="star-half-alt"/>
                         <div class="extra-small">Quick Vote</div>
                     </router-link>
                 </li>
             </ul>
 
-            <!-- Mobile Notifications button -->
-            <!-- <ul class="navbar-nav text-center">
-                <li class="nav-item">
-                    <router-link to="/notifications" class="nav-link d-md-none">
-                        <font-awesome-icon :icon="['far', 'bell']"/>
-                        <div class="extra-small">Notifications</div>
-                    </router-link>
-                </li>
-            </ul> -->
-
-            <!-- Mobile Notifications button -->
+            <!-- Mobile My Profile button -->
             <ul class="navbar-nav text-center">
                 <li class="nav-item">
-                    <router-link to="/profile" class="nav-link d-md-none">
+                    <router-link :to="myProfileTo" class="nav-link d-md-none" :class="{ active: isMyProfile }">
                         <font-awesome-icon :icon="['fas', 'user']"/>
                         <div class="extra-small">My Profile</div>
                     </router-link>
@@ -76,14 +66,14 @@
 
                     <!-- Collapsed & Larger Screen Recommendation button -->
                     <li class="nav-item">
-                        <router-link :to="searchTo" class="nav-link" :class="{ active: isActive('/search') }">
+                        <router-link :to="searchTo" class="nav-link" :class="{ active: isSearch }">
                             <font-awesome-icon icon="search" class="d-none d-md-inline"/> Search
                         </router-link>
                     </li>
 
                     <!-- Collapsed & Larger Screen Quick Vote button -->
                     <li class="nav-item">
-                        <router-link :to="quickVoteTo" class="nav-link" :class="{ active: isActive('/quick-vote') }">
+                        <router-link :to="quickVoteTo" class="nav-link" :class="{ active: isQuickVote }">
                             <font-awesome-icon icon="star-half-alt" class="d-none d-md-inline"/> Quick Vote
                         </router-link>
                         <div class="dropdown-divider d-md-none"></div>
@@ -91,7 +81,7 @@
 
                     <!-- Collapsed My Profile button -->
                     <li class="nav-item d-md-none">
-                        <router-link to="/my-profile" class="nav-link">My Profile</router-link>
+                        <router-link :to="myProfileTo" class="nav-link" :class="{ active: isMyProfile }">My Profile</router-link>
                     </li>
 
                     <!-- Collapsed Notifications button -->
@@ -146,7 +136,7 @@
 
                     <!-- Larger Screen My Profile button -->
                     <li class="nav-item">
-                        <router-link to="/my-profile" class="nav-link">
+                        <router-link :to="myProfileTo" class="nav-link" :class="{ active: isMyProfile }">
                             <font-awesome-icon icon="user"/>
                             My Profile
                         </router-link>
@@ -199,8 +189,14 @@ export default {
         'notification-badge': NotificationBadge,
     },
     computed: {
-        searchTo() { return this.isStringStartWith(this.$route.path, '/search') ? '/search-/movie/1' : this.$store.state.navigation.search },
-        quickVoteTo() { return this.isStringStartWith(this.$route.path, '/quick-vote') ? '/quick-vote-movies' : this.$store.state.navigation.quickVote },
+        userId() { return this.$store.state.auth.userId },
+        parentRouteName() { return this.$route.matched[0] && this.$route.matched[0].name },
+        isSearch() { return this.parentRouteName === 'search' },
+        isQuickVote() { return this.parentRouteName === 'quickVote' },
+        isMyProfile() { return this.parentRouteName === 'user' && this.$route.params.id === this.userId },
+        searchTo() { return this.isSearch ? '/search-/movie/1' : this.$store.state.navigation.search },
+        quickVoteTo() { return this.isQuickVote ? '/quick-vote-movies' : this.$store.state.navigation.quickVote },
+        myProfileTo() { return this.isMyProfile ? `/user/profile/${this.userId}` : this.$store.state.navigation.myProfile },
     },
     methods: {
         logout() {
@@ -208,9 +204,6 @@ export default {
                 this.$router.push({ name: 'Login' })
             })
         },
-        isActive(input) {
-            return this.isStringStartWith(this.$route.path, input)
-        }
     }
 }
 </script>

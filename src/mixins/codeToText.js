@@ -11,6 +11,13 @@ export default {
             if(rateCode === 4) return 'Good'
             if(rateCode === 5) return 'Legendary'
         },
+        rateCodeToColor: rateCode => {
+            if(rateCode === 1) return 'dc3545'
+            if(rateCode === 2) return 'ffc107'
+            if(rateCode === 3) return '6c757d'
+            if(rateCode === 4) return '17a2b8'
+            if(rateCode === 5) return '28a745'
+        },
         codeToLanguage: code => { const match = languageCodes.find(language => language.i === code); return (match && match.o) || code },
         codeToCountry: code => { const match = countryCodes.find(country => country.i === code); return (match && match.o) || code },
         codeToGenre: code => { const match = genreCodes.find(genre => genre.i === code); return (match && match.o) || code },

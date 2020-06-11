@@ -48,6 +48,7 @@ export default {
             if(this.cardType === 'person') return this.personUrl(this.id)
             if(this.cardType === 'movie') return this.movieSeriesUrl('movie', this.id)
             if(this.cardType === 'series') return this.movieSeriesUrl('series', this.id)
+            if(this.cardType === 'user') return this.userUrl(this.id)
         }
     }
 }

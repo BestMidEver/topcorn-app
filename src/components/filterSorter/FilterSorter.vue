@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="d-flex justify-content-between align-items-center">
-            <div class="ml-3 small text-muted">{{filterSorterText}}</div>
+            <div class="ml-3 small text-muted py-2">{{filterSorterText}}</div>
             <div class="mr-1">
                 <custom-button type="filter-sorter" @click="openFilter()"/>
             </div>
@@ -37,11 +37,11 @@ export default {
         },
         sortText() {
             const sortFilter = this.selectedFilters.find(filter => filter.effect.includes('sort-'))
-            return sortFilter.selected || sortFilter.default
+            return sortFilter && (sortFilter.selected || sortFilter.default)
         },
         filterText() {
-            const filterTexts = this.selectedFilters.filter(filter => filter.effect.includes('filter-') && this.isTrue(filter.selected))
-            return filterTexts.map(filter => `${filter.title}: ${this.parseArray(filter.selected).join(', ')}`).join(' | ')
+            const filterTexts = this.selectedFilters.filter(filter => filter.effect.includes('filter-') && (this.isTrue(filter.selected) || filter.forceShow))
+            return filterTexts.map(filter => `${filter.title}: ${this.parseArray(filter.selected || filter.default).join(', ')}`).join(' | ')
         },
         filterSorterText() {
             let arr = []

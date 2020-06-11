@@ -127,6 +127,37 @@ const actions = {
         }).catch(error => {
         }).then(() => { context.dispatch('loading/finishResponseWaiting', null, { root:true }) })
     },
+    follow(context, data) {
+        context.dispatch('loading/startResponseWaiting', null, { root:true })
+        const follow = data.data.following_id > 0 ? null : 1
+        axios.post(`${process.env.VUE_APP_API_URL}/follow`, {
+            obj_id: data.data.obj_id,
+            follow: follow
+        })
+        .then(response => {
+            data.data.following_id = follow
+            data.boundedTo.forEach(boundedTo => {
+                context.commit(boundedTo, data.data, { root: true })
+            })
+        }).catch(error => {
+        }).then(() => { context.dispatch('loading/finishResponseWaiting', null, { root:true }) })
+    },
+    getNotified(context, data) {
+        console.log(data)
+        context.dispatch('loading/startResponseWaiting', null, { root:true })
+        const notifiedBy = data.data.notified_by_id > 0 ? null : 1
+        axios.post(`${process.env.VUE_APP_API_URL}/notifiedBy/${data.type}`, {
+            obj_id: data.data.obj_id,
+            notified_by: notifiedBy
+        })
+        .then(response => {
+            data.data.notified_by_id = notifiedBy
+            data.boundedTo.forEach(boundedTo => {
+                context.commit(boundedTo, data.data, { root: true })
+            })
+        }).catch(error => {
+        }).then(() => { context.dispatch('loading/finishResponseWaiting', null, { root:true }) })
+    },
 }
 
 export default {

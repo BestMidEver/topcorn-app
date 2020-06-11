@@ -1,6 +1,6 @@
 <template>
     <div>
-        <cover-container :coverSrc="coverSrc" :profileSrc="profileSrc" :links="links" :isFullScreen="isFullScreen" :externalIds="data.external_ids" :homePage="data.homepage" :class="isFullScreen ? 'mb-3' : ''">
+        <cover-container type="person" :coverSrc="coverSrc" :profileSrc="profileSrc" :isFullScreen="isFullScreen" :externalIds="links" :homePage="data.homepage" :class="isFullScreen ? 'mb-3' : ''">
             <template slot="right-text-first-row">
                 <skeleton-loader v-if="pageLoading" type="full-line" class="h5" lineHeight="27px" style="width: 140px; max-width: 50vw"/>
                 <h5 v-if="!pageLoading"><span class="text-left">{{ name }}<small v-if="age"> ({{age}})</small></span></h5>

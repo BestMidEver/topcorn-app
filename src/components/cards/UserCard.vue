@@ -1,5 +1,5 @@
 <template>
-    <card-container :data="data" type="small">
+    <card-container :data="data" type="small" cardType="user">
         <template slot="image">
             <card-image :data="data" :preventDarken="true"/>
         </template>
@@ -23,7 +23,7 @@ export default {
     },
     props: {
         data: Object,
-    }
+    },
 }
 </script>
 

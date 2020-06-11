@@ -22,6 +22,7 @@ Vue.mixin({
         roundTo: (number, over = 1) => Math.round((number + Number.EPSILON) * over) / over,
         getAge: (birth_day, death_day = null) => { let today = death_day === null ? new Date() : new Date(death_day); let birthDate = new Date(birth_day); let age = today.getFullYear() - birthDate.getFullYear(); let m = today.getMonth() - birthDate.getMonth(); if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) { age-- }; return age; },
         isArrContainsSecondArr: (firstArr, secondArr) => lodash.difference(secondArr, firstArr).length === 0,
-        parseArray: (array) => Array.isArray(array) ? array : [array]
+        parseArray: (array) => Array.isArray(array) ? array : [array],
+        arrayOfBasicObjectsToObject: (array) => array.reduce((result, item) => { const key = Object.keys(item)[0]; result[key] = item[key]; return result }, {})
     }
 })

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <person-movie-series-section :data="personData" class="mt-2" :type="type" :isFullScreen="true"/>
+        <person-movie-series-section :data="personData" class="mt-1" :type="type" :isFullScreen="true"/>
     </div>
 </template>
 

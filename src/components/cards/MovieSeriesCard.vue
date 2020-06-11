@@ -4,13 +4,13 @@
             <card-image :data="data"/>
         </template>
         <template slot="over-layer-top">
-            <!-- <card-over-layer-top/> -->
+            <card-over-layer-top :data="data" :cardType="cardType"/>
         </template>
         <template slot="over-layer-bottom">
             <card-over-layer-bottom :data="data"/>
         </template>
         <template slot="badge-top">
-            <!-- <card-badge-top/> -->
+            <card-badge-top :data="data" :cardType="cardType"/>
         </template>
         <template slot="badge-bottom">
             <card-badge-bottom :data="data"/>
@@ -49,7 +49,8 @@ export default {
     props: {
         data: Object,
         boundedTo: Array,
-        type: String
+        type: String,
+        cardType: String
     },
 }
 </script>

@@ -25,7 +25,7 @@ export default {
     data() {
         const tcResponse = { current_page: 1, data: [], last_page: 0, total: 0 }
         return {
-            type: 'person',
+            type: 'user',
             tcResponse0: tcResponse,
             tcResponse: tcResponse,
             axiosRandom: ''
