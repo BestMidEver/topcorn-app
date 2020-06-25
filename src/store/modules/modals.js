@@ -13,7 +13,7 @@ const getDefaultState = () => {
         voteCommentDataType: '',
         voteCommentType: '', // vote, vote + comment, comment
         shareObject: {},
-        shareObjectUsersData: {},
+        shareObjectUsersData: [],
     }
 }
 const state = getDefaultState()
@@ -28,7 +28,7 @@ const mutations = {
         state.voteCommentDataType = ''
         state.voteCommentType = ''
         state.shareObject = {}
-        state.shareObjectUsersData = {}
+        state.shareObjectUsersData = []
     },
     setVoteCommentData(state, data) { state.voteCommentData = data },
     setVoteCommentDataBoundedTo(state, boundedTo) { state.voteCommentDataBoundedTo = boundedTo },

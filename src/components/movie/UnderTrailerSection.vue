@@ -43,15 +43,15 @@
                         :status="followStatus" @click="$store.dispatch('noModals/follow', { data: data, boundedTo: boundedTo })" :disabled="$store.state.loading.responseWaiting">
                         <div class="one-line">Follow</div>
                     </custom-button>
-                    <custom-button v-if="isButtonAllowed('bell')" type="bell" :style="{order: calcButtonIndex('bell')}" :borderRadius="calcButtonBorderRadius('bell')" iconSize="22px" class="btn-sm btn-block border-0 mt-0 px-0"
+                    <!-- <custom-button v-if="isButtonAllowed('bell')" type="bell" :style="{order: calcButtonIndex('bell')}" :borderRadius="calcButtonBorderRadius('bell')" iconSize="22px" class="btn-sm btn-block border-0 mt-0 px-0"
                         :status="notifyByStatus" @click="$store.dispatch('noModals/getNotified', { data: data, boundedTo: boundedTo, type: type })" :disabled="$store.state.loading.responseWaiting">
                         <div class="one-line">Get Notified</div>
                         <div class="one-line">(Bumper To Bumper)</div>
-                    </custom-button>
+                    </custom-button> -->
                 </div>
             </div>
         </div>
-        <share-object/>
+        <share-object v-if="isShareObject"/>
     </div>
     
 </template>
@@ -78,7 +78,7 @@ export default {
         boundedTo: Array,
         data: Object
     },
-    data: function() {
+    data() {
         return {
             allowedItems: {
                 'movie': ['watch-later', 'seen', 'ban', 'share'],
@@ -90,7 +90,8 @@ export default {
         }
     },
     computed: {
-        allowedButtons: function () { return this.allowedItems[this.type] },
+        isShareObject() { return this.type === 'movie' || this.type === 'series' },
+        allowedButtons() { return this.allowedItems[this.type] },
         watchLaterStatus() { return !this.$store.state.loading.responseWaiting && this.data.later_id > 0 ? 'active' : '' },
         seenStatus() { return !this.$store.state.loading.responseWaiting && this.data.rate_code > 0 ? `active${this.data.rate_code}` : '' },
         banStatus() { return !this.$store.state.loading.responseWaiting && this.data.ban_id > 0 ? 'active' : '' },

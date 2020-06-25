@@ -87,7 +87,8 @@
 
                 <!-- Collapsed Notifications button -->
                 <li class="nav-item d-md-none">
-                    <router-link to="/notifications/1" class="nav-link">
+                    <router-link to="/notifications/1" class="nav-link" :class="{ active: isNotifications }">
+                        <font-awesome-icon icon="bell" class="mr-1"/>
                         Notifications
                         <notification-badge :count="notificationCount"/>
                     </router-link>
@@ -95,8 +96,8 @@
 
                 <!-- Collapsed Settings button -->
                 <li class="nav-item d-md-none">
-                    <router-link to="/settings/profile" class="nav-link">
-                        <font-awesome-icon icon="cog"/>
+                    <router-link to="/settings/profile" class="nav-link" :class="{ active: isSettings }">
+                        <font-awesome-icon icon="cog" class="mr-1"/>
                         Settings
                     </router-link>
                     <div class="dropdown-divider"></div>
@@ -130,7 +131,7 @@
             <ul class="navbar-nav ml-auto d-none d-md-flex">
                 <!-- Larger Screen Notifications button -->
                 <li class="nav-item">
-                    <router-link to="/notifications/1" class="nav-link">
+                    <router-link to="/notifications/1" class="nav-link" :class="{ active: isNotifications }">
                         <font-awesome-icon icon="bell"/>
                         <notification-badge :count="notificationCount"/>
                     </router-link>
@@ -151,7 +152,7 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-dropdown-menu">
                         <!-- Larger Screen Settings button -->
-                        <router-link to="/settings/profile" class="dropdown-item">
+                        <router-link to="/settings/profile" class="dropdown-item" :class="{ active: isSettings }">
                             <font-awesome-icon icon="cog" class="text-muted"/>
                             Settings
                         </router-link>
@@ -195,6 +196,8 @@ export default {
         isDiscover() { return this.parentRouteName === 'discover' },
         isQuickVote() { return this.parentRouteName === 'quickVote' },
         isMyProfile() { return this.parentRouteName === 'user' && this.$route.params.id === this.userId },
+        isNotifications() { return this.parentRouteName === 'notifications' },
+        isSettings() { return this.parentRouteName === 'settings' },
         searchTo() { return this.isSearch ? '/search-/movie/1' : this.$store.state.navigation.search },
         quickVoteTo() { return this.isQuickVote ? '/quick-vote-movies' : this.$store.state.navigation.quickVote },
         myProfileTo() { return this.isMyProfile ? `/user/profile/${this.userId}` : this.$store.state.navigation.myProfile },

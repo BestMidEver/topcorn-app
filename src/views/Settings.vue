@@ -1,7 +1,7 @@
 <template>
     <div>
         <header-bar title="Settings" :goBack="true"/>
-        <static-modal-container>
+        <static-modal-container type="expanded">
             <template slot="content">
                 <div class="modal-header py-0 px-1">
                     <settings-navbar/>

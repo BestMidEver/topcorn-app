@@ -2,9 +2,9 @@
     <div>
         <user-cover-section :data="userData" :interactionData="interactionData" class="mt-md-4" :pageLoading="$store.state.loading.pageLoading"/>
         <under-trailer-section v-if="!ownProfile" type="user" :data="interactionData" :boundedTo="[]"/>
-        <user-movie-series-section v-if="checkDataLength(moviesData)" :data="moviesData" class="mt-5" type="movie"/>
-        <user-movie-series-section v-if="checkDataLength(seriesData)" :data="seriesData" class="mt-5" type="series"/>
-        <review-section v-if="checkDataLength(commentData)" :data="commentData" :loading="$store.state.loading.pageLoading" :boundedTo="[]" type="user"/>
+        <user-movie-series-section v-if="loading || checkDataLength(moviesData)" :data="moviesData" class="mt-5" type="movie"/>
+        <user-movie-series-section v-if="loading || checkDataLength(seriesData)" :data="seriesData" class="mt-5" type="series"/>
+        <review-section v-if="checkDataLength(commentData)" :data="commentData" :loading="$store.state.loading.pageLoading" :boundedTo="['comments/setReview']" type="user"/>
         <user-user-section v-if="checkDataLength(friendsData)" :data="friendsData" :loading="$store.state.loading.pageLoading" class="mt-5"/>
     </div>
 </template>
@@ -32,6 +32,7 @@ export default {
         }
     },
     computed: {
+        loading() { return this.$store.state.loading.pageLoading },
         id() { return this.$route.params.id },
         ownProfile() { return this.$store.state.auth.userId == this.id },
         userData() { return this.$store.state.movieSeriesDataSets.dataObject },

@@ -19,17 +19,20 @@
                 </div>
             </div>
         </button>
+        <no-result v-if="data.length === 0" class="mt-0" expandStatus="compressed"/>
     </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import FiveStar from '@/components/reviews/FiveStar.vue'
+import NoResult from '@/components/NoResult.vue'
 
 
 export default {
     components: {
-        'five-star': FiveStar
+        'five-star': FiveStar,
+        'no-result': NoResult,
     },
     props: {
         data: [Array, Object]

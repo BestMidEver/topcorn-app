@@ -1,6 +1,6 @@
 <template>
     <div>
-        <user-cover-section :data="tcResponse" class="mt-1 mt-md-4" style="margin: 0 -1px" :pageLoading="loading" :isFullScreen="true"/>
+        <user-cover-section :data="tcResponse" class="mt-1 mt-md-4 cover-container" :pageLoading="loading" :isFullScreen="true"/>
         <form @submit.prevent="save">
             <div class="modal-body pt-0">
                 <custom-input v-model="username" type="text" title="User Name" :required="true" :disabled="loading"/>
@@ -166,4 +166,9 @@ export default {
 </script>
 
 <style scoped>
+@media (min-width: 576px) {
+    .cover-container {
+        margin: 0 -1px
+    }
+}
 </style>
