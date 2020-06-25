@@ -1,10 +1,10 @@
 <template>
     <div>
-        <div :id="'accordion' + id">
+        <div :id="'accordion' + id" style="margin-bottom: -0.5rem;">
             <div>
                 <div :id="'collapsea' + id" :data-parent="'#accordion' + id" class="collapse">
                     <div v-html="newLinedContent"></div>
-                    <div class="text-center pt-0" style="margin-bottom: -0.5rem;">
+                    <div class="text-center pt-0">
                         <custom-button type="show-less" iconSize="22px" class="btn-lg border-0 collapsed" data-toggle="collapse" :data-target="'#collapseb' + id" aria-expanded="true"></custom-button>
                     </div>
                 </div>
@@ -15,7 +15,7 @@
                         <div v-html="short"></div>
                     </div>
                     <div v-if="isLong">
-                        <div class="text-center pt-1" style="margin-bottom: -0.5rem;">
+                        <div class="text-center mt-1">
                             <custom-button type="text" iconSize="22px" class="btn-sm border-0 collapsed" data-toggle="collapse" :data-target="'#collapsea' + id" aria-expanded="false">Read more</custom-button>
                         </div>
                     </div>

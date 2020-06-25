@@ -4,7 +4,7 @@
             <card-image :data="data"/>
         </template>
         <template slot="over-layer-top">
-            <card-over-layer-top :data="data" :cardType="cardType"/>
+            <card-over-layer-top :data="data" :cardType="cardType" :type="type"/>
         </template>
         <template slot="over-layer-bottom">
             <card-over-layer-bottom :data="data"/>

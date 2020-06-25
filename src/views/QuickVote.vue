@@ -1,23 +1,23 @@
 <template>
-    <div class="modal-container">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header p-0">
-                    <tabs :items="tabs" :itemTypes="tabTypes" :activeType.sync="activeType" class="w-100" :disabled="$store.state.loading.pageLoading"/>
-                </div>
-                <router-view></router-view>
+    <static-modal-container>
+        <template slot="content">
+            <div class="modal-header p-0">
+                <tabs :items="tabs" :itemTypes="tabTypes" :activeType.sync="activeType" class="w-100" :disabled="$store.state.loading.pageLoading"/>
             </div>
-        </div>
-    </div>
+            <router-view></router-view>
+        </template>
+    </static-modal-container>
 </template>
 
 <script>
 import Tabs from '@/components/Tabs.vue'
+import StaticModalContainer from '@/components/modals/StaticModalContainer.vue'
 
 
 export default {
     components: {
         'tabs': Tabs,
+        'static-modal-container': StaticModalContainer,
     },
     data() {
         return {
@@ -37,8 +37,4 @@ export default {
 </script>
 
 <style scoped>
-.fs-container { background-size: 100% 100%!important; }
-.modal-dialog-centered::before {
-    height: unset;
-}
 </style>

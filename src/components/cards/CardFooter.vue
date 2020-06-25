@@ -6,7 +6,7 @@
                     <custom-button type="watch-later" borderRadius="bottom-left" status="active" class="btn-sm btn-block border-0" :disabled="$store.state.loading.responseWaiting"></custom-button>
                 </div>
                 <div class="col-7">
-                    <custom-button type="bookmark" borderRadius="none" status="active" class="btn-sm btn-block border-0" :disabled="$store.state.loading.responseWaiting"> Favorite</custom-button>
+                    <custom-button type="bookmark" borderRadius="none" status="active" class="btn-sm btn-block border-0 middle-button" :disabled="$store.state.loading.responseWaiting"> Favorite</custom-button>
                 </div>
             </template>
             <template v-else>
@@ -15,7 +15,7 @@
                         @click="$store.dispatch('noModals/watchLater', { data: data, boundedTo: boundedTo, type: dataType })" :disabled="$store.state.loading.responseWaiting"/>
                 </div>
                 <div class="col-7">
-                    <custom-button type="seen" borderRadius="none" :status="seenStatus" class="btn-sm btn-block border-0"
+                    <custom-button type="seen" borderRadius="none" :status="seenStatus" class="btn-sm btn-block border-0 middle-button"
                         @click="$store.dispatch('modals/openVoteComment', { data: data, boundedTo: boundedTo, type: dataType, voteCommentType: 'vote' })" :disabled="$store.state.loading.responseWaiting"> Seen</custom-button>
                 </div>
             </template>
@@ -54,4 +54,8 @@ export default {
 </script>
 
 <style scoped>
+.middle-button {
+    margin: -1px 0;
+    padding-bottom: 6px;
+}
 </style>

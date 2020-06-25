@@ -83,7 +83,7 @@ const actions = {
         .then(response => {
             localStorage.setItem('userId', response.data.id)
             context.commit('setUserId', response.data.id)
-            this.$forceUpdate()
+            //this.$forceUpdate()
         })
     }
 }

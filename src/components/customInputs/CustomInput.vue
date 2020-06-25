@@ -1,17 +1,19 @@
 <template>
-    <div class="w-100 px-1">
+    <div>
+        <label v-if="title" class="small text-secondary mb-1">{{ title }}</label>
         <div class="input-group input-group-sm">
-            <div class="input-group-prepend">
+            <div v-if="isAnyTrue([icon, prependText])" class="input-group-prepend">
                 <span class="input-group-text bg-white">
                     <font-awesome-icon v-if="icon" :icon="icon"/>
+                    <span v-if="prependText">{{ prependText }}</span>
                 </span>
             </div>
-            <input v-model="inputVal" :type="type" :placeholder="placeHolder" class="form-control rounded-right" style="flex: 1" :required="required"/>
+            <input v-model="inputVal" :type="type" :placeholder="placeHolder" class="form-control rounded-right" style="flex: 1" :required="required" :disabled="disabled"/>
             <div v-if="isClearVisible" class="input-group-append">
                 <custom-button type="text" class="btn-sm btn-block border-0" @click="clearInput"><div class="one-line">{{ clearMessage }}</div></custom-button>
             </div>
         </div>
-        <div class="text-danger m-0" v-if="alertMessage"><font-awesome-icon icon="exclamation-triangle"/> {{ alertMessage }}</div>
+        <div class="text-danger m-0" v-if="alertMessage"><font-awesome-icon icon="exclamation-triangle"/> {{ capitalizeFirstLetter(alertMessage) }}</div>
     </div>
 </template>
 
@@ -31,6 +33,9 @@ export default {
         icon: String,
         alertMessage: String,
         clearMessage: String,
+        title: String,
+        prependText: String,
+        disabled: Boolean
     },
     data() {
         return {

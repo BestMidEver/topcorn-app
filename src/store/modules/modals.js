@@ -12,6 +12,8 @@ const getDefaultState = () => {
         voteCommentDataBoundedTo: [],
         voteCommentDataType: '',
         voteCommentType: '', // vote, vote + comment, comment
+        shareObject: {},
+        shareObjectUsersData: {},
     }
 }
 const state = getDefaultState()
@@ -25,16 +27,26 @@ const mutations = {
         state.voteCommentDataBoundedTo = []
         state.voteCommentDataType = ''
         state.voteCommentType = ''
+        state.shareObject = {}
+        state.shareObjectUsersData = {}
     },
     setVoteCommentData(state, data) { state.voteCommentData = data },
     setVoteCommentDataBoundedTo(state, boundedTo) { state.voteCommentDataBoundedTo = boundedTo },
     setVoteCommentDataType(state, type) { state.voteCommentDataType = type },
     setVoteCommentType(state, type) { state.voteCommentType = type },
+    setShareObject(state, data) { state.shareObject = data },
+    setShareObjectUsersData(state, data) { state.shareObjectUsersData = data },
+    shareObjectsSent(state, userIds) {
+        state.shareObjectUsersData.filter(user => userIds.includes(user.user_id)).forEach(user => {
+            Vue.set(user, 'selected', false)
+            Vue.set(user, 'is_seen', 0)
+        })
+    },
 }
 
 const actions = {
     resetState ({ commit }) { commit('resetState') },
-    openVoteComment(context, data) {console.log(data)
+    openVoteComment(context, data) {
         context.commit('setVoteCommentData', data.data)
         context.commit('setVoteCommentDataBoundedTo', data.boundedTo)
         context.commit('setVoteCommentDataType', data.type)
@@ -85,8 +97,30 @@ const actions = {
         })
     },
     openShareModal(context, data) {
-
+        context.commit('setShareObject', data)
+        $('#share-object-modal').modal('show')
     },
+    getShareObjectModalUsers(context) {
+        axios.get(`${process.env.VUE_APP_API_URL}/getShareObjectModalUsers/${context.state.shareObject.type}/${context.state.shareObject.data.id}`)
+        .then(response => {
+            context.commit('setShareObjectUsersData', response.data)
+        })
+    },
+    shareObjects(context, userIds) {
+        context.dispatch('loading/startResponseWaiting', null, { root: true })
+        axios.post(`${process.env.VUE_APP_API_URL}/shareObjects`, {
+            users: userIds,
+            objId: context.state.shareObject.data.id,
+            type: context.state.shareObject.type
+        })
+        .then(response => {
+            context.commit('shareObjectsSent', userIds)
+            setTimeout(() => {
+                $('#share-object-modal').modal('hide')
+                context.dispatch('loading/finishResponseWaiting', null, { root: true })
+            }, process.env.VUE_APP_DEMONSTRATION_TIME)
+        })
+    }
 }
 
 export default {

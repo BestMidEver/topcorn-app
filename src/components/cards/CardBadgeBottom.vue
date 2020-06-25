@@ -1,6 +1,6 @@
 <template>
-    <div v-if="rate > 0" class="p-2 text-right badge-layer">
-        <div><span class="badge btn-verydark text-white">{{ rate }}</span></div>
+    <div v-if="num > 0" class="p-2 text-right badge-layer">
+        <div><span class="badge btn-verydark text-white">{{ num }}</span></div>
     </div>
 </template>
 
@@ -11,6 +11,8 @@ export default {
     },
     computed: {
         rate() { return this.data.vote_average },
+        age() { return this.data && (this.data.died_age || this.data.age) || 0 },
+        num() { return this.rate || this.age }
     },
 }
 </script>

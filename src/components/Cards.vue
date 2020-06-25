@@ -9,7 +9,7 @@
                     <movie-series-card v-for="card in results" :key="`card-${card.id}`" :data="card" :boundedTo="boundedTo" :type="type" :cardType="cardType"/>
                 </template>
                 <template v-else-if="type === 'person'">
-                    <person-card v-for="(card, index) in results" :key="`card-${index}-${card.id}`" :data="card"/>
+                    <person-card v-for="(card, index) in results" :key="`card-${index}-${card.id}`" :data="card" :cardType="cardType"/>
                 </template>
                 <template v-else-if="type === 'user'">
                     <user-card v-for="(card, index) in results" :key="`card-${index}-${card.id}`" :data="card"/>

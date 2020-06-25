@@ -1,12 +1,12 @@
 <template>
     <div>
         <div class="d-flex justify-content-between align-items-center">
-            <div class="ml-3 small text-muted py-2">{{filterSorterText}}</div>
+            <div class="ml-3 small text-muted py-2">{{appliedFilterSorterText}}</div>
             <div class="mr-1">
                 <custom-button type="filter-sorter" @click="openFilter()"/>
             </div>
         </div>
-        <filter-sorter-modal :modalId="filterModalId" :filters.sync="filters_"/>
+        <filter-sorter-modal :modalId="filterModalId" :filters.sync="filters_" @filterChanged="filterChanged" @filtersReset="filtersReset"/>
     </div>
 </template>
 
@@ -27,6 +27,7 @@ export default {
     data() {
         return {
             filterModalId: 'fs-' + this.randomString(15),
+            appliedFilterSorterText: ''
         }
     },
     computed: {
@@ -40,7 +41,7 @@ export default {
             return sortFilter && (sortFilter.selected || sortFilter.default)
         },
         filterText() {
-            const filterTexts = this.selectedFilters.filter(filter => filter.effect.includes('filter-') && (this.isTrue(filter.selected) || filter.forceShow))
+            const filterTexts = this.selectedFilters.filter(filter => filter.effect.includes('filter-') && (this.isAllTrue([filter.selected, filter.selected != filter.default]) || filter.forceShow))
             return filterTexts.map(filter => `${filter.title}: ${this.parseArray(filter.selected || filter.default).join(', ')}`).join(' | ')
         },
         filterSorterText() {
@@ -50,10 +51,19 @@ export default {
             return arr.join(' | ')
         }
     },
+    watch: {
+        '$route.query'(val) { this.saveFilterSorterText() }
+    },
+    created() {
+        this.saveFilterSorterText()
+    },
     methods: {
         openFilter() {
             $(`#${this.filterModalId}`).modal('show')
-        }
+        },
+        filterChanged(filter) { this.$emit('filterChanged', filter) },
+        filtersReset(filter) { this.$emit('filtersReset', filter) },
+        saveFilterSorterText() { this.appliedFilterSorterText = this.filterSorterText }
     }
 }
 </script>

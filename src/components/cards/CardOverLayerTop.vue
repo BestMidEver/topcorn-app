@@ -1,10 +1,11 @@
 <template>
     <div class="custom-over-layer d-flex flex-column justify-content-center">
         <div class="d-flex flex-row justify-content-center">
-            <div v-if="cardType === 'valak'" class="text-white">
+            <div v-if="cardType === 'movie-series-recommendation' && matchRate" class="text-white">
                 <small>Based on your taste</small>
-                <span class="d-block"><span class="h5 text-warning">91%</span><small> match</small></span>
-                <small><span class="h5 text-warning">352</span>/408 points</small>                                                                 
+                <span class="d-block"><span class="h5 text-warning">{{ matchRate }}%</span><small> match</small></span>
+                <small>From {{ matchCount }} relevant {{ type | plural(matchCount, types) }}</small>
+                <!-- <small><span class="h5 text-warning">{{ matchPoint }}</span>/{{ matchP2 }} points</small> -->
             </div>
             <div v-if="cardType && cardType.includes('profile-movie-series-card')" class="text-white">
                 <template v-if="cardType === 'profile-movie-series-card-other-profile'">
@@ -17,6 +18,10 @@
                 </template>
                 <small>Updated</small>
                 <small class="d-block">{{ updatedAt }}</small>
+            </div>
+            <div v-if="cardType === 'person-with-age' && ifLivedAge > 0" class="text-white">
+                <small>If lived</small>
+                <span class="d-block"><span class="h5 text-warning">{{ ifLivedAge }}</span> <small> years old</small></span>
             </div>
         </div>
     </div>
@@ -32,13 +37,25 @@ export default {
     },
     props: {
         data: Object,
-        cardType: String
+        cardType: String,
+        type: String
     },
     computed: {
+        types() {
+            switch (this.type) {
+                case 'movie': return 'movies'
+                case 'series': return 'series'
+            }
+        },
         profileMovieSeriesCardRate() { return this.data && this.data.user_rate_code },
         profileMovieSeriesCardLater() { return this.data && this.data.user_later_id },
         profileMovieSeriesCardBan() { return this.data && this.data.user_ban_id },
-        updatedAt() { return this.data && this.data.updated_at }
+        updatedAt() { return this.data && this.data.updated_at },
+        matchRate() { return this.data && this.data.percent },
+        matchCount() { return this.data && this.data.count },
+        matchPoint() { return this.data && this.data.point },
+        matchP2() { return this.data && this.data.p2 },
+        ifLivedAge() { return this.data && this.data.died_age && this.data.age || 0 },
     },
 }
 </script>

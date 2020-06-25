@@ -1,14 +1,14 @@
 <template>
     <div @scroll.passive="handleScroll">
         <tabs :items="tabs" :itemTypes="tabTypes" :activeType.sync="activeType"/>
-        <custom-input v-model="searchText" type="text" clearMessage="Cancel" :placeHolder="placeholder" icon="search" class="mt-2"/>
+        <custom-input v-model="searchText" type="text" clearMessage="Cancel" :placeHolder="placeholder" icon="search" class="mt-2 w-100 px-1"/>
         <router-view></router-view>
     </div>
 </template>
 
 <script>
 import Tabs from '@/components/Tabs.vue'
-import CustomInput from '@/components/CustomInput.vue'
+import CustomInput from '@/components/customInputs/CustomInput.vue'
 
 
 export default {
@@ -16,7 +16,7 @@ export default {
         'tabs': Tabs,
         'custom-input': CustomInput,
     },
-    data: function() {
+    data() {
         const tabTypes = ['movie', 'series', 'person', 'user'/* , 'list' */]
         return {
             pageTitle: 'Search',

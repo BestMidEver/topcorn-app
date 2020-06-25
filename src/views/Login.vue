@@ -1,44 +1,53 @@
 <template>
-    <div class="d-flex justify-content-center">
-        <form class="form-container w-100" @submit.prevent="login">
-            <page-heading title="Login" :center="true" size="h6"/>
-            <custom-input v-model="email" type="email" placeHolder="Email" icon="at" class="mt-3" :required="false"/>
-            <custom-input v-model="password" :alertMessage="alertMessage" type="password" placeHolder="Password" icon="key" class="mt-3" :required="false"/>
-            <submit-button name="Login"/>
-            <a :href="forgotPasswordUrl" target="_blank" class="text-muted"><div class="text-center mt-4 small">I Forgot My Password</div></a>
-        </form>
-    </div>
+    <static-modal-container>
+        <template slot="content">
+            <div class="modal-header">
+                <span class="modal-title h6">Login</span>
+            </div>
+            <form @submit.prevent="login">
+                <div class="modal-body">
+                    <custom-input v-model="email" type="email" placeHolder="Email" icon="at" :required="false"/>
+                    <custom-input v-model="password" :alertMessage="alertMessage" type="password" placeHolder="Password" icon="key" class="mt-3" :required="false"/>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <a :href="forgotPasswordUrl" target="_blank" class="btn btn-sm text-secondary border-0">I Forgot My Password</a>
+                    <button type="submit" class="btn btn-sm btn-primary border-0" :disabled="loading">Login</button>
+                </div>
+            </form>
+        </template>
+    </static-modal-container>
 </template>
 
 <script>
-import PageHeading from '@/components/PageHeading.vue'
-import CustomInput from '@/components/CustomInput.vue'
-import SubmitButton from '@/components/SubmitButton.vue'
+import CustomInput from '@/components/customInputs/CustomInput.vue'
+import StaticModalContainer from '@/components/modals/StaticModalContainer.vue'
 
 
 export default {
     components: {
-        'page-heading': PageHeading,
         'custom-input': CustomInput,
-        'submit-button': SubmitButton,
+        'static-modal-container': StaticModalContainer,
     },
     data() {
         return {
             email: '',
             password: '',
             alertMessage: '',
-            forgotPasswordUrl: `${process.env.VUE_APP_SERVER_URL}/password/reset`
+            forgotPasswordUrl: `${process.env.VUE_APP_SERVER_URL}/password/reset`,
+            loading: false
         }
     },
     methods: {
         login() {
+            this.loading = true
             this.$store.dispatch('auth/retrieveToken', {
                 email: this.email,
                 password: this.password,
             }).then(response => {
-                this.$router.push({ name: 'Search' })
+                this.$router.replace(process.env.VUE_APP_HOME_TO)
             }).catch(error => {
                 this.alertMessage = error.response.data
+                this.loading = false
             })
         }
     }

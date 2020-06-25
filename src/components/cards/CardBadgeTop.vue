@@ -1,6 +1,7 @@
 <template>
     <div class="p-2 text-right badge-layer">
-        <div v-if="cardType === 'valak'"><span class="badge btn-verydark text-white">91%</span></div>
+        <div v-if="cardType === 'movie-series-recommendation'"><span class="badge btn-verydark text-white">{{ matchRate }}</span></div>
+        <div v-if="cardType === 'person-with-age' && ifLivedAge > 0"><span class="badge btn-verydark text-white">{{ ifLivedAge }}</span></div>
         <div v-if="cardType === 'profile-movie-series-card-other-profile'">
             <span class="badge btn-verydark text-white">
                 <span v-if="profileOwnerWatchLater" class="btn btn-sm p-0 text-warning" :class="profileOwnerRate ? 'mr-2' : ''"><font-awesome-icon :icon="['fas', 'clock']"/></span>
@@ -26,7 +27,9 @@ export default {
     computed: {
         profileOwnerRate() { return this.data && this.data.user_rate_code },
         profileOwnerWatchLater() { return this.data && this.data.user_later_id },
-        profileOwnerBan() { return this.data && this.data.user_ban_id }
+        profileOwnerBan() { return this.data && this.data.user_ban_id },
+        matchRate() { return this.data && this.data.percent },
+        ifLivedAge() { return this.data && this.data.died_age && this.data.age || 0 },
     },
 }
 </script>

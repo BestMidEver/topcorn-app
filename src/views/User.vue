@@ -15,6 +15,7 @@ import urlGenerate from '@/mixins/urlGenerate'
 Vue.use(VueAxios, axios)
 axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
+
 export default {
     components: {
         'header-bar': HeaderBar,

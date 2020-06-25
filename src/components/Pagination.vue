@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex justify-content-center mx-1" :class="expandStatus !== 'compressed' ? 'mt-3' : ''">
         <nav v-show="expandStatus !== 'compressed' && totalPages > 1" id="pagination-nav">
-            <ul class="pagination">
+            <ul class="pagination mb-1">
                 <li v-if="totalPages > 10" class="page-item first-page" :class="firstPageClass">
                     <button class="page-link rounded-0 border-white" @click="paginate(1)"><font-awesome-icon :icon="['fas', 'fast-backward']"/></button>
                 </li>
@@ -38,7 +38,7 @@ export default {
     computed: {
         totalPages() {
             if(this.tmdbData) return this.tmdbData.total_pages
-            if(this.tcData) return this.tcData.last_page
+            if(this.tcData) return this.tcData.last_page > 500 ? 500 : this.tcData.last_page
             if(this.tcAllResults) return Math.ceil(this.tcAllResults.length / this.itemPerPage)
         },
         currentPage() { return parseInt(this.$route.params.page) },
@@ -76,12 +76,12 @@ nav{ overflow: auto; white-space: nowrap;  max-width: 500px; }
 .first-page{
     left: 0;
     position: sticky;
-    z-index: 1040;
+    z-index: 1020;
 }
 .last-page{
     right: 0;
     position: sticky;
-    z-index: 1040;
+    z-index: 1020;
 }
 svg{ font-size: 10px; }
 </style>

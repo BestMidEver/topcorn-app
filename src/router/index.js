@@ -36,10 +36,21 @@ import UserMovieSeries from '@/components/user/UserMovieSeries.vue'
 import UserComment from '@/components/user/UserComment.vue'
 import UserUser from '@/components/user/UserUser.vue'
 import Settings from '@/views/Settings.vue'
+import SettingsProfile from '@/components/settings/SettingsProfile.vue'
+import SettingsPassword from '@/components/settings/SettingsPassword.vue'
+import SettingsInterface from '@/components/settings/SettingsInterface.vue'
+import SettingsNotifications from '@/components/settings/SettingsNotifications.vue'
+import Discover from '@/views/Discover.vue'
+import DiscoverMovie from '@/components/discover/DiscoverMovie.vue'
+import DiscoverSeries from '@/components/discover/DiscoverSeries.vue'
+import DiscoverPerson from '@/components/discover/DiscoverPerson.vue'
+import DiscoverUser from '@/components/discover/DiscoverUser.vue'
+import Notifications from '@/views/Notifications.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
+  { path: '/', redirect: store.getters['auth/loggedIn'] ? process.env.VUE_APP_HOME_TO : '/login' },
   { path: '/login', name: 'login', component: Login, meta: { requiresVisitor: true } },
   { path: '/register', name: 'register', component: Register, meta: { requiresVisitor: true }  },
   { path: '/search-*/:tab/:page', name: 'search', component: Search, meta: { requiresAuth: true },
@@ -105,7 +116,23 @@ const routes = [
       { path: '/user/:tab/:id/:page', name: 'user-movieSeries', component: UserMovieSeries },
     ]
   },
-  { path: '/settings', name: 'Settings', component: Settings, meta: { requiresAuth: true }   },
+  { path: '/settings/tab', name: 'settings', component: Settings, meta: { requiresAuth: true },
+    children: [
+      { path: '/settings/profile', name: 'settings-profile', component: SettingsProfile },
+      { path: '/settings/password', name: 'settings-password', component: SettingsPassword },
+      { path: '/settings/interface', name: 'settings-interface', component: SettingsInterface },
+      { path: '/settings/notifications', name: 'settings-notifications', component: SettingsNotifications },
+    ]
+  },
+  { path: '/discover/:tab/:page', name: 'discover', component: Discover, meta: { requiresAuth: true },
+    children: [
+      { path: '/discover/movie/:page', name: 'discover-movie', component: DiscoverMovie, props: { type: 'movie' } },
+      { path: '/discover/series/:page', name: 'discover-series', component: DiscoverSeries, props: { type: 'series' } },
+      { path: '/discover/person/:page', name: 'discover-person', component: DiscoverPerson },
+      { path: '/discover/user/:page', name: 'discover-user', component: DiscoverUser },
+    ]
+  },
+  { path: '/notifications/:page', name: 'notifications', component: Notifications, meta: { requiresAuth: true } }
 ]
 
 const router = new VueRouter({
@@ -139,7 +166,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-  //console.log(to, from)
   store.dispatch('navigation/afterEach', to)
 })
 

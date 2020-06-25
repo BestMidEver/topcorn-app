@@ -7,7 +7,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <filter-sorter-picker v-for="(filter, i) in filters" :key="i" :data="filter" :selected.sync="query[filter.title]"/>
+                    <filter-sorter-picker v-for="(filter, i) in filters" :key="i + filter.title" :data="filter" :selected.sync="query[filter.title]" @filterChanged="filterChanged"/>
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
                     <button type="button" class="btn btn-sm text-secondary border-0" data-dismiss="modal" :disabled="disabled" @click="resetFilters()">Reset</button>
@@ -40,7 +40,12 @@ export default {
     },
     methods: {
         applyFilters() { this.changeQuery(this.query) },
-        resetFilters() { this.query = {}; this.applyFilters() }
+        resetFilters() {
+            this.query = {}
+            this.$emit('filtersReset')
+            this.applyFilters()
+        },
+        filterChanged(filter) { this.$emit('filterChanged', filter) }
     }
 }
 </script>

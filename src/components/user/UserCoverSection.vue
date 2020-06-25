@@ -1,6 +1,6 @@
 <template>
     <div>
-        <cover-container type="user" :coverSrc="coverSrc" :profileSrc="profileSrc" :isFullScreen="isFullScreen" :isOwnProfile="isOwnProfile" :externalIds="user" :homePage="homePage" :class="isFullScreen ? 'mb-3' : ''">
+        <cover-container type="user" :coverSrc="coverSrc" :profileSrc="profileSrc" :isFullScreen="isFullScreen" :isOwnProfile="ownProfile" :externalIds="user" :homePage="homePage" :class="isFullScreen ? 'mb-3' : ''">
             <template slot="right-text-first-row">
                 <skeleton-loader v-if="pageLoading" type="full-line" class="h5" lineHeight="27px" style="width: 140px; max-width: 50vw"/>
                 <h5 v-if="!pageLoading"><span class="text-left">{{ name }}</span></h5>
@@ -49,16 +49,17 @@ export default {
         }
     },
     computed: {
+        id() { return this.$route.params.id },
+        ownProfile() { return this.$store.state.auth.userId == this.id },
         user() { return this.data || (this.detailedData && this.detailedData.user_data) || {} },
         coverSrc() { return this.user.cover_pic ? `${process.env.VUE_APP_TMDB_COVER_URL}${this.user.cover_pic}` : null },
         profileSrc() {
             let src = null
-            if(this.user.profile_pic) src =  `${process.env.VUE_APP_TMDB_THUMBNAIL_URL}${this.user.profile_pic}`
+            if(this.user.profile_pic) src = `${process.env.VUE_APP_TMDB_THUMBNAIL_URL}${this.user.profile_pic}`
             if(!src && this.user.facebook_profile_pic) src = this.user.facebook_profile_pic
             return src
         },
         name() { return this.user.name || '' },
-        isOwnProfile() { return this.$route.params.id == -1 },
         homePage() { return this.user.another_link_url },
         isFollowingMe() { return !this.detailedData && this.interactionData && this.interactionData.follows_id > 0 },
         movieCount() { return this.detailedData && this.detailedData.rated_movie_count || '' },

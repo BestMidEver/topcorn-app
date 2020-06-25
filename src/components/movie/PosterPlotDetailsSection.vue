@@ -12,10 +12,10 @@
                 <div>
                     <div class="d-flex align-items-center mb-lg-2">
                         <span v-if="isAnyTrue([year, genres])" class="h6 pt-md-0 pl-3 mb-0">
-                            <span v-if="isTrue(year)" data-toggle="tooltip" data-placement="top" :data-original-title="year">{{ this.dateToYear(year) }}</span>
+                            <span v-if="isTrue(year)">{{ this.dateToYear(year) }}</span>
                             <template v-if="isTrue(endYear)">
                                 <span v-if="endYear === 'margin'" class="mr-3">-</span>
-                                <span v-else data-toggle="tooltip" data-placement="top" :data-original-title="endYear">-{{ this.dateToYear(endYear) }}</span>
+                                <span v-else>-{{ this.dateToYear(endYear) }}</span>
                             </template>
                             <span v-if="isAllTrue([year, genres])" class="text-muted"> •</span>
                             <span v-if="isTrue(genres)"> {{ mergeArrayWith(genres) }}</span>

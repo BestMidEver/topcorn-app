@@ -5,7 +5,7 @@
             <router-link :to="movieSeriesUrl(type, currentItem.id)" class="modal-title h6" style="color: var(--text-link-color)">{{ heading }}<em class="small text-muted" v-if="year"> ({{ year }})</em></router-link>
             <custom-button v-show="isTrue(previousItem)" type="back" class="btn-sm border-0 mt-0 px-lg-4 p-0" @click="goBack()" :disabled="$store.state.loading.responseWaiting"><div class="one-line">Back</div></custom-button>
         </div>
-        <div class="position-relative">
+        <div class="position-relative" style="margin: 0 -1px">
             <img class="d-none" :src="previousSrc">
             <img v-if="imageLoading" class="img-fluid" :src="require('@/assets/9x16loading.png')"/>
             <img v-show="!imageLoading" class="img-fluid" :src="currentSrc" @load="imageLoading = false" @error="imageLoading = true">

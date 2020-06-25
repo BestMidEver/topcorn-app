@@ -2,7 +2,7 @@
   <div id="app">
     <navigation v-if="loggedIn"/>
     <navigation-logout v-else/>
-    <router-view class="body"/>
+    <router-view class="body pb-3"/>
     <vote-comment/>
   </div>
 </template>
@@ -56,13 +56,14 @@ export default {
 
 .body { height: calc(100vh - var(--navigation-bar-height)); overflow: auto; }
 
-.one-line{ overflow: auto; white-space: nowrap; }
-.bottom-line{ border-bottom: 1px solid var(--muted-line-color); }
-.top-line{ border-top: 1px solid var(--muted-line-color); }
+.one-line { overflow: auto; white-space: nowrap; }
+.bottom-line { border-bottom: 1px solid var(--muted-line-color); }
+.top-line { border-top: 1px solid var(--muted-line-color); }
 
 @media (min-width: 768px) {
   .body {  height: calc(100vh - var(--navigation-bar-height-md)); margin-top: var(--navigation-bar-height-md); }
-  .bottom-line-md{ border-bottom: 1px solid var(--muted-line-color); }
-  .top-line-md{ border-top: 1px solid var(--muted-line-color); }
+  .bottom-line-md { border-bottom: 1px solid var(--muted-line-color); }
+  .top-line-md { border-top: 1px solid var(--muted-line-color); }
+  .top-line-md-none { border-top: none; }
 }
 </style>

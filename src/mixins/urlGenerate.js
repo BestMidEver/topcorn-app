@@ -11,8 +11,15 @@ export default {
         movieSeriesDataUrl: (type, id, season, episode) => `${process.env.VUE_APP_API_URL}/getMovieSeriesAllData/${type}/${id}${season||season===0?'/'+season:''}${episode||episode===0?'/'+episode:''}`,
         personDataUrl: (id) => `${process.env.VUE_APP_API_URL}/getPersonAllData/${id}`,
         userDataUrl: () => `${process.env.VUE_APP_API_URL}/getUserAllData`,
+        simpleUserData: () => `${process.env.VUE_APP_API_URL}/getSimpleUserData`,
+        getCoverPicsUrl: () => `${process.env.VUE_APP_API_URL}/getCoverPics`,
+        getProfilePicsUrl: (id) => `${process.env.VUE_APP_TMDB_API_URL}/movie/${id}/credits?api_key=${process.env.VUE_APP_TMDB_API_KEY}`,
         userDetailDataUrl: (id) => `${process.env.VUE_APP_API_URL}/getUserDetailData/${id}`,
+        setUser: () => `${process.env.VUE_APP_API_URL}/setUser`,
+        notifications: (page = 1) => `${process.env.VUE_APP_API_URL}/notifications?page=${page}`,
+        changeNotificationMode: () => `${process.env.VUE_APP_API_URL}/changeNotificationMode`,
         userInteractionSetUrl: (page = 1) => `${process.env.VUE_APP_API_URL}/getUserInteractionSet?page=${page}`,
+        discoverUrl: (page = 1) => `${process.env.VUE_APP_API_URL}/discover?page=${page}`,
         reviewsDataUrl: (type, id, page = 1) => `${process.env.VUE_APP_API_URL}/${type==='person'?'getPersonReviewsData':'getReviewsData/'+type}/${id}?page=${page}`,
         moreLikeThisDataUrl: (movieSeriesType, type, id, page = 1) => `${process.env.VUE_APP_TMDB_API_URL}/${movieSeriesType=='series'?'tv':movieSeriesType}/${id}/${type}?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en&page=${page}`,
         
@@ -31,12 +38,6 @@ export default {
             this.$router.replace({ name: this.$route.name, params: params, query: query })
         },
         changeQuery(queryObj, keepPageNumber) {
-            /* let path = `${this.$route.path}?`
-            let objs = Array.isArray(queryObj) ? queryObj : [queryObj]
-            let query = []
-            objs.forEach(obj => { for (let [key, value] of Object.entries(obj)) { query.push(`${key}=${value}`) } })
-            path += query.join('&')
-            console.log(5555, path) */
             let params = this.$route.params
             if(!keepPageNumber) if(params.page >= 0) params.page = 1
             this.$router.replace({ name: this.$route.name, params: params, query: queryObj })

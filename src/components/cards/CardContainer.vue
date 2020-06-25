@@ -1,7 +1,7 @@
 <template>
     <div class="mt-2" :class="cardClass">
         <div class="card h-100 d-flex flex-column justify-content-between mx-1">
-            <router-link class="card-link" :to="to" data-toggle="tooltip" data-placement="top" :data-original-title="title">
+            <div class="card-profile">
                 <div class="position-relative text-center">
                     <div class="images">
                         <slot name="image"/>
@@ -15,9 +15,11 @@
                         <slot name="badge-bottom"/>
                     </div>
                 </div>
+            </div>
+            <router-link class="card-link" :to="to">
+                <slot name="text"/>
+                <slot name="bottom-body"/>
             </router-link>
-            <slot name="text"/>
-            <slot name="bottom-body"/>
             <slot name="footer"/>
         </div>
     </div>
@@ -69,13 +71,13 @@ export default {
     background: var(--very-dark-color);
     border-color: var(--very-dark-color);
 }
-.card a:hover .card-over-layer {
+.card .card-profile:hover .card-over-layer {
     display: flex!important;
 }
-.card a:hover .card-badge-layer {
+.card .card-profile:hover .card-badge-layer {
     display: none!important;
 }
-.card a:hover .darken-cover {
+.card .card-profile:hover .darken-cover {
     filter: brightness(30%);
 }
 .images > img:not(:first-child) { border-radius: 0; }

@@ -1,5 +1,5 @@
 <template>
-    <button type="button" class="btn" :class="computedClass" data-toggle="tooltip" data-placement="bottom" :data-original-title="tooltip" @click="$emit('click')">
+    <button type="button" class="btn" :class="computedClass" @click="$emit('click')">
         <font-awesome-icon v-if="type !== 'text'" :icon="status ? icon.active : icon.default" :style="iconSize && { fontSize: iconSize }"/>
         <small><slot></slot></small>
     </button>
@@ -17,10 +17,9 @@ export default {
         status: {
             validator: value => ['', 'active', 'active0', 'active1', 'active2', 'active3', 'active4', 'active5'].includes(value)
         },
-        iconSize: String,
-        tooltip: String
+        iconSize: String
     },
-    data: function() {
+    data() {
         return {
             icons: {
                 'watch-later': { default: ['far', 'clock'], active: ['fas', 'clock'] },
@@ -56,8 +55,8 @@ button{ color: var(--secondary)!important; }
 
 
 .watch-later.active{ color: var(--warning)!important; }
-.seen.active5, .bookmark.active{ background: var(--success); color: #fff!important; }
-.seen.active5:hover, .bookmark.active:hover{ color: var(--success)!important; }
+.seen.active5{ background: var(--success); color: #fff!important; }
+.seen.active5:hover{ color: var(--success)!important; }
 .seen.active4{ background: var(--info); color: #fff!important; }
 .seen.active4:hover{ color: var(--info)!important; }
 .seen.active3{ background: var(--secondary); color: #fff!important; }
@@ -73,6 +72,7 @@ button{ color: var(--secondary)!important; }
 .scroll-up, .scroll-down{ background: var(--background-color)!important; }
 .last-seen.active{ color: var(--lastseen-color)!important }
 .follow.active{ color: var(--follow-color)!important }
+.bookmark.active{ color: var(--info)!important; }
 
 .left{ border-top-right-radius: 0!important; border-bottom-right-radius: 0!important; }
 .right{ border-top-left-radius: 0!important; border-bottom-left-radius: 0!important; }
