@@ -6,16 +6,12 @@
 
 <script>
 import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import lodash from 'lodash'
 import Cards from '@/components/Cards.vue'
 import urlGenerate from '@/mixins/urlGenerate'
- 
 
 Vue.use(lodash)
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
+
 
 export default {
     components: {
@@ -48,7 +44,7 @@ export default {
         search() {
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
-            axios.get(this.searchUserUrl(this.$route.params.pathMatch, this.$route.params.page))
+            this.$store.dispatch('request/get', this.searchUserUrl(this.$route.params.pathMatch, this.$route.params.page))
             .then(response => {
                 if(axiosRandom === this.axiosRandom) this.tcResponse = response.data
             }).catch(error => {

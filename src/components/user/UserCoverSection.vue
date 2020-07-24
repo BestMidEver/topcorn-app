@@ -68,9 +68,9 @@ export default {
         chartMovieData() { return this.detailedData && this.detailedData.rated_movies && [['Movies', 'Count', { role: 'style' }], ...this.detailedData.rated_movies.map(group => [this.rateCodeToText(group.rate), group.count, `color: #${this.rateCodeToColor(group.rate)}`]).sort((a, b) => a.rate > b.rate ? 1 : -1)] },
         chartSeriesData() { return this.detailedData && this.detailedData.rated_series && [['Movies', 'Count', { role: 'style' }], ...this.detailedData.rated_series.map(group => [this.rateCodeToText(group.rate), group.count, `color: #${this.rateCodeToColor(group.rate)}`]).sort((a, b) => a.rate > b.rate ? 1 : -1)] }
     },
-    created() {
+    /* created() {
         if(this.isFullScreen) $('.body').scrollTop(0)
-    },
+    }, */
 }
 </script>
 

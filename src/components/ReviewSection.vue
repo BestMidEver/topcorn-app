@@ -39,7 +39,7 @@ export default {
         }
     },
     computed: {
-        reviewCount() { return this.data.data.length || 0 },
+        reviewCount() { return this.data && this.data.data && this.data.data.length || 0 },
         commentButtonText() {
             if(!this.reviewCount > 0) return 'Add the First Comment'
             if(this.reviewCount > 0) { return 'Say Something' }
@@ -49,9 +49,9 @@ export default {
             return this.movieSeriesUrl(this.type, this.$route.params.id, 'comment', this.seasonNumber, this.episodeNumber)
         }
     },
-    created() {
+    /* created() {
         if(this.isFullScreen) $('.body').scrollTop(0)
-    },
+    }, */
 }
 </script>
 

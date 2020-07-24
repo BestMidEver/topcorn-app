@@ -43,15 +43,18 @@
                     <div class="d-flex flex-row no-gutters" style="background: #000;">
                         <div class="col-10 col-md-5">
                             <div class="h-100 d-flex flex-column justify-content-center pl-2">
-                                <div v-if="trailers && trailers.length > 1">
+                                <div v-if="trailers && trailers.length > 1" class="d-flex">
                                     <button class="btn btn-lg text-muted hover-white btn-trailer" :disabled="currentTrailerIndex === 0" @click="currentTrailerIndex--"><font-awesome-icon icon="step-backward"/></button>
                                     <button class="btn btn-lg text-muted hover-white btn-trailer" :disabled="currentTrailerIndex === trailers.length - 1" @click="currentTrailerIndex++"><font-awesome-icon icon="step-forward"/></button>
-                                    <div class="dropdown dnone d-inline">
+                                    <custom-select class="d-inline" :items="trailers.map(trailer => trailer.name)" :selected.sync="selectedTrailer" buttonHeight="48px" buttonWidth="46px">
+                                        <button class="btn btn-lg text-muted hover-white dropdown-toggle"></button>
+                                    </custom-select>
+                                    <!-- <div class="dropdown dnone d-inline">
                                         <button class="btn btn-lg text-muted hover-white dropdown-toggle" type="button" id="dropdownchoosetrailer" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownchoosetrailer">
                                             <button v-for="(trailer, index) in trailers" :key="trailer.id" class="dropdown-item" :class="{ active: currentTrailerIndex === index}" @click="currentTrailerIndex = index">{{ trailer.name }}</button>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -72,6 +75,7 @@
 <script>
 import NoResult from '@/components/NoResult.vue'
 import seriesComputeds from './seriesComputeds.js'
+import CustomSelect from '@/components/customInputs/CustomSelect.vue'
 
 function initialState (){
     return {
@@ -86,6 +90,7 @@ function initialState (){
 export default {
     components: {
         'no-result': NoResult,
+        'custom-select': CustomSelect,
     },
     mixins: [seriesComputeds],
     props: {
@@ -118,7 +123,7 @@ export default {
         },
         tagline() {
             if(this.type === 'movie') return this.isTrue(this.data.tagline) ? this.data.tagline : false
-            if(this.detailedType === 'series') return this.isAllTrue([this.data.number_of_episodes, this.data.number_of_seasons]) ? `${this.data.number_of_seasons} Seasons - ${this.data.number_of_episodes} Episodes` : false
+            if(this.detailedType === 'series') return this.isAllTrue([this.data.number_of_episodes, this.data.number_of_seasons]) ? `${this.data.number_of_seasons} ${this.$options.filters.plural('Season', this.data.number_of_seasons, 'Seasons')} - ${this.data.number_of_episodes} ${this.$options.filters.plural('Episode', this.data.number_of_episodes, 'Episodes')}` : false
             /* if(this.detailedType === 'season') return this.seasonData.air_date ? `Aired on ${this.seasonData.air_date}` : ''
             return this.episodeData.air_date ? `Aired on ${this.episodeData.air_date}` : '' */
         },
@@ -138,7 +143,15 @@ export default {
         showLogo() { return !this.logoLoading && this.data.id == this.$route.params.id },
         ifTrailerLoader() { return this.$store.state.loading.pageLoading || (this.detailedType === 'episode' && this.$store.state.loading.pageLoading4) || this.hiddenTrailers },
         ifTrailer404() { return this.isFalse(this.trailers) || (this.trailers && this.trailers.length == 0) },
-        ifTrailer() { return !this.ifTrailerLoader && !this.ifTrailer404 }
+        ifTrailer() { return !this.ifTrailerLoader && !this.ifTrailer404 },
+        selectedTrailer: {
+            get() {
+                return this.trailers[this.currentTrailerIndex].name
+            },
+            set(val) {
+                this.currentTrailerIndex = this.trailers.findIndex(trailer => trailer.name == val)
+            }
+        },
     },
     watch: {
         coverSrc() { this.imageLoading = true },

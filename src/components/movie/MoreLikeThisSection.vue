@@ -4,7 +4,7 @@
             <router-link :to="movieSeriesUrl(type, $route.params.id, 'recommendations')" replace type="text" class="btn-sm btn-block border-0 mr-1 text-secondary" :class="buttonClass"><div class="one-line">Show All</div></router-link>
         </section-heading>
         <tabs v-if="isFullScreen" :items="items" :itemTypes="itemTypes" :activeType.sync="activeType"/>
-        <cards :type="type" :tmdbData="tmdbData" :loading="$store.state.loading.pageLoading" :boundedTo="['interactions/setMovieInteraction']"
+        <cards :type="type" :tmdbData="tmdbData" :loading="loading" :boundedTo="['interactions/setMovieInteraction']"
             :expandStatus="isFullScreen ? 'expanded' : 'compressed'" class="mt-2"/>
     </div>
 </template>
@@ -36,6 +36,7 @@ export default {
         }
     },
     computed: {
+        loading() { return this.isFullScreen ? this.$store.state.loading.pageLoading || this.$store.state.loading.pageLoading4 : this.$store.state.loading.pageLoading },
         items() { return this.data.collection.results.length > 0 ? ['Recommendations', 'Similar', this.data.collection.name] : ['Recommendations', 'Similar'] },
         itemTypes() { return this.data.collection.results.length > 0 ? ['recommendations', 'similar', 'collection'] : ['recommendations', 'similar'] },
         tmdbData() {
@@ -54,9 +55,9 @@ export default {
     },
     watch: {
     },
-    created() {
+    /* created() {
         if(this.isFullScreen) $('.body').scrollTop(0)
-    },
+    }, */
 }
 </script>
 

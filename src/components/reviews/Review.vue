@@ -44,6 +44,7 @@
 import CustomButton from '@/components/CustomButton.vue'
 import FiveStar from './FiveStar.vue'
 import urlGenerate from '@/mixins/urlGenerate'
+import codeToText from '@/mixins/codeToText'
 
 
 export default {
@@ -51,17 +52,17 @@ export default {
         'custom-button': CustomButton,
         'five-star': FiveStar,
     },
-    mixins: [urlGenerate],
+    mixins: [urlGenerate, codeToText],
     props: {
         data: Object,
         boundedTo: Array,
     },
     computed: {
         //results() { return this.data.data },
-        objName() { if(this.data.hasOwnProperty('obj_name')) return this.data.obj_name },
+        objName() { if(this.data.hasOwnProperty('obj_name')) return `${this.data.obj_name}${this.data.season_number >= 0 ? ` ${this.toEpisodeCode(this.data.season_number, this.data.episode_number)}` : ''}` },
         to() {
             if(this.objName){
-                if(['movie', 'series'].includes(this.data.type)) return this.movieSeriesUrl(this.data.type, this.data.movie_series_id)
+                if(['movie', 'series'].includes(this.data.type)) return this.movieSeriesUrl(this.data.type, this.data.movie_series_id, 'profile', this.data.season_number, this.data.episode_number)
                 if(this.data.type === 'person') return this.personUrl(this.data.movie_series_id)
             }
             if(this.data.user_id) return this.userUrl(this.data.user_id)

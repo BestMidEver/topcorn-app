@@ -3,7 +3,7 @@
         <template v-if="loading">
             <notification-skeleton v-for="i in 12" :key="i"/>
         </template>
-        <template v-if="!loading">
+        <template v-else>
             <notification-row v-for="(notification, i) in data.data" :key="i" :data.sync="notification"/>
         </template>
         <pagination :tcData="data" :loading="loading"/>

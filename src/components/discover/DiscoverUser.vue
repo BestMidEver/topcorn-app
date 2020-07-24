@@ -23,9 +23,9 @@ export default {
     },
     computed: {
     },
-    created() {
+    /* created() {
         if(this.isFullScreen) $('.body').scrollTop(0)
-    },
+    }, */
 }
 </script>
 

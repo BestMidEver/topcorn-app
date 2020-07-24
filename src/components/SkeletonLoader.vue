@@ -3,6 +3,7 @@
         <div v-if="type === 'line'" class="rectangle" :style="lineStyle"></div>
         <div v-else-if="type === 'full-line'" class="rectangle" :style="fullLineStyle"></div>
         <div v-else-if="type === 'dot'" class="dot"></div>
+        <div v-else-if="type === 'thumbnail'" class="thumbnail"></div>
         <div v-else class="card h-100 d-flex flex-column justify-content-between mx-1">
             <img class="card-img-top" :src="require('@/assets/2x3loading.png')"/>
             <div class="card-block p-1" :class="isTextCenter">
@@ -36,7 +37,7 @@
 export default {
     props: {
         type: {
-            validator: value => ['small', 'line', 'full-line', 'dot', ''].includes(value)
+            validator: value => ['small', 'line', 'full-line', 'dot', 'thumbnail', ''].includes(value)
         },
         lineHeight: String
     },
@@ -46,7 +47,7 @@ export default {
     },
     computed: {
         cardClass() {
-            if(['line', 'full-line', 'dot'].includes(this.type)) return ''
+            if(['line', 'full-line', 'dot', 'thumbnail'].includes(this.type)) return ''
             if(this.type === 'small') return 'mt-2 col-4 col-sm-3 col-md-2'
             return 'mt-2 col-6 col-md-4 col-lg-3 col-xl-2'
         },
@@ -88,6 +89,13 @@ export default {
 .dot {
   height: 14px;
   width: 14px;
+  background-color: #d9d9d9;
+  border-radius: 50%;
+  display: inline-block;
+}
+.thumbnail {
+  height: 46px;
+  width: 46px;
   background-color: #d9d9d9;
   border-radius: 50%;
   display: inline-block;

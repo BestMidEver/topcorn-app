@@ -7,7 +7,7 @@
                 <small>From {{ matchCount }} relevant {{ type | plural(matchCount, types) }}</small>
                 <!-- <small><span class="h5 text-warning">{{ matchPoint }}</span>/{{ matchP2 }} points</small> -->
             </div>
-            <div v-if="cardType && cardType.includes('profile-movie-series-card')" class="text-white">
+            <div v-else-if="cardType && cardType.includes('profile-movie-series-card')" class="text-white">
                 <template v-if="cardType === 'profile-movie-series-card-other-profile'">
                     <small>According to this user</small>
                     <div>
@@ -19,9 +19,13 @@
                 <small>Updated</small>
                 <small class="d-block">{{ updatedAt }}</small>
             </div>
-            <div v-if="cardType === 'person-with-age' && ifLivedAge > 0" class="text-white">
+            <div v-else-if="cardType === 'person-with-age' && ifLivedAge > 0" class="text-white">
                 <small>If lived</small>
                 <span class="d-block"><span class="h5 text-warning">{{ ifLivedAge }}</span> <small> years old</small></span>
+            </div>
+            <div v-else-if="cardType === 'person-series-episode-count'" class="text-white">
+                <small>Participated</small>
+                <span class="d-block"><span class="h5 text-warning">{{ episodeCount }}</span> <small> times</small></span>
             </div>
         </div>
     </div>
@@ -56,6 +60,7 @@ export default {
         matchPoint() { return this.data && this.data.point },
         matchP2() { return this.data && this.data.p2 },
         ifLivedAge() { return this.data && this.data.died_age && this.data.age || 0 },
+        episodeCount() { return this.data && (this.data.episode_count > 0 && this.data.episode_count) },
     },
 }
 </script>

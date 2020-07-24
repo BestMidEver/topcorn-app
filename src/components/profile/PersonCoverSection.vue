@@ -42,7 +42,7 @@ export default {
     },
     computed: {
         pageLoading() { return this.$store.state.loading.pageLoading },
-        profileSrc() {console.log(this.data)
+        profileSrc() {
             if(this.isTrue(this.data.profile_path)) return `${process.env.VUE_APP_TMDB_THUMBNAIL_URL}${this.data.profile_path}`
         },
         coverSrc() {
@@ -62,9 +62,9 @@ export default {
         biography() { return this.data.biography },
         jobTypes() { return this.data.jobTypes && this.data.jobTypes.map(type => type.job).join(', ') },
     },
-    created() {
+    /* created() {
         if(this.isFullScreen) $('.body').scrollTop(0)
-    },
+    }, */
 }
 </script>
 

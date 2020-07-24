@@ -1,13 +1,14 @@
 <template>
-    <div class="header-bar bg-white bottom-line top-line row text-center no-gutters nav-shadow">
-        <div class="col-1 d-flex align-items-center">
+    <div class="header-bar bg-white bottom-line top-line text-center no-gutters nav-shadow d-flex flex-row">
+        <div class="d-flex align-items-center">
             <div class="d-flex">
-                <a @click="backAction()" class="px-3 py-1" style="color: var(--secondary)!important">
+                <a @click="backAction()" class="px-3 py-15" style="color: var(--secondary)!important">
                     <font-awesome-icon :icon="['fas', 'chevron-left']"/>
                 </a>
             </div>
         </div>
-        <div v-if="!loading" class="col-10 d-flex align-items-center justify-content-center small" style="overflow: auto">{{ title }}</div>
+        <div v-if="!loading" class="d-flex align-items-center justify-content-center small flex-fill py-1" style="overflow: auto">{{ title }}</div>
+        <div style="width: 42px"></div>
     </div>
 </template>
 
@@ -44,4 +45,5 @@ export default {
     -webkit-box-shadow: 0 .02rem .1rem rgba(0,0,0,.075)!important;
     box-shadow: 0 .02rem .1rem rgba(0,0,0,.075)!important;
 }
+.py-15 { padding-top: .30rem!important; padding-bottom: .30rem!important; }
 </style>

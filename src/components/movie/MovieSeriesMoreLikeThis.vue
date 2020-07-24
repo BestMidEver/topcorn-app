@@ -6,15 +6,8 @@
 
 <script>
 import MoreLikeThisSection from '@/components/movie/MoreLikeThisSection.vue'
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import urlGenerate from '@/mixins/urlGenerate'
 import tmdbMerge from '@/mixins/tmdbMerge'
- 
-
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 
 export default {
@@ -53,17 +46,17 @@ export default {
     methods: {
         getReviewPage() {
             if(this.$route.name === 'movie-moreLikeThis-collection') return
-            this.$store.dispatch('loading/startPageLoading')
+            this.$store.dispatch('loading/startPageLoading4')
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
-            axios.get(this.moreLikeThisDataUrl(this.type, this.moreLikeThisType, this.$route.params.id, this.$route.params.page))
+            this.$store.dispatch('request/get', this.moreLikeThisDataUrl(this.type, this.moreLikeThisType, this.$route.params.id, this.$route.params.page))
             .then(response => {
                 this.tmdbResponse[this.moreLikeThisType] = response.data
                 this.merge()
             }).catch(error => {
                 this.tmdbResponse[this.moreLikeThisType] = this.tmdbResponse0
             }).then(() => {
-                this.$store.dispatch('loading/finishPageLoading')
+                this.$store.dispatch('loading/finishPageLoading4')
             })
         },
         merge() {

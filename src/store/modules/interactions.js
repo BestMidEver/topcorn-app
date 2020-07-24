@@ -1,10 +1,5 @@
 import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 
-
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 const state = {
     movieInteractions: [],
@@ -20,7 +15,6 @@ const mutations = {
     },
     setMovieInteraction(state, data) {
         const movie = data.data ? data.data : data
-        console.log('interaction', movie)
         state.movieInteractions = state.movieInteractions.filter(m => m.movie_id !== movie.id)
         const interaction = {
             movie_id: movie.id,
@@ -48,7 +42,7 @@ const mutations = {
 const actions = {
     pluckMoviesSeries(context) {
         return new Promise((resolve, reject) => {
-            axios.get(`${process.env.VUE_APP_API_URL}/pluckId/interactedMoviesSeries`)
+            context.dispatch('request/get', `${process.env.VUE_APP_API_URL}/pluckId/interactedMoviesSeries`, { root:true })
             .then(response => {
                 context.commit('setMovieInteractions', response.data.movies)
                 context.commit('setSeriesInteractions', response.data.series)

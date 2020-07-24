@@ -25,7 +25,7 @@ export default {
         
 
         // page urls
-        movieSeriesUrl: (type, id, tab = 'profile', season = -1, episode = -1) => `/${type}/${tab}/${id}${type === 'series' ? '/' + season + '/' + episode : ''}${['cast', 'comment', 'recommendations', 'similar', 'collection'].includes(tab)?'/1':''}`,
+        movieSeriesUrl: (type, id, tab = 'profile', season = -1, episode = -1) => `/${type}/${tab}/${id}${type === 'series' ? '/' + (season === null ? -1 : season) + '/' + (episode === null ? -1 : episode) : ''}${['cast', 'comment', 'recommendations', 'similar', 'collection'].includes(tab)?'/1':''}`,
         personUrl: (id, tab = 'profile') => `/person/${tab}/${id}${['movie', 'series', 'image'].includes(tab)?'/1':''}`,
         userUrl: (id, tab = 'profile') => `/user/${tab}/${id}${['movie', 'series', 'comment', 'user'].includes(tab)?'/1':''}`,
         settingsUrl: (tab = 'profile') => `/settings/${tab}`,

@@ -6,13 +6,7 @@
 
 <script>
 import UserCoverSection from '@/components/user/UserCoverSection.vue'
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import urlGenerate from '@/mixins/urlGenerate'
-
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 
 export default {
@@ -36,7 +30,7 @@ export default {
             this.$store.dispatch('loading/startPageLoading2')
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
-            axios.get(this.userDetailDataUrl(this.$route.params.id))
+            this.$store.dispatch('request/get', this.userDetailDataUrl(this.$route.params.id))
             .then(response => {
                 if(axiosRandom === this.axiosRandom) {
                     this.userData = response.data

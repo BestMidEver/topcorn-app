@@ -27,9 +27,9 @@ export default {
     },
     watch: {
     },
-    created() {
+    /* created() {
         $('.body').scrollTop(0)
-    },
+    }, */
     beforeCreate() {
     },
     methods: {

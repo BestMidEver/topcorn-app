@@ -7,16 +7,13 @@
 
 <script>
 import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import tmdbMerge from '@/mixins/tmdbMerge'
 import urlGenerate from '@/mixins/urlGenerate'
 import HeaderBar from '@/components/HeaderBar.vue'
 import lodash from 'lodash'
 import codeToText from '@/mixins/codeToText'
 
-Vue.use(VueAxios, axios, lodash)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
+Vue.use(lodash)
 
 
 export default {
@@ -47,13 +44,12 @@ export default {
     },
     watch: {
         '$route.params.id'() { this.getObjData() },
-        objInteractions() { console.log('objInteractions watched'); this.mergeAndStore() },
+        objInteractions() { this.mergeAndStore() },
     },
     beforeCreate() {
         this.$store.dispatch('interactions/pluckMoviesSeries')
     },
     created() {
-        console.log('person.vue created', this.$route)
         this.getObjData()
     },
     methods: {
@@ -65,10 +61,9 @@ export default {
             this.$store.dispatch('loading/startPageLoading')
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
-            axios.get(this.tmdbPersonUrl(this.$route.params.id))
+            this.$store.dispatch('request/get', this.tmdbPersonUrl(this.$route.params.id))
             .then(response => {
                 if(axiosRandom === this.axiosRandom) {
-                    console.log('tmdb responsed')
                     this.tmdbResponse = response.data
                     this.groupJobs()
                     this.sortObjs()
@@ -82,7 +77,7 @@ export default {
             this.$store.dispatch('loading/startResponseWaiting')
             const axiosRandom = this.randomString(20)
             this.axiosRandom2 = axiosRandom
-            axios.get(this.personDataUrl(this.$route.params.id))
+            this.$store.dispatch('request/get', this.personDataUrl(this.$route.params.id))
             .then(response => {
                 if(axiosRandom === this.axiosRandom2) {
                     this.$store.dispatch('comments/setDataObject', response.data.reviews)
@@ -123,12 +118,10 @@ export default {
             this.tmdbResponse.series.results.sort((a, b) => a.episode_count > b.episode_count ? -1 : 1)
             this.tmdbResponse.series.jobTypes.sort((a, b) => a.count > b.count ? -1 : 1)
             this.tmdbResponse.series.genres.sort((a, b) => a.name < b.name ? -1 : 1)
-            console.log(this.tmdbResponse)
         },
         mergeAndStore() {
             this.tmdbResponse.movies = this.mergeTmdbResponse(this.tmdbResponse.movies, this.$store.state.interactions.movieInteractions)
             this.tmdbResponse.series = this.mergeTmdbResponse(this.tmdbResponse.series, this.$store.state.interactions.seriesInteractions)
-            console.log('setDataObject', this.tmdbResponse.name)
             this.$store.dispatch('movieSeriesDataSets/setDataObject', this.tmdbResponse)
             this.$store.dispatch('movieSeriesDataSets/setDataObject2', { id: this.tmdbResponse.id, name: this.tmdbResponse.name })
         },

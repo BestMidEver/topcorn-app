@@ -40,12 +40,7 @@
 import CardContainer from '@/components/cards/CardContainer.vue'
 import CustomButton from '@/components/CustomButton.vue'
 import urlGenerate from '@/mixins/urlGenerate'
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
+import codeToText from '@/mixins/codeToText'
 
 
 export default {
@@ -53,7 +48,7 @@ export default {
         'card-container': CardContainer,
         'custom-button': CustomButton,
     },
-    mixins: [urlGenerate],
+    mixins: [urlGenerate, codeToText],
     props: {
         data: Object,
     },
@@ -82,7 +77,7 @@ export default {
                 case 'New Feature': return require('@/assets/150x150logo.png')
                 default: 
                     let src = null
-                    if(this.notificationData.profile_path) src = `${process.env.VUE_APP_TMDB_SMALL_THUMBNAIL_URL}${this.notificationData.profile_path}`
+                    if(this.notificationData.profile_path) src = `${process.env.VUE_APP_TMDB_THUMBNAIL_URL}${this.notificationData.profile_path}`
                     if(!src && this.notificationData.facebook_profile_path) src = this.notificationData.facebook_profile_path
                     return src || require('@/assets/2x3loading.png')
             }
@@ -121,16 +116,16 @@ export default {
             switch (this.notificationData.type) {
                 case 'Share Series':
                 case 'Share Movie':
-                case 'Review Like Series':
-                case 'Review Like Movie': return this.notificationData.title
-                case 'Review Like Person': return this.notificationData.name
                 case 'Airing Today':
-                case 'Air Date Changed': return this.notificationData.original_title
+                case 'Air Date Changed':
+                case 'Review Like Movie': return this.notificationData.title
+                case 'Review Like Series': return `${this.notificationData.title} ${this.toEpisodeCode(this.notificationData.season_number, this.notificationData.episode_number)}`
+                case 'Review Like Person': return this.notificationData.name
             }
         },
         toObject() {
             switch (this.notificationData.type) {
-                case 'Review Like Series':
+                case 'Review Like Series': return this.movieSeriesUrl('series', this.notificationData.obj_id, 'profile', this.notificationData.season_number, this.notificationData.episode_number)
                 case 'Share Series': return this.movieSeriesUrl('series', this.notificationData.obj_id)
                 case 'Review Like Movie':
                 case 'Share Movie': return this.movieSeriesUrl('movie', this.notificationData.obj_id)
@@ -141,7 +136,7 @@ export default {
         },
         text2() {
             switch (this.notificationData.type) {
-                case 'Air Date Changed': return this.notificationData.day_difference_next > 0 ? ` is ${this.notificationData.day_difference_next} later.` : ' was defined.'
+                case 'Air Date Changed': return this.notificationData.day_difference_next > 0 ? ` is ${this.notificationData.day_difference_next} ${this.$options.filters.plural('day', this.notificationData.day_difference_next, 'days')} later.` : ' was defined.'
                 case 'Airing Today': return this.notificationData.day_difference_update > 1 ? ' aired.' : ' is airing today.'
             }
         },
@@ -153,7 +148,7 @@ export default {
             }
         },
         timeAgo() { return this.data.time_ago },
-        objectSrc() { return this.notificationData.poster_path ? `${process.env.VUE_APP_TMDB_SMALL_THUMBNAIL_URL}${this.notificationData.poster_path}` : null },
+        objectSrc() { return this.notificationData.poster_path ? `${process.env.VUE_APP_TMDB_THUMBNAIL_URL}${this.notificationData.poster_path}` : null },
         objectIcon() {
             switch (this.notificationData.type) {
                 case 'Started Following': return ['fa', 'user']
@@ -168,7 +163,7 @@ export default {
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
             const futureIsSeen = this.saveButtonStatus === 'active' ? 1 : 2
-            axios.post(this.changeNotificationMode(), { id: this.data.id, mode: futureIsSeen })
+            this.$store.dispatch('request/post', { url: this.changeNotificationMode(), data: { id: this.data.id, mode: futureIsSeen } })
             .then(response => {
                 if(axiosRandom === this.axiosRandom) {
                     this.data.is_seen = futureIsSeen

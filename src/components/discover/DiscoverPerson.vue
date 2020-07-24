@@ -10,13 +10,7 @@ import Cards from '@/components/Cards.vue'
 import FilterSorter from '@/components/filterSorter/FilterSorter.vue'
 import filterSorterDefaultFilters from '@/components/filterSorter/filterSorterDefaultFilters'
 import filterSorterBackendAdapter from '@/components/filterSorter/filterSorterBackendAdapter'
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import urlGenerate from '@/mixins/urlGenerate'
-
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 
 export default {
@@ -53,7 +47,7 @@ export default {
             this.$store.dispatch('loading/startPageLoading')
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
-            axios.post(this.discoverUrl(this.$route.params.page), this.requestData)
+            this.$store.dispatch('request/post', { url: this.discoverUrl(this.$route.params.page), data: this.requestData })
             .then(response => {
                 if(axiosRandom === this.axiosRandom && this.$route.name === 'discover-person') {
                     this.data = response.data

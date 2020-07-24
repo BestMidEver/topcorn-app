@@ -56,9 +56,9 @@ export default {
     watch: {
         detailedType(val) { if(this.$route.name.split('-')[2] === 'guest' && this.detailedType !== 'episode') this.$router.replace(`/series/cast/${this.$route.params.id}/${this.seasonNumber}/${this.episodeNumber}/1`) }
     },
-    created() {
+    /* created() {
         if(this.isFullScreen) $('.body').scrollTop(0)
-    },
+    }, */
 }
 </script>
 

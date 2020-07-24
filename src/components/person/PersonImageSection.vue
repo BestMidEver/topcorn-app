@@ -33,9 +33,9 @@ export default {
         results() { return this.data.images ? this.data.images.profiles : [] },
         dataLength() { return this.results.length || 0 },
     },
-    created() {
+    /* created() {
         if(this.isFullScreen) $('.body').scrollTop(0)
-    },
+    }, */
     methods: {
     },
 }

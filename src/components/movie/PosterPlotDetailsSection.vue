@@ -154,9 +154,9 @@ export default {
     watch: {
         tabCode() { this.imageLoading = true }
     },
-    created() {
+    /* created() {
         if(this.isFullScreen) $('.body').scrollTop(0)
-    }
+    } */
 }
 </script>
 

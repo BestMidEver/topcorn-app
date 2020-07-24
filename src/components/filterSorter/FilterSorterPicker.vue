@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!data.disabled" :is="data.type" :items="items" :title="title" :selected.sync="selected_"/>
+    <component v-if="!data.disabled" :is="data.type" :items="items" :title="title" :selected.sync="selected_"/>
 </template>
 
 <script>
@@ -28,7 +28,7 @@ export default {
             },
             set(val) {
                 this.$emit('update:selected', val)
-                this.$emit('filterChanged', {...this.data, selected: val})
+                this.$emit('filterChanged', { ...this.data, selected: val })
             }
         },
         items() { return this.data && this.data.items || [] },

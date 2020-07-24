@@ -1,26 +1,26 @@
 <template>
     <div class="mt-2" :class="cardClass">
-        <div class="card h-100 d-flex flex-column justify-content-between mx-1">
+        <div class="card h-100 d-flex flex-column justify-content-between mx-1 card-border">
             <div class="card-profile">
                 <div class="position-relative text-center">
                     <div class="images">
-                        <slot name="image"/>
+                        <slot name="image" class="bg-white"/>
                     </div>
-                    <div class="card-over-layer d-none">
+                    <div class="card-over-layer d-none bg-white">
                         <slot name="over-layer-top"/>
                         <slot name="over-layer-bottom"/>
                     </div>
-                    <div class="card-badge-layer">
+                    <div class="card-badge-layer bg-white">
                         <slot name="badge-top"/>
                         <slot name="badge-bottom"/>
                     </div>
                 </div>
             </div>
             <router-link class="card-link" :to="to">
-                <slot name="text"/>
-                <slot name="bottom-body"/>
+                <slot name="text" class="bg-white"/>
+                <slot name="bottom-body" class="bg-white"/>
             </router-link>
-            <slot name="footer"/>
+            <slot name="footer" style="background-color: var(--footer-gray)"/>
         </div>
     </div>
 </template>
@@ -51,6 +51,9 @@ export default {
             if(this.cardType === 'movie') return this.movieSeriesUrl('movie', this.id)
             if(this.cardType === 'series') return this.movieSeriesUrl('series', this.id)
             if(this.cardType === 'user') return this.userUrl(this.id)
+        },
+        getLastSeenEpisode() {
+            
         }
     }
 }

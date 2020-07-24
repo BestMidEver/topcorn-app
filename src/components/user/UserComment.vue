@@ -7,16 +7,10 @@
 
 <script>
 import ReviewSection from '@/components/ReviewSection.vue'
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import urlGenerate from '@/mixins/urlGenerate'
 import FilterSorter from '@/components/filterSorter/FilterSorter.vue'
 import filterSorterDefaultFilters from '@/components/filterSorter/filterSorterDefaultFilters'
 import filterSorterBackendAdapter from '@/components/filterSorter/filterSorterBackendAdapter'
-
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 
 export default {
@@ -49,14 +43,14 @@ export default {
     },
     created() {
         this.getData()
-        if(this.isFullScreen) $('.body').scrollTop(0)
+        //if(this.isFullScreen) $('.body').scrollTop(0)
     },
     methods: {
         getData() {
             this.$store.dispatch('loading/startPageLoading2')
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
-            axios.post(this.userInteractionSetUrl(this.$route.params.page), this.requestData)
+            this.$store.dispatch('request/post', { url: this.userInteractionSetUrl(this.$route.params.page), data: this.requestData })
             .then(response => {
                 if(axiosRandom === this.axiosRandom) {
                     this.data = response.data

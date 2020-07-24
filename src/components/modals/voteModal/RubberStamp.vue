@@ -39,7 +39,7 @@ export default {
     border-radius: 1rem;
     font-family: 'Courier';
     -webkit-mask-size: 944px 604px;
-    /* mix-blend-mode: multiply; */
+    mix-blend-mode: multiply;
 }
 
 .is-nope {

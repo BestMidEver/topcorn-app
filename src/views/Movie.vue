@@ -7,16 +7,13 @@
 
 <script>
 import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import tmdbMerge from '@/mixins/tmdbMerge'
 import urlGenerate from '@/mixins/urlGenerate'
 import lodash from 'lodash'
 import HeaderBar from '@/components/HeaderBar.vue'
  
+Vue.use(lodash)
 
-Vue.use(VueAxios, axios, lodash)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 function initialState (){
     const tmdbResponse = { results: [], total_pages: 0, total_results: 0 }
@@ -56,20 +53,18 @@ export default {
         createdInteractionData() { return { ban_id: null, backdrop_path: this.tmdbResponse.backdrop_path, id: this.tmdbResponse.id, later_id: null, original_title: this.tmdbResponse.original_title, rate_code: null, release_date: this.tmdbResponse.release_date, title: this.tmdbResponse.title } }
     },
     watch: {
-        objInteractions() { console.log('objInteractions watched'); this.mergeAndStore() },
+        objInteractions() { this.mergeAndStore() },
         obj() {
             Object.assign(this.$data, initialState())
-            console.log('obj changed')
             this.getObjData()
-            $('.body').scrollTop(0)
+            //$('.body').scrollTop(0)
         },
-        interactionData() { console.log('interactionData watched', this.interactionData); this.$store.dispatch('movieSeriesDataSets/setDataObject', this.interactionData) }
+        interactionData() { this.$store.dispatch('movieSeriesDataSets/setDataObject', this.interactionData) }
     },
     beforeCreate() {
         this.$store.dispatch('interactions/pluckMoviesSeries')
     },
     created() {
-        console.log('movie.vue created')
         this.getObjData()
     },
     methods: {
@@ -81,11 +76,10 @@ export default {
             this.$store.dispatch('loading/startPageLoading')
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
-            axios.get(this.tmdbMovieSeriesUrl(this.type, this.$route.params.id))
+            this.$store.dispatch('request/get', this.tmdbMovieSeriesUrl(this.type, this.$route.params.id))
             .then(response => {
                 if(axiosRandom === this.axiosRandom) {
                     this.tmdbResponse = response.data
-                    console.log('tmdb responsed')
                     this.sortTrailers()
                     this.groupCrew()
                     this.appendCollection()
@@ -103,7 +97,7 @@ export default {
             }
             const axiosRandom = this.randomString(20)
             this.axiosRandom3 = axiosRandom
-            axios.get(this.tmdbCollectionUrl(this.tmdbResponse.belongs_to_collection.id))
+            this.$store.dispatch('request/get', this.tmdbCollectionUrl(this.tmdbResponse.belongs_to_collection.id))
             .then(response => {
                 if(axiosRandom === this.axiosRandom3) {
                     this.tmdbResponse.collection = { results: response.data.parts, total_pages: 1, total_results: 1, name: response.data.name }
@@ -117,7 +111,7 @@ export default {
             this.$store.dispatch('loading/startResponseWaiting')
             const axiosRandom = this.randomString(20)
             this.axiosRandom2 = axiosRandom
-            axios.get(this.movieSeriesDataUrl(this.type, this.$route.params.id))
+            this.$store.dispatch('request/get', this.movieSeriesDataUrl(this.type, this.$route.params.id))
             .then(response => {
                 if(axiosRandom === this.axiosRandom2) {
                     this.interactionDataResponse = response.data.interactionData.original
@@ -143,7 +137,6 @@ export default {
             this.tmdbResponse.recommendations = this.mergeTmdbResponse(this.tmdbResponse.recommendations || this.tmdbResponse0)
             this.tmdbResponse.similar = this.mergeTmdbResponse(this.tmdbResponse.similar || this.tmdbResponse0)
             this.tmdbResponse.collection = this.mergeTmdbResponse(this.tmdbResponse.collection || this.tmdbResponse0)
-            console.log('setDataObject2', this.tmdbResponse.title)
             this.$store.dispatch('movieSeriesDataSets/setDataObject2', this.tmdbResponse)
         },
     }

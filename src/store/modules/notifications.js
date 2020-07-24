@@ -1,11 +1,3 @@
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
-
-
 const state = {
     notificationCount: 0
 }
@@ -19,7 +11,8 @@ const mutations = {
 
 const actions = {
     getNotificationCount(context) {
-        axios.get(`${process.env.VUE_APP_API_URL}/notifications`).then(response => { context.commit('setNotificationCount', response.data) } )
+        context.dispatch('request/get', `${process.env.VUE_APP_API_URL}/notifications`, { root: true })
+        .then(response => { context.commit('setNotificationCount', response.data) } )
     },
 }
 

@@ -39,9 +39,9 @@ export default {
         dataLength() { return this.data && this.data.data && this.data.data.length || 0 },
         cardType() { return this.ownProfile ? 'profile-movie-series-card-own-profile' : 'profile-movie-series-card-other-profile' }
     },
-    created() {
+    /* created() {
         if(this.isFullScreen) $('.body').scrollTop(0)
-    },
+    }, */
 }
 </script>
 

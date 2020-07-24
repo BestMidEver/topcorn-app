@@ -9,21 +9,15 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <button type="button" class="btn btn-sm text-secondary border-0" @click="reset()" :disabled="loading">Cancel</button>
-                <button type="submit" class="btn btn-sm btn-primary border-0" :disabled="loading">Save</button>
+                <button type="submit" class="btn btn-sm btn-primary border-0" :disabled="saveDisabled">Save</button>
             </div>
         </form>
     </div>
 </template>
 
 <script>
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import urlGenerate from '@/mixins/urlGenerate'
 import CustomInput from '@/components/customInputs/CustomInput.vue'
-
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 
 export default {
@@ -44,6 +38,7 @@ export default {
     },
     computed: {
         loading() { return this.$store.state.loading.pageLoading },
+        saveDisabled() { return this.loading || !this.currentPassword || !this.newPassword || !this.comfirmPassword },
         email() { return this.tcResponse && this.tcResponse.email },
     },
     created() {
@@ -54,7 +49,7 @@ export default {
             this.$store.dispatch('loading/startPageLoading')
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
-            axios.get(this.simpleUserData())
+            this.$store.dispatch('request/get', this.simpleUserData())
             .then(response => {
                 if(axiosRandom === this.axiosRandom) {
                     this.tcResponse = response.data
@@ -69,11 +64,12 @@ export default {
             this.$store.dispatch('loading/startPageLoading')
             const axiosRandom = this.randomString(20)
             this.axiosRandom2 = axiosRandom
-            axios.post(this.setUser(), { type: 'password', current_password: this.currentPassword, new_password: this.newPassword, new_password_confirmation: this.comfirmPassword })
+            this.$store.dispatch('request/postWithErrors', { url: this.setUser(), data: { type: 'password', current_password: this.currentPassword, new_password: this.newPassword, new_password_confirmation: this.comfirmPassword } })
             .then(response => {
                 if(axiosRandom === this.axiosRandom2) {
                     this.errors = {}
                     this.reset()
+                    alert('Your password has been changed successfully.')
                 }
             }).catch(error => {
                 this.errors = error.response.data.errors

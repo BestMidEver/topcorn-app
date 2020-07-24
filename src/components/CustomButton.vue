@@ -70,8 +70,8 @@ button{ color: var(--secondary)!important; }
 .expand.active, .edit.active{ color: var(--tab-active-color)!important; }
 .like.active{ color: var(--like-color)!important; }
 .scroll-up, .scroll-down{ background: var(--background-color)!important; }
-.last-seen.active{ color: var(--lastseen-color)!important }
-.follow.active{ color: var(--follow-color)!important }
+.last-seen.active{ color: var(--info)!important }
+.follow.active{ color: var(--info)!important }
 .bookmark.active{ color: var(--info)!important; }
 
 .left{ border-top-right-radius: 0!important; border-bottom-right-radius: 0!important; }

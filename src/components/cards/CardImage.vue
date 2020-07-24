@@ -12,7 +12,8 @@ export default {
         preventDarken: Boolean,
         size: {
             validator: value => ['narrow'/* , 'person' */].includes(value)
-        }
+        },
+        type: String
     },
     data() {
         return {
@@ -24,7 +25,7 @@ export default {
             if(this.isTrue(this.data.poster_path)) return `${process.env.VUE_APP_TMDB_POSTER_URL}${this.data.poster_path}`
             if(this.isTrue(this.data.profile_path)) return `${process.env.VUE_APP_TMDB_POSTER_URL}${this.data.profile_path}`
             if(this.isTrue(this.data.facebook_profile_path)) return `${this.data.facebook_profile_path}&height=450&width=300`
-            if(this.isTrue(this.data.cover_path)) return `${process.env.VUE_APP_TMDB_SMALL_COVER_URL}${this.data.cover_path}`
+            if(this.isAllTrue([this.data.cover_path, !(['movie', 'series'].includes(this.type))])) return `${process.env.VUE_APP_TMDB_SMALL_COVER_URL}${this.data.cover_path}`
             if(this.isTrue(this.data.file_path)) return `${process.env.VUE_APP_TMDB_SMALL_COVER_URL}${this.data.file_path}`
             return require('@/assets/200x300logo.png')
         },

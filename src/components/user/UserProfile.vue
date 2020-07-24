@@ -42,12 +42,12 @@ export default {
         friendsData() { return this.$store.state.users.dataObject },
         interactionData() { return this.$store.state.users.dataObject2 },
     },
-    watch: {
+    /* watch: {
         $route() { $('.body').scrollTop(0) }
     },
     created() {
         $('.body').scrollTop(0)
-    },
+    }, */
     methods: {
         checkDataLength(obj) {
             return obj.data && obj.data.length > 0

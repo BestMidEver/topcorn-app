@@ -1,10 +1,5 @@
 import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 
-
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 const getDefaultState = () => {
     return {
@@ -55,7 +50,7 @@ const actions = {
     },
     getUserReview(context) {
         if(!context.state.voteCommentDataType || !context.state.voteCommentData.id) return
-        axios.get(`${process.env.VUE_APP_API_URL}/getUserReview/${context.state.voteCommentDataType}/${context.state.voteCommentData.id}/${context.state.voteCommentData.season_number||context.state.voteCommentData.season_number===0?context.state.voteCommentData.season_number:-1}/${context.state.voteCommentData.episode_number||context.state.voteCommentData.episode_number===0?context.state.voteCommentData.episode_number:-1}`)
+        context.dispatch('request/get', `${process.env.VUE_APP_API_URL}/getUserReview/${context.state.voteCommentDataType}/${context.state.voteCommentData.id}/${context.state.voteCommentData.season_number||context.state.voteCommentData.season_number===0?context.state.voteCommentData.season_number:-1}/${context.state.voteCommentData.episode_number||context.state.voteCommentData.episode_number===0?context.state.voteCommentData.episode_number:-1}`, { root:true })
         .then(response => {
             Vue.set(context.state.voteCommentData, 'review', response.data.review ? response.data.review : '')
         }).catch(error => {
@@ -63,12 +58,12 @@ const actions = {
     },
     sendReview(context, review) {
         context.dispatch('loading/startResponseWaiting', null, { root: true })
-        axios.post(`${process.env.VUE_APP_API_URL}/sendReview/${context.state.voteCommentDataType}`, {
+        context.dispatch('request/post', { url: `${process.env.VUE_APP_API_URL}/sendReview/${context.state.voteCommentDataType}`, data: {
             obj_id: context.state.voteCommentData.id,
             season_number: context.state.voteCommentData.season_number || context.state.voteCommentData.season_number === 0 ? context.state.voteCommentData.season_number : -1,
             episode_number: context.state.voteCommentData.episode_number || context.state.voteCommentData.episode_number === 0 ? context.state.voteCommentData.episode_number : -1,
             review: review
-        })
+        } }, { root:true })
         .then(response => {
             Vue.set(context.state.voteCommentData, 'review', review)
             context.state.voteCommentDataBoundedTo.forEach(boundedTo => {
@@ -79,10 +74,10 @@ const actions = {
     },
     vote(context, data) {
         context.dispatch('loading/startResponseWaiting', null, { root: true })
-        axios.post(`${process.env.VUE_APP_API_URL}/rate/${context.state.voteCommentDataType}`, {
+        context.dispatch('request/post', { url: `${process.env.VUE_APP_API_URL}/rate/${context.state.voteCommentDataType}`, data: {
             obj_id: context.state.voteCommentData.id,
             rate_code: data.vote
-        })
+        } }, { root:true })
         .then(response => {
             context.state.voteCommentData.rate_code = data.vote
             context.state.voteCommentDataBoundedTo.forEach(boundedTo => {
@@ -101,18 +96,21 @@ const actions = {
         $('#share-object-modal').modal('show')
     },
     getShareObjectModalUsers(context) {
-        axios.get(`${process.env.VUE_APP_API_URL}/getShareObjectModalUsers/${context.state.shareObject.type}/${context.state.shareObject.data.id}`)
+        context.dispatch('loading/startPageLoading4', null, { root: true })
+        context.dispatch('request/get', `${process.env.VUE_APP_API_URL}/getShareObjectModalUsers/${context.state.shareObject.type}/${context.state.shareObject.data.id}`, { root:true })
         .then(response => {
             context.commit('setShareObjectUsersData', response.data)
         })
+        .then(() => {
+            context.dispatch('loading/finishPageLoading4', null, { root: true })
+        })
     },
     shareObjects(context, userIds) {
-        context.dispatch('loading/startResponseWaiting', null, { root: true })
-        axios.post(`${process.env.VUE_APP_API_URL}/shareObjects`, {
+        context.dispatch('request/post', { url: `${process.env.VUE_APP_API_URL}/shareObjects`, data: {
             users: userIds,
             objId: context.state.shareObject.data.id,
             type: context.state.shareObject.type
-        })
+        } }, { root:true })
         .then(response => {
             context.commit('shareObjectsSent', userIds)
             setTimeout(() => {

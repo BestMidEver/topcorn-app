@@ -1,5 +1,5 @@
 <template>
-    <div :id="modalId" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div :id="modalId" class="modal fade dismiss-on-route-change" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header d-flex align-items-center">

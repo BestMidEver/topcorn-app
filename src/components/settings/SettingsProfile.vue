@@ -22,16 +22,10 @@
 
 <script>
 import UserCoverSection from '@/components/user/UserCoverSection.vue'
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import urlGenerate from '@/mixins/urlGenerate'
 import CustomSelect from '@/components/customInputs/CustomSelect.vue'
 import CustomInput from '@/components/customInputs/CustomInput.vue'
 import reverter from './reverter.js'
-
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 
 export default {
@@ -107,7 +101,7 @@ export default {
             this.$store.dispatch('loading/startPageLoading')
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
-            axios.get(this.simpleUserData())
+            this.$store.dispatch('request/get', this.simpleUserData())
             .then(response => {
                 if(axiosRandom === this.axiosRandom) {
                     this.tcResponse = response.data
@@ -122,7 +116,7 @@ export default {
             this.$store.dispatch('loading/startPageLoading2')
             const axiosRandom = this.randomString(20)
             this.axiosRandom2 = axiosRandom
-            axios.get(this.getCoverPicsUrl())
+            this.$store.dispatch('request/get', this.getCoverPicsUrl())
             .then(response => {
                 if(axiosRandom === this.axiosRandom2) {
                     this.coverPictureResponse = response.data
@@ -136,7 +130,7 @@ export default {
             this.$store.dispatch('loading/startPageLoading3')
             const axiosRandom = this.randomString(20)
             this.axiosRandom3 = axiosRandom
-            axios.get(this.getProfilePicsUrl(this.coverPictureResponse.find(movie => movie.cover_path === this.tcResponse.cover_pic).movie_id))
+            this.$store.dispatch('request/get', this.getProfilePicsUrl(this.coverPictureResponse.find(movie => movie.cover_path === this.tcResponse.cover_pic).movie_id))
             .then(response => {
                 if(axiosRandom === this.axiosRandom3) {
                     this.profilePictureResponse = response.data
@@ -150,11 +144,12 @@ export default {
             this.$store.dispatch('loading/startPageLoading')
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
-            axios.post(this.setUser(), { type: 'profile', ...this.tcResponse })
+            this.$store.dispatch('request/post', { url: this.setUser(), data: { type: 'profile', ...this.tcResponse } })
             .then(response => {
                 if(axiosRandom === this.axiosRandom) {
                     this.tcResponse = response.data
                     this.saveResponse()
+                    alert('Your profile settings have been saved successfully.')
                 }
             }).catch(error => {
             }).then(() => {

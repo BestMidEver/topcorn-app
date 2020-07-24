@@ -6,14 +6,7 @@
 
 <script>
 import ReviewSection from '@/components/ReviewSection.vue'
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import urlGenerate from '@/mixins/urlGenerate'
- 
-
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 
 export default {
@@ -46,7 +39,7 @@ export default {
             this.$store.dispatch('loading/startPageLoading4')
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
-            axios.get(this.reviewsDataUrl('person', this.$route.params.id, this.$route.params.page))
+            this.$store.dispatch('request/get', this.reviewsDataUrl('person', this.$route.params.id, this.$route.params.page))
             .then(response => {
                 if(axiosRandom === this.axiosRandom) {
                     this.$store.dispatch('comments/setDataObject2', response.data)

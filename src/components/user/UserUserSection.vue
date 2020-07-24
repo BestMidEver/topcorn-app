@@ -41,9 +41,9 @@ export default {
     computed: {
         dataLength() { return this.data && this.data.data && this.data.data.length || 0 },
     },
-    created() {
+    /* created() {
         if(this.isFullScreen) $('.body').scrollTop(0)
-    },
+    }, */
 }
 </script>
 

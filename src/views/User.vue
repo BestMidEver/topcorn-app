@@ -7,13 +7,7 @@
 
 <script>
 import HeaderBar from '@/components/HeaderBar.vue'
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import urlGenerate from '@/mixins/urlGenerate'
-
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 
 export default {
@@ -45,7 +39,6 @@ export default {
         '$route.params.id'() { this.getObjData() }
     },
     created() {
-        console.log('user.vue created', this.$route)
         this.getObjData()
     },
     methods: {
@@ -57,10 +50,9 @@ export default {
             this.$store.dispatch('loading/startResponseWaiting')
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
-            axios.post(this.userDataUrl(), { id: this.id, interaction: this.ownProfile ? 'Watch Later' : 'Rate-5' })
+            this.$store.dispatch('request/post', { url: this.userDataUrl(), data: { id: this.id, interaction: this.ownProfile ? 'Watch Later' : 'Rate-5' } })
             .then(response => {
                 if(axiosRandom === this.axiosRandom) {
-                    console.log(response.data)
                     this.tcResponse = response.data
                     this.$store.dispatch('movieSeriesDataSets/setDataObject', this.tcResponse.user_data)
                     this.$store.dispatch('movieSeriesDataSets/setTcDataObject', this.tcResponse.movies)

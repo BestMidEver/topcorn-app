@@ -1,6 +1,6 @@
 <template>
     <div>
-        <trailer-section :type="type" class="mt-md-4"/>
+        <trailer-section :type="type" :class="type === 'movie' ? 'mt-md-3' : 'mt-md-1'"/>
         <under-trailer-section :title="title" :type="detailedType" :data="interactionData" :boundedTo="underTrailerSectionBoundedTo"/>
         <poster-plot-details-section :data="objData" :type="type"/>
         <cast-section :data="objData" :type="type"/>

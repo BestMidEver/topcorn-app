@@ -1,65 +1,38 @@
 # my-app
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-
-
 ### Android
 ```
-$ npm run cordova-serve-android # Development Android 
-$ npm run cordova-build-android # Build Android 
-$ npm run cordova-build-only-www-android # Build only files to src-cordova
-```
-
-### IOS
-```
-$ npm run cordova-serve-ios # Development IOS 
-$ npm run cordova-build-ios # Build IOS 
-$ npm run cordova-build-only-www-ios # Build only files to src-cordova
-```
-
-### OSX
-```
-$ npm run cordova-serve-osx # Development OSX 
-$ npm run cordova-build-osx # Build OSX 
-$ npm run cordova-build-only-www-osx # Build only files to src-cordova
+cd my-app && npm run cordova-serve-android
 ```
 
 ### Browser
 ```
 cd my-app && npm run cordova-serve-browser
-$ npm run cordova-serve-browser # Development Browser 
-$ npm run cordova-build-browser # Build Browser 
-$ npm run cordova-build-only-www-browser # Build only files to src-cordova
-```
-
-### Electron
-```
-$ npm run cordova-serve-electron # Development Electron 
-$ npm run cordova-build-electron # Build Electron 
-$ npm run cordova-build-only-www-electron # Build only files to src-cordova
 ```
 
 ### SERVER PUSH
 ```
 git add . && git commit -a -m 'default' && git push live master
 ```
+
+### GENERATE DEBUG APK ###
+```
+cd R:\uygulama\my-app && npm run cordova-build-only-www-android
+cd R:\uygulama\my-app\src-cordova && cordova build android --debug
+```
+
+### GENERATE & SIGN APK ###
+```
+cd R:\uygulama\my-app && npm run cordova-build-android
+cd R:\uygulama\my-app\src-cordova\platforms\android\app\build\outputs\apk\release
+keytool -genkey -v -keystore topcorn.keystore -alias topcorn -keyalg RSA -keysize 2048 -validity 10000
+jarsigner -sigalg SHA1withRSA -digestalg SHA1 -verbose -keystore topcorn.keystore app-release-unsigned.apk topcorn
+
+zipalign:
+C:\Users\sadec\AppData\Local\Android\Sdk\build-tools\30.0.0\zipalign -v 4 app-release-unsigned.apk aligned.apk
+```
+
+
 
 …or create a new repository on the command line
 echo "# topcorn-app" >> README.md

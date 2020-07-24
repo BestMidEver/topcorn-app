@@ -8,8 +8,6 @@
 
 <script>
 import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import tmdbMerge from '@/mixins/tmdbMerge'
 import urlGenerate from '@/mixins/urlGenerate'
 import lodash from 'lodash'
@@ -17,9 +15,8 @@ import HeaderBar from '@/components/HeaderBar.vue'
 import SeriesNavbar from '@/components/movie/SeriesNavbar'
 import seriesComputeds from '@/components/movie/seriesComputeds.js'
  
+Vue.use(lodash)
 
-Vue.use(VueAxios, axios, lodash)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 function initialState (){
     const tmdbResponse = { results: [], total_pages: 0, total_results: 0 }
@@ -64,23 +61,21 @@ export default {
         createdInteractionData() { return { ban_id: null, backdrop_path: this.tmdbResponse.backdrop_path, id: this.tmdbResponse.id, later_id: null, original_name: this.tmdbResponse.original_name, rate_code: null, first_air_date: this.tmdbResponse.first_air_date, name: this.tmdbResponse.name } }
     },
     watch: {
-        objInteractions() { console.log('objInteractions watched'); this.mergeAndStore() },
+        objInteractions() { this.mergeAndStore() },
         obj() {
             Object.assign(this.$data, initialState())
-            console.log('obj changed')
             this.getObjData()
-            $('.body').scrollTop(0)
+            //$('.body').scrollTop(0)
         },
         '$route.params.season'() { this.getTmdbSeasonData(); this.getTcData() },
         '$route.params.episode'() { this.getTmdbEpisodeData(); this.getTcData() },
-        interactionData() { console.log('interactionData watched', this.interactionData.name); this.$store.dispatch('movieSeriesDataSets/setDataObject', this.interactionData) },
+        interactionData() { this.$store.dispatch('movieSeriesDataSets/setDataObject', this.interactionData) },
 
     },
     beforeCreate() {
         this.$store.dispatch('interactions/pluckMoviesSeries')
     },
     created() {
-        console.log('movie.vue created')
         this.getObjData()
     },
     methods: {
@@ -94,12 +89,11 @@ export default {
             this.$store.dispatch('loading/startPageLoading')
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
-            axios.get(this.tmdbMovieSeriesUrl(this.type, this.$route.params.id))
+            this.$store.dispatch('request/get', this.tmdbMovieSeriesUrl(this.type, this.$route.params.id))
             .then(response => {
                 if(axiosRandom === this.axiosRandom) {
                     this.tmdbResponse = response.data
                     //this.mergeInteractionData()
-                    console.log('tmdb responsed')
                     this.sortTrailers()
                     this.groupCrew(this.tmdbResponse.credits.crew)
                 }
@@ -112,7 +106,7 @@ export default {
             this.$store.dispatch('loading/startResponseWaiting')
             const axiosRandom = this.randomString(20)
             this.axiosRandom2 = axiosRandom
-            axios.get(this.movieSeriesDataUrl(this.type, this.$route.params.id, this.seasonNumber, this.episodeNumber))
+            this.$store.dispatch('request/get', this.movieSeriesDataUrl(this.type, this.$route.params.id, this.seasonNumber, this.episodeNumber))
             .then(response => {
                 if(axiosRandom === this.axiosRandom2) {
                     this.interactionDataResponse = response.data.interactionData.original
@@ -140,16 +134,14 @@ export default {
             this.tmdbResponse.recommendations = this.mergeTmdbResponse(this.tmdbResponse.recommendations || this.tmdbResponse0)
             this.tmdbResponse.similar = this.mergeTmdbResponse(this.tmdbResponse.similar || this.tmdbResponse0)
             this.tmdbResponse.collection = this.mergeTmdbResponse(this.tmdbResponse.collection || this.tmdbResponse0)
-            console.log('setDataObject2', this.tmdbResponse.title)
             this.$store.dispatch('movieSeriesDataSets/setDataObject2', this.tmdbResponse)
         },
         getTmdbSeasonData() {
             if(this.$route.params.season == -1) { this.$store.dispatch('loading/finishPageLoading3'); return }
-            console.log('getTmdbSeasonData')
             this.$store.dispatch('loading/startPageLoading3')
             const axiosRandom = this.randomString(20)
             this.axiosRandom3 = axiosRandom
-            axios.get(this.tmdbSeasonUrl(this.$route.params.id, this.$route.params.season))
+            this.$store.dispatch('request/get', this.tmdbSeasonUrl(this.$route.params.id, this.$route.params.season))
             .then(response => {
                 if(axiosRandom === this.axiosRandom3) {
                     this.tmdbSeasonResponse = response.data
@@ -171,11 +163,10 @@ export default {
         },
         getTmdbEpisodeData() {
             if(this.$route.params.episode == -1) return
-            console.log('getTmdbEpisodeData')
             this.$store.dispatch('loading/startPageLoading4')
             const axiosRandom = this.randomString(20)
             this.axiosRandom4 = axiosRandom
-            axios.get(this.tmdbEpisodeVideoUrl(this.$route.params.id, this.$route.params.season, this.$route.params.episode))
+            this.$store.dispatch('request/get', this.tmdbEpisodeVideoUrl(this.$route.params.id, this.$route.params.season, this.$route.params.episode))
             .then(response => {
                 if(axiosRandom === this.axiosRandom4) {
                     Vue.set(this.tmdbSeasonResponse.episodes.find(episode => episode.episode_number == this.$route.params.episode), 'videos', response.data)

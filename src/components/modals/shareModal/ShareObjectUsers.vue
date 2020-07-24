@@ -1,25 +1,28 @@
 <template>
     <div class="btn-group-toggle" role="group">
-        <button v-for="(user, i) in data" :key="i" class="btn btn-block btn-sm" :class="user.selected ? 'selected' : 'text-muted'" @click="toggleSelected(user)">
-            <div class="d-flex align-items-center text-left">
-                <div>
-                    <img v-show="!thumbnailLoading" class="thumbnail-img" :src="thumbnailSrc(user)" @load="thumbnailLoading = false" @error="$event.target.src = require('@/assets/2x3loading.png')"/>
-                    <img v-show="thumbnailLoading" class="thumbnail-img" :src="require('@/assets/2x3loading.png')"/>
-                </div>
-                <div class="flex-grow-1 px-2">
-                    <div>{{ user.user_name }}</div>
+        <share-modal-skeleton v-if="loading"/>
+        <template v-else>
+            <button v-for="(user, i) in data" :key="i" class="btn btn-block btn-sm" :class="user.selected ? 'selected' : 'text-muted'" @click="toggleSelected(user)">
+                <div class="d-flex align-items-center text-left">
                     <div>
-                        <span v-if="user.later_id > 0" class="btn btn-sm p-0 text-warning" :class="user.rate_code > 0 ? 'mr-2' : ''"><font-awesome-icon :icon="['fas', 'clock']"/></span>
-                        <five-star v-if="user.rate_code > 0" :rate="user.rate_code" class="d-inline" style="margin-left: 0px!important"/>
-                        <span v-if="user.ban_id > 0" class="btn btn-sm p-0 text-danger" :class="(user.later_id > 0 || user.rate_code > 0) ? 'ml-2' : ''"><font-awesome-icon :icon="['fas', 'ban']"/></span>
+                        <img v-show="!thumbnailLoading" class="thumbnail-img" :src="thumbnailSrc(user)" @load="thumbnailLoading = false" @error="$event.target.src = require('@/assets/2x3loading.png')"/>
+                        <img v-show="thumbnailLoading" class="thumbnail-img" :src="require('@/assets/2x3loading.png')"/>
+                    </div>
+                    <div class="flex-grow-1 px-2">
+                        <div>{{ user.user_name }}</div>
+                        <div>
+                            <span v-if="user.later_id > 0" class="btn btn-sm p-0 text-warning" :class="user.rate_code > 0 ? 'mr-2' : ''"><font-awesome-icon :icon="['fas', 'clock']"/></span>
+                            <five-star v-if="user.rate_code > 0" :rate="user.rate_code" class="d-inline" style="margin-left: 0px!important"/>
+                            <span v-if="user.ban_id > 0" class="btn btn-sm p-0 text-danger" :class="(user.later_id > 0 || user.rate_code > 0) ? 'ml-2' : ''"><font-awesome-icon :icon="['fas', 'ban']"/></span>
+                        </div>
+                    </div>
+                    <div>
+                        <font-awesome-icon v-if="user.is_seen !== null" :icon="isSeenIcon(user.is_seen)"/>
                     </div>
                 </div>
-                <div>
-                    <font-awesome-icon v-if="user.is_seen !== null" :icon="isSeenIcon(user.is_seen)"/>
-                </div>
-            </div>
-        </button>
-        <no-result v-if="data.length === 0" class="mt-0" expandStatus="compressed"/>
+            </button>
+            <no-result v-if="data.length === 0" class="mt-0" expandStatus="compressed"/>
+        </template>
     </div>
 </template>
 
@@ -27,12 +30,14 @@
 import Vue from 'vue'
 import FiveStar from '@/components/reviews/FiveStar.vue'
 import NoResult from '@/components/NoResult.vue'
+import ShareModalSkeleton from './ShareModalSkeleton.vue'
 
 
 export default {
     components: {
         'five-star': FiveStar,
         'no-result': NoResult,
+        'share-modal-skeleton': ShareModalSkeleton,
     },
     props: {
         data: [Array, Object]
@@ -43,6 +48,7 @@ export default {
         }
     },
     computed: {
+        loading() { return this.$store.state.loading.pageLoading4 }
     },
     methods: {
         toggleSelected(user) {

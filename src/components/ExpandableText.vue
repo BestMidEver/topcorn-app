@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div :id="'accordion' + id" style="margin-bottom: -0.5rem;">
+        <div :id="'accordion' + id" :style="{ 'margin-bottom': isLong ? '-0.5rem' : '' }">
             <div>
                 <div :id="'collapsea' + id" :data-parent="'#accordion' + id" class="collapse">
                     <div v-html="newLinedContent"></div>

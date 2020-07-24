@@ -13,16 +13,10 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import urlGenerate from '@/mixins/urlGenerate'
 import CustomInput from '@/components/customInputs/CustomInput.vue'
 import CustomSelect from '@/components/customInputs/CustomSelect.vue'
 import reverter from './reverter.js'
-
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 
 export default {
@@ -53,7 +47,7 @@ export default {
             this.$store.dispatch('loading/startPageLoading')
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
-            axios.get(this.simpleUserData())
+            this.$store.dispatch('request/get', this.simpleUserData())
             .then(response => {
                 if(axiosRandom === this.axiosRandom) {
                     this.tcResponse = response.data
@@ -68,11 +62,12 @@ export default {
             this.$store.dispatch('loading/startPageLoading')
             const axiosRandom = this.randomString(20)
             this.axiosRandom2 = axiosRandom
-            axios.post(this.setUser(), { type: 'profile', ...this.tcResponse })
+            this.$store.dispatch('request/post', { url: this.setUser(), data: { type: 'profile', ...this.tcResponse } })
             .then(response => {
                 if(axiosRandom === this.axiosRandom2) {
                     this.tcResponse = response.data
                     this.saveResponse()
+                    alert('Your pagination setting has been saved successfully.')
                 }
             }).catch(error => {
             }).then(() => {

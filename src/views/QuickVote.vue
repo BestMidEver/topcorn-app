@@ -1,7 +1,7 @@
 <template>
-    <static-modal-container>
+    <static-modal-container><!--  type="expanded" -->
         <template slot="content">
-            <div class="modal-header p-0">
+            <div class="modal-header p-0 bg-white">
                 <tabs :items="tabs" :itemTypes="tabTypes" :activeType.sync="activeType" class="w-100" :disabled="$store.state.loading.pageLoading"/>
             </div>
             <router-view></router-view>

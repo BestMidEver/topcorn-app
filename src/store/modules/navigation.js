@@ -1,7 +1,7 @@
 const state = {
     search: '/search-/movie/1',
     quickVote: '/quick-vote-movies',
-    myProfile: `/user/profile/${localStorage.getItem('userId')}`,
+    myProfile: '',
     discover: '/discover/movie/1',
 }
 
@@ -23,6 +23,17 @@ const actions = {
         if(to.matched[0] && to.matched[0].name === 'user' && to.params.id === localStorage.getItem('userId')) context.commit('setMyProfile', to.fullPath)
         if(to.path.indexOf('/discover') === 0) context.commit('setDiscover', to.fullPath)
     },
+    getLastSeenEpisode(context, id) {
+        context.dispatch('loading/startResponseWaiting', null, { root:true })
+        return new Promise((resolve, reject) => {
+            context.dispatch('request/get', `${process.env.VUE_APP_API_URL}/getSeriesCardData/${id}`, { root:true })
+            .then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            }).then(() => { context.dispatch('loading/finishResponseWaiting', null, { root:true }) })
+        })
+    }
 }
 
 export default {

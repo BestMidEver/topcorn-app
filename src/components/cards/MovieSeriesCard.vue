@@ -1,7 +1,7 @@
 <template>
     <card-container :data="data" :cardType="type">
         <template slot="image">
-            <card-image :data="data"/>
+            <card-image :data="data" :type="type"/>
         </template>
         <template slot="over-layer-top">
             <card-over-layer-top :data="data" :cardType="cardType" :type="type"/>

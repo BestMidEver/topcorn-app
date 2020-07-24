@@ -8,7 +8,8 @@
                     <span v-if="prependText">{{ prependText }}</span>
                 </span>
             </div>
-            <input v-model="inputVal" :type="type" :placeholder="placeHolder" class="form-control rounded-right" style="flex: 1" :required="required" :disabled="disabled"/>
+            <input v-model="inputVal" :type="type" :placeholder="placeHolder" class="form-control rounded-right" style="flex: 1" :required="required" :disabled="disabled"
+                @focus="hideNavs()" @blur="showNavs()" @keyup.enter="$event.target.blur()" @input="inputVal = $event.target.value"/>
             <div v-if="isClearVisible" class="input-group-append">
                 <custom-button type="text" class="btn-sm btn-block border-0" @click="clearInput"><div class="one-line">{{ clearMessage }}</div></custom-button>
             </div>
@@ -48,16 +49,21 @@ export default {
                 return this.value
             },
             set(val) {
-                //if (this.timeout) clearTimeout(this.timeout)
-                //this.timeout = setTimeout(() => {
-                    this.$emit('input', val)
-                //}, 1000)
+                this.$emit('input', val)
             }
         },
         isClearVisible() { return this.clearMessage && this.isTrue(this.inputVal) }
     },
     methods: {
-        clearInput() { /* clearTimeout(this.timeout); this.$emit('input', '') */ this.inputVal = '' }
+        clearInput() { this.inputVal = '' },
+        hideNavs() {    
+            $('#the-body').addClass('mt-0')
+            $('#navigation-bar').hide()
+        },
+        showNavs() {
+            $('#the-body').removeClass('mt-0')
+            $('#navigation-bar').show()
+        },
     }
 }
 </script>

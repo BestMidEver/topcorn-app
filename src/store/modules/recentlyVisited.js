@@ -1,11 +1,3 @@
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-
-
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
-
 const state = {
     movies: [],
     series: [],
@@ -58,7 +50,7 @@ const actions = {
     getData(context) {
         context.dispatch('loading/startPageLoading2', null, { root:true })
         return new Promise((resolve, reject) => {
-            axios.get(`${process.env.VUE_APP_API_URL}/recentlyVisiteds`)
+            context.dispatch('request/get', `${process.env.VUE_APP_API_URL}/recentlyVisiteds`, { root:true })
             .then(response => {
                 context.commit('setMovies', response.data.movies)
                 context.commit('setSeries', response.data.series)
@@ -74,7 +66,7 @@ const actions = {
     clear(context, types) {
         context.dispatch('loading/startResponseWaiting', null, { root:true })
         return new Promise((resolve, reject) => {
-            axios.get(`${process.env.VUE_APP_API_URL}/clearRecentlyVisiteds/${types}`)
+            context.dispatch('request/get', `${process.env.VUE_APP_API_URL}/clearRecentlyVisiteds/${types}`, { root:true })
             .then(response => {
                 context.commit('clear', types)
                 resolve(response)

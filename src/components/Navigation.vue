@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-md navbar-light bg-white fixed-bottom py-0 py-md-1 bottom-line-md top-line top-line-md-none nav-shadow">
+    <nav id="navigation-bar" class="navbar navbar-expand-md navbar-light bg-white fixed-bottom py-0 py-md-1 bottom-line-md top-line top-line-md-none nav-shadow">
 
         <!-- Mobile Recommendation button -->
         <ul class="navbar-nav text-center">
@@ -34,7 +34,7 @@
         <!-- Mobile My Profile button -->
         <ul class="navbar-nav text-center">
             <li class="nav-item">
-                <router-link :to="myProfileTo" class="nav-link d-md-none" :class="{ active: isMyProfile }">
+                <router-link :to="myProfileTo" :replace="isMyProfile" class="nav-link d-md-none" :class="{ active: isMyProfile }">
                     <font-awesome-icon :icon="['fas', 'user']"/>
                     <div class="extra-small">My Profile</div>
                 </router-link>
@@ -100,6 +100,40 @@
                         <font-awesome-icon icon="cog" class="mr-1"/>
                         Settings
                     </router-link>
+                </li>
+
+                <!-- Collapsed Privacy Policy button -->
+                <li class="nav-item d-md-none">
+                    <router-link to="/privacy-policy" class="nav-link">
+                        <font-awesome-icon icon="user-secret" class="mr-1"/>
+                        Privacy Policy
+                    </router-link>
+                    <div class="dropdown-divider"></div>
+                </li>
+
+                <!-- Collapsed Refresh button -->
+                <li class="nav-item d-md-none">
+                    <button class="btn btn-link nav-link text-muted btn-block text-left border-0" @click="$router.go()">
+                        <font-awesome-icon icon="sync" class="mr-1"/>
+                        Refresh
+                    </button>
+                    <div class="dropdown-divider"></div>
+                </li>
+
+                <!-- Collapsed Patreon button -->
+                <li class="nav-item d-md-none">
+                    <a :href="patreonLink" class="nav-link">
+                        <font-awesome-icon icon="hand-spock"/>
+                        Become a Patron
+                    </a>
+                </li>
+
+                <!-- Collapsed Instagram button -->
+                <li class="nav-item d-md-none">
+                    <a :href="instagramLink" class="nav-link">
+                        <font-awesome-icon :icon="['fab', 'instagram']" class="mr-1"/>
+                        Instagram/topcorn.xyz
+                    </a>
                     <div class="dropdown-divider"></div>
                 </li>
 
@@ -111,18 +145,9 @@
                     </button>
                 </li> -->
 
-                <!-- Collapsed Patreon button -->
-                <!-- <li class="nav-item d-md-none">
-                    <a href="/patreon link" class="nav-link">
-                        <font-awesome-icon icon="hand-spock"/>
-                        Become a Patron
-                    </a>
-                    <div class="dropdown-divider"></div>
-                </li> -->
-
                 <!-- Collapsed Logout button -->
                 <li class="nav-item d-md-none">
-                    <button class="btn btn-sm btn-link nav-link text-muted mb-3" @click="logout">
+                    <button class="btn btn-sm btn-link nav-link text-muted mb-3 border-0" @click="logout">
                         Logout
                     </button>
                 </li>
@@ -139,7 +164,7 @@
 
                 <!-- Larger Screen My Profile button -->
                 <li class="nav-item">
-                    <router-link :to="myProfileTo" class="nav-link" :class="{ active: isMyProfile }">
+                    <router-link :to="myProfileTo" :replace="isMyProfile" class="nav-link" :class="{ active: isMyProfile }">
                         <font-awesome-icon icon="user"/>
                         My Profile
                     </router-link>
@@ -147,7 +172,7 @@
 
                 <li class="nav-item dropdown">
                     <!-- Larger Screen Dropdown button -->
-                    <button class="nav-link btn btn-link" id="navbar-dropdown-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="nav-link btn btn-link border-0" id="navbar-dropdown-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <font-awesome-icon icon="caret-down"/>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-dropdown-menu">
@@ -157,17 +182,37 @@
                             Settings
                         </router-link>
 
+                        <!-- Larger Screen Privacy Policy button -->
+                        <router-link to="/privacy-policy" class="dropdown-item">
+                            <font-awesome-icon icon="user-secret" class="text-muted"/>
+                            Privacy Policy
+                        </router-link>
+
                         <!-- Larger Screen Dark Theme button -->
                         <!-- <button class="dropdown-item">
                             <font-awesome-icon icon="moon" class="text-muted"/>
                             Activate Dark Theme
                         </button> -->
+                        <div class="dropdown-divider"></div>
 
-                        <!-- Larger Screen Patreon button -->
-                        <!-- <a class="dropdown-item" href="/patreon-link">
+                        <!-- Larger Screen Logout button -->
+                        <button class="dropdown-item" @click="$router.go()">
+                            <font-awesome-icon icon="sync" class="text-muted"/>
+                            Refresh
+                        </button>
+                        <div class="dropdown-divider"></div>
+
+                        <!-- Larger Screen Patreon link -->
+                        <a class="dropdown-item" :href="patreonLink">
                             <font-awesome-icon icon="hand-spock" class="text-muted"/>
                             Become a Patron
-                        </a> -->
+                        </a>
+
+                        <!-- Larger Screen Instagram link -->
+                        <a class="dropdown-item" :href="instagramLink">
+                            <font-awesome-icon :icon="['fab', 'instagram']" class="mr-1"/>
+                            Instagram/topcorn.xyz
+                        </a>
                         <div class="dropdown-divider"></div>
 
                         <!-- Larger Screen Logout button -->
@@ -200,14 +245,15 @@ export default {
         isSettings() { return this.parentRouteName === 'settings' },
         searchTo() { return this.isSearch ? '/search-/movie/1' : this.$store.state.navigation.search },
         quickVoteTo() { return this.isQuickVote ? '/quick-vote-movies' : this.$store.state.navigation.quickVote },
-        myProfileTo() { return this.isMyProfile ? `/user/profile/${this.userId}` : this.$store.state.navigation.myProfile },
+        myProfileTo() { return this.isMyProfile ? `/user/profile/${this.userId}` : (this.$store.state.navigation.myProfile || `/user/profile/${this.userId}`) },
         discoverTo() { return this.isDiscover ? '/discover/movie/1' : this.$store.state.navigation.discover },
-        notificationCount() { return this.$store.state.notifications.notificationCount }
+        notificationCount() { return this.$store.state.notifications.notificationCount },
+        patreonLink() { return process.env.VUE_APP_PATREON_LINK },
+        instagramLink() { return process.env.VUE_APP_INSTAGRAM_LINK }
     },
     watch: {
-        '$route'() {
-            $('.collapse-on-route-change').collapse('hide')
-            $('.dismiss-on-route-change').modal('hide')
+        $route() {
+            $('.body').scrollTop(0)
             this.getNotificationCount()
         }
     },
@@ -215,11 +261,7 @@ export default {
         this.getNotificationCount(); this.interval = setInterval(() => this.getNotificationCount(), 30000)
     },
     methods: {
-        logout() {
-            this.$store.dispatch('auth/destroyToken').then(response => {
-                this.$router.push('/login')
-            })
-        },
+        logout() { this.$store.dispatch('auth/destroyToken') },
         getNotificationCount() { this.$store.dispatch('notifications/getNotificationCount') }
     }
 }
@@ -234,4 +276,5 @@ export default {
     -webkit-box-shadow: 0 .02rem .1rem rgba(0,0,0,.075)!important;
     box-shadow: 0 .02rem .1rem rgba(0,0,0,.075)!important;
 }
+.active { color: var(--info)!important }
 </style>

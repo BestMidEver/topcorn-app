@@ -9,7 +9,7 @@
                     </div>
                 </div>
             </div>
-            <div v-if="allowedButtons.length > 0" class="d-flex flex-column mt-1 px-1 ml-auto" :class="allowedButtons.length == 1 ? 'col' : 'col-12 col-md-auto'">
+            <div v-if="allowedButtons.length > 0" class="d-flex flex-column mt-1 px-1 ml-auto" :class="allowedButtons.length == 1 ? '' : 'col-12 col-md-auto'">
                 <div id="under-trailer-button-container" class="d-flex flex-row text-center" :class="allowedButtons.length == 1 ? 'justify-content-end' : 'justify-content-between'">
                     <custom-button v-if="isButtonAllowed('watch-later')" type="watch-later" :style="{order: calcButtonIndex('watch-later')}" :borderRadius="calcButtonBorderRadius('watch-later')" iconSize="22px" class="btn-sm btn-block border-0 mt-0 px-0"
                         :status="watchLaterStatus" @click="$store.dispatch('noModals/watchLater', { data: data, boundedTo: boundedTo, type: type })" :disabled="$store.state.loading.responseWaiting">
@@ -95,7 +95,7 @@ export default {
         watchLaterStatus() { return !this.$store.state.loading.responseWaiting && this.data.later_id > 0 ? 'active' : '' },
         seenStatus() { return !this.$store.state.loading.responseWaiting && this.data.rate_code > 0 ? `active${this.data.rate_code}` : '' },
         banStatus() { return !this.$store.state.loading.responseWaiting && this.data.ban_id > 0 ? 'active' : '' },
-        lastSeenStatus() { return !this.$store.state.loading.responseWaiting && this.data.seen_id > 0 ? 'active' : '' },
+        lastSeenStatus() { return !this.$store.state.loading.responseWaiting && this.data.seen_id > 0 && this.data.last_seen_episode_number === this.data.episode_number && this.data.last_seen_season_number === this.data.season_number ? 'active' : '' },
         followStatus() { return !this.$store.state.loading.responseWaiting && this.data.following_id > 0 ? 'active' : '' },
         notifyByStatus() { return !this.$store.state.loading.responseWaiting && this.data.notified_by_id > 0 ? 'active' : '' },
         seriesData() { return this.$store.state.movieSeriesDataSets.dataObject2 },

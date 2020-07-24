@@ -1,7 +1,7 @@
 <template>
     <div class="modal-container" :class="customize">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content card-border">
                 <slot name="content"/>
             </div>
         </div>

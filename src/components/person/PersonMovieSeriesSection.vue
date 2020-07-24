@@ -5,7 +5,7 @@
         </section-heading>
         <filter-sorter v-if="isFullScreen" :filters="filters" :selectedFilters="selectedFilters"/>
         <cards :type="type" :tcAllResults="filteredResults" :loading="$store.state.loading.pageLoading" :boundedTo="[`interactions/set${capitalizeFirstLetter(type)}Interaction`]"
-            :expandStatus="isFullScreen ? 'expanded' : 'compressed'" class="mt-2"/>
+            :expandStatus="isFullScreen ? 'expanded' : 'compressed'" class="mt-2" :cardType="cardType"/>
     </div>
 </template>
 
@@ -32,6 +32,7 @@ export default {
         type: String,
     },
     computed: {
+        cardType() { return this.type === 'series' ? 'person-series-episode-count' : '' },
         types() { return this.type === 'movie' ? 'movies' : this.type },
         results() { return this.data[this.types] ? this.data[this.types].results : [] },
         dataLength() { return this.filteredResults.length || 0 },
@@ -57,9 +58,9 @@ export default {
         genreIds() { return this.genres && this.genres.map(genre => genre.id) || [] },
         genreNames() { return this.genres && this.genres.map(genre => genre.name) || [] },
     },
-    created() {
+    /* created() {
         if(this.isFullScreen) $('.body').scrollTop(0)
-    },
+    }, */
 }
 </script>
 

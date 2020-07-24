@@ -1,10 +1,4 @@
-import Vue from 'vue'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
 import urlGenerate from '@/mixins/urlGenerate'
-
-Vue.use(VueAxios, axios)
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
 
 
 export default {
@@ -29,7 +23,7 @@ export default {
             this.$store.dispatch('loading/startPageLoading')
             const axiosRandom = this.randomString(20)
             this.axiosRandom = axiosRandom
-            axios.post(this.discoverUrl(this.$route.params.page), this.requestData)
+            this.$store.dispatch('request/post', { url: this.discoverUrl(this.$route.params.page), data: this.requestData })
             .then(response => {
                 if(axiosRandom === this.axiosRandom && this.type === this.$route.name.split('-')[1]) {
                     this.data = response.data
